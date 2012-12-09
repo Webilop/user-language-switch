@@ -12,12 +12,14 @@ function uls_create_custom_rewrite_rules() {
 	global $wp_rewrite;
 	
 	//get available languages
-	$languages = '(tupale|en|es)';
+	$languages = '(en|es)';
 	
 	$wp_rewrite->add_rewrite_tag( '%lang%', $languages, 'lang=' );
 
 	//create prefixed rules
-	$new_rules = array();
+	$new_rules = array(
+		$languages . '/?$' => 'index.php' //home page rule
+	);
 	foreach($wp_rewrite->rules as $left => $right)
 		$new_rules[$languages . '/' . $left] = preg_replace_callback('/matches\[(\d{1,2})\]/', function($matches){
 			return 'matches[' . ($matches[1] + 1) . ']';
