@@ -12,22 +12,26 @@ function uls_create_custom_rewrite_rules() {
 	global $wp_rewrite;
 	
 	//get available languages
-	$languages = '(en|es)';
+	$languages = '(en|es|en_US|es_ES)';
 	
 	$wp_rewrite->add_rewrite_tag( '%lang%', $languages, 'lang=' );
 
 	//create prefixed rules
 	$new_rules = array(
-		$languages . '/?$' => 'index.php' //home page rule
+		//$languages . '/?$' => 'index.php?lang=$matches[1]' //home page rule
 	);
-	foreach($wp_rewrite->rules as $left => $right)
-		$new_rules[$languages . '/' . $left] = preg_replace_callback('/matches\[(\d{1,2})\]/', function($matches){
-			return 'matches[' . ($matches[1] + 1) . ']';
-		}, $right) . '&lang=$matches[1]';
+	foreach($wp_rewrite->rules as $left => $right){
+		//ignore attachment rules
+		if(false === strpos($left, '/attachment/')){
+			$new_rules[$languages . '/' . $left] = preg_replace_callback('/matches\[(\d{1,2})\]/', function($matches){
+				return 'matches[' . ($matches[1] + 1) . ']';
+			}, $right) . '&lang=$matches[1]';
+		}
+	}
 	
 	//add new rules
 	$wp_rewrite->rules = $new_rules + $wp_rewrite->rules;
-	//_db2($wp_rewrite);
+	//_db2($wp_rewrite->rules);
 	//_db2($wp_rewrite->rules);
 	return $wp_rewrite->rules;
 }
@@ -57,4 +61,19 @@ add_action( 'init', 'uls_flush_rewrite_rules' );
 add_action( 'generate_rewrite_rules', 'uls_create_custom_rewrite_rules' );
 add_filter( 'query_vars', 'uls_add_custom_page_variables' );
 
+/**
+ * Add rewrite rules for BuddyPress
+ */
+add_filter('bp_core_get_directory_pages', 'uls_buddypress_rewrite_rules');
+function uls_buddypress_rewrite_rules($directory_pages){
+	//get language from url
+	$language = uls_get_user_language_from_url();
+	if(null == $language)
+		return $directory_pages;
+	
+	foreach($directory_pages as &$page)
+		$page->slug = $language . '/' . $page->slug;
+
+	return $directory_pages;
+}
 ?>
