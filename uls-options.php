@@ -37,27 +37,27 @@ class ULS_Options{
 		$options = get_option('uls_settings');
 	
 		//create section for registration
-		add_settings_section('uls_general_settings_section', __('General Settings','user-language-switcher'), 'ULS_Options::create_general_settings_section', 'uls-settings-page');
+		add_settings_section('uls_general_settings_section', __('General Settings','user-language-switch'), 'ULS_Options::create_general_settings_section', 'uls-settings-page');
 		$options['input_name'] = 'default_backend_language';
-		add_settings_field($options['input_name'], __('Default language for admin side','user-language-switcher'), 'ULS_Options::create_language_selector_input', 'uls-settings-page','uls_general_settings_section',$options);
+		add_settings_field($options['input_name'], __('Default language for admin side','user-language-switch'), 'ULS_Options::create_language_selector_input', 'uls-settings-page','uls_general_settings_section',$options);
 		
 		$options['input_name'] = 'backend_language_field_name';
-		add_settings_field($options['input_name'], __('User meta field to store the admin side language','user-language-switcher'), 'ULS_Options::create_text_input', 'uls-settings-page','uls_general_settings_section',$options);
+		add_settings_field($options['input_name'], __('User meta field to store the admin side language','user-language-switch'), 'ULS_Options::create_text_input', 'uls-settings-page','uls_general_settings_section',$options);
 		
 		$options['input_name'] = 'default_frontend_language';
-		add_settings_field($options['input_name'], __('Default language for website','user-language-switcher'), 'ULS_Options::create_language_selector_input', 'uls-settings-page','uls_general_settings_section',$options);
+		add_settings_field($options['input_name'], __('Default language for website','user-language-switch'), 'ULS_Options::create_language_selector_input', 'uls-settings-page','uls_general_settings_section',$options);
 		
 		$options['input_name'] = 'frontend_language_field_name';
-		add_settings_field($options['input_name'], __('User meta field to store the website language language','user-language-switcher'), 'ULS_Options::create_text_input', 'uls-settings-page','uls_general_settings_section',$options);
+		add_settings_field($options['input_name'], __('User meta field to store the website language language','user-language-switch'), 'ULS_Options::create_text_input', 'uls-settings-page','uls_general_settings_section',$options);
 		
 		$options['input_name'] = 'user_backend_configuration';
-		add_settings_field($options['input_name'], __('Allow users change their admin side language','user-language-switcher'), 'ULS_Options::create_checkbox_input', 'uls-settings-page','uls_general_settings_section',$options);
+		add_settings_field($options['input_name'], __('Allow users change their admin side language','user-language-switch'), 'ULS_Options::create_checkbox_input', 'uls-settings-page','uls_general_settings_section',$options);
 		
 		$options['input_name'] = 'user_frontend_configuration';
-		add_settings_field($options['input_name'], __('Allow users change their website language','user-language-switcher'), 'ULS_Options::create_checkbox_input', 'uls-settings-page','uls_general_settings_section',$options);
+		add_settings_field($options['input_name'], __('Allow users change their website language','user-language-switch'), 'ULS_Options::create_checkbox_input', 'uls-settings-page','uls_general_settings_section',$options);
 		
 		//create section for collaboration
-		add_settings_section('uls_collaboration_section', __('Collaborate','user-language-switcher'), 'ULS_Options::create_collaboration_section', 'uls-settings-page');
+		add_settings_section('uls_collaboration_section', __('Collaborate','user-language-switch'), 'ULS_Options::create_collaboration_section', 'uls-settings-page');
 	}
 
 	/**
@@ -82,12 +82,12 @@ class ULS_Options{
 	 * Add entries in menu sidebar in back end.
 	 */
 	static function register_menu(){
-		add_options_page( __('User Language Switcher','user-language-switcher'), __('User Language Switcher','user-language-switcher'), 'manage_options', 'uls-settings-page', 'ULS_Options::create_settings_page' );
+		add_options_page( __('User Language Switch','user-language-switch'), __('User Language Switch','user-language-switch'), 'manage_options', 'uls-settings-page', 'ULS_Options::create_settings_page' );
 		
 		//if users can configurate their languages
 		$options = get_option('uls_settings');
 		if($options['user_backend_configuration'] || $options['user_frontend_configuration'])
-			add_menu_page( __('User Language Preferences','user-language-switcher'), __('User Language','user-language-switcher'), 'read', 'uls-user-language-page', 'ULS_Options::create_user_language_page' );
+			add_menu_page( __('User Language Preferences','user-language-switch'), __('User Language','user-language-switch'), 'read', 'uls-user-language-page', 'ULS_Options::create_user_language_page' );
 	}
 
 	/**
@@ -126,7 +126,7 @@ class ULS_Options{
 	 */
 	static function create_general_settings_section(){
 		?>
-		<p><?php _e('You can install more languages in your site following the instructions in ','user-language-switcher'); ?><a href="http://codex.wordpress.org/WordPress_in_Your_Language" target="_blank"><?php _e('WordPress in Your Language','user-language-switcher'); ?></a>.</p>
+		<p><?php _e('You can install more languages in your site following the instructions in ','user-language-switch'); ?><a href="http://codex.wordpress.org/WordPress_in_Your_Language" target="_blank"><?php _e('WordPress in Your Language','user-language-switch'); ?></a>.</p>
 		<?php
 	}
 	
@@ -144,11 +144,11 @@ class ULS_Options{
 	 */
 	static function create_settings_page(){
 		if ( !current_user_can( 'manage_options' ) )  {
-			wp_die( __( 'You do not have sufficient permissions to access this page.', 'user-language-switcher' ) );
+			wp_die( __( 'You do not have sufficient permissions to access this page.', 'user-language-switch' ) );
 		}
 	?>
 	<div class="wrap">
-		<h2><?php _e('User Language Switcher','user-language-switcher'); ?></h2>
+		<h2><?php _e('User Language Switch','user-language-switch'); ?></h2>
 		<form method="post" action="options.php">
 			<?php settings_fields( 'uls_settings' ); ?>
 			<?php do_settings_sections( 'uls-settings-page' ); ?>
@@ -163,7 +163,7 @@ class ULS_Options{
 	 */
 	static function create_user_language_page(){
 		if ( !current_user_can( 'read' ) )  {
-			wp_die( __( 'You do not have sufficient permissions to access this page.', 'user-language-switcher' ) );
+			wp_die( __( 'You do not have sufficient permissions to access this page.', 'user-language-switch' ) );
 		}
 		$options = get_option('uls_settings');
 		$default_backend_language = get_user_meta(get_current_user_id(), $options['backend_language_field_name'], true);
@@ -175,15 +175,15 @@ class ULS_Options{
 			$default_frontend_language = $options['default_frontend_language'];
 	?>
 	<div class="wrap">
-		<h2><?php _e('User Language Preferences','user-language-switcher'); ?></h2>
+		<h2><?php _e('User Language Preferences','user-language-switch'); ?></h2>
 		<?php if(isset($_GET['message'])): ?>
 			<?php if('saved' == $_GET['message']): ?>
 				<div class="uls-notice updated">
-					<p><strong><?php _e('Preferences saved.', 'user-language-switcher'); ?></strong></p>
+					<p><strong><?php _e('Preferences saved.', 'user-language-switch'); ?></strong></p>
 				</div>
 			<?php elseif('error' == $_GET['message']): ?>
 				<div class="uls-error error">
-					<p><strong><?php _e('Error saving preferences.', 'user-language-switcher'); ?></strong></p>
+					<p><strong><?php _e('Error saving preferences.', 'user-language-switch'); ?></strong></p>
 				</div>
 			<?php endif; ?>
 		<?php endif; ?>
@@ -196,7 +196,7 @@ class ULS_Options{
 				<tbody>
 					<?php if($options['user_backend_configuration']): ?>
 					<tr valign="top">
-						<th scope="row"><?php _e('Displayed language in the admin side','user-language-switcher'); ?></th>
+						<th scope="row"><?php _e('Displayed language in the admin side','user-language-switch'); ?></th>
 						<td>
 							<?php echo uls_language_selector_input($options['backend_language_field_name'],$options['backend_language_field_name'],$default_backend_language); ?>
 						</td>
@@ -204,7 +204,7 @@ class ULS_Options{
 					<?php endif; ?>
 					<?php if($options['user_frontend_configuration']): ?>
 					<tr valign="top">
-						<th scope="row"><?php _e('Displayed language in the front-end side','user-language-switcher'); ?></th>
+						<th scope="row"><?php _e('Displayed language in the front-end side','user-language-switch'); ?></th>
 						<td>
 							<?php echo uls_language_selector_input($options['frontend_language_field_name'],$options['frontend_language_field_name'],$default_frontend_language); ?>
 						</td>
@@ -213,7 +213,7 @@ class ULS_Options{
 				</tbody>
 			</table>
 			<p class="submit">
-				<input type="submit" class="button-primary" value="<?php _e('Save','user-language-switcher'); ?>" />
+				<input type="submit" class="button-primary" value="<?php _e('Save','user-language-switch'); ?>" />
 			</p>
 		</form>
 	</div>
