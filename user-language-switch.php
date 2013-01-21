@@ -28,7 +28,29 @@ function uls_init_plugin(){
 	//load translation
 	$plugin_dir = dirname( plugin_basename( __FILE__ ) ) . '/languages/';
 	load_plugin_textdomain( 'user-language-switch', false, $plugin_dir );
+	
+	//init flag of permalink convertion to true
+	global $uls_permalink_convertion;
+	$uls_permalink_convertion = true;
 }
+
+/*add_action('get_header', 'uls_redirect_page_by_language');
+function uls_redirect_page_by_language(){
+	//if user isn't in admin side
+	if( ! is_admin() ){
+		//get the language
+		$language = uls_get_user_language();
+		if('' == $language)
+			$language = uls_get_site_language();
+		
+		//get the translation page
+		$translation_id = uls_get_post_translation_id(get_the_ID(), $language);
+		if(false !== $translation_id){
+			wp_redirect(get_permalink($translation_id));
+			exit;
+		}
+	}
+}*/
 
 /**
  * This function load the language from the current URL.
@@ -72,7 +94,7 @@ function uls_get_user_language_from_url($only_lang = false){
  * @param $only_lang boolean if it is true, then it returns the 2 letters of the language. It is the language code without location.
  * @param $type string (backend|frontend) specifiy which language it will return.
  * 
- * @return mixed it returns a string containing a language code. If user don't have permissions to change languages, then the default language is returned. It returns false if user hasn't configures a language.
+ * @return mixed it returns a string containing a language code. If user don't have permissions to change languages or user hasn't configured a language, then the default language is returned. If user isn't logged in, then false is returned.
  */
 function uls_get_user_saved_language($only_flag = false, $type = null){
 	if( is_user_logged_in() ){
@@ -99,7 +121,7 @@ function uls_get_user_saved_language($only_flag = false, $type = null){
 		}
 		return $language;
 	}
-	
+           	
 	return false;
 }
 
@@ -258,6 +280,11 @@ add_filter('post_link', 'uls_link_filter', 10, 2);
 add_filter('page_link', 'uls_link_filter', 10, 2);
 //add_filter('the_permalink', 'uls_link_filter', 10, 2);
 function uls_link_filter($post_url, $post = null){
+	//if global change is enabled
+	global $uls_permalink_convertion;
+	if( ! $uls_permalink_convertion )
+		return $post_url;
+	
 	//TO-DO: what happen if user is in backend? see next line
 	//if user is in backend
 	if( is_admin() ) return $post_url;
@@ -270,30 +297,44 @@ function uls_link_filter($post_url, $post = null){
 		$post_id = $post->ID;
 	//echo "post_id: " . $post_id . "<br/>";
 	
+	//get post language
+	$post_language = get_post_meta($post_id, 'uls_language', true);
+	
 	//get language from URL
 	$language = uls_get_user_language_from_url();
-	
-	//if there isn't language in the URL
-	if(false === $language)
-		return $post_url;
 	//echo "lang: " . $language . "<br/>";
+	//if there is a language in the URL, then append the language in the link
+	if(false !== $language){
+		//get the translation of the post
+		$translation_id = uls_get_post_translation_id($post_id, $language);
+		//echo "Trans2: $translation_id <br/>";
+		if($translation_id == $post_id)
+			return uls_get_url_translated($post_url, $language, $options["url_type"]);
+		elseif(false !== $translation_id)
+			return get_permalink($translation_id);
+		else
+			return uls_get_url_translated($post_url, $language, $options["url_type"]);
+	}
 	
 	//if language is the same to the user saved language
 	$saved_language = uls_get_user_saved_language();
 	//echo "saved: $saved_language<br/>";
-	if($language == $saved_language)
+	if(false === $saved_language)
+		$saved_language = uls_get_site_language();
+	if($post_language == $saved_language)
 		return $post_url;
-
-	//get the translation of the post
-	$translation_id = uls_get_post_translation_id($post_id, $language);
-	//echo "Trans: $translation_id <br/>";
-	if($translation_id == $post_id)
-		return $post_url;
-	elseif(false !== $translation_id)
-		return get_permalink($translation_id);
+	else{
+		//get the translation of the post
+		$translation_id = uls_get_post_translation_id($post_id, $language);
+		//echo "Trans: $translation_id <br/>";
+		if($translation_id == $post_id)
+			return $post_url;
+		elseif(false !== $translation_id)
+			return get_permalink($translation_id);
+	}
 
 	//add language to the url
-	return uls_get_url_translated($post_url, $language, $options["url_type"]);
+	return uls_get_url_translated($post_url, $saved_language, $options["url_type"]);
 }
 
 /**

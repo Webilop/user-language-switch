@@ -31,9 +31,9 @@ function uls_get_link($post_id, $language = null, $label = null, $class='uls-lin
 	if(empty($translation_id))
 		$translation_id = $post_id;
 	if(null == $label)
-		return '<a class="' . $class . '" href="' . get_permalink($translation_id) . '" >' . get_the_title($translation_id) . '</a>';
+		return '<a class="' . $class . '" href="' . get_permalink($post_id) . '" >' . get_the_title($translation_id) . '</a>';
 	else
-		return '<a class="' . $class . '" href="' . get_permalink($translation_id) . '" >' . $label . '</a>';
+		return '<a class="' . $class . '" href="' . get_permalink($post_id) . '" >' . $label . '</a>';
 }
 /**
  * Add shortcode to get link.
@@ -79,6 +79,10 @@ function uls_language_link_switch($url, $url_type = 'prefix', $type = 'links', $
 	if('' == $current_language)
 		$current_language = uls_get_site_language();
 	
+	//set conversion of permalinks to false
+	global $uls_permalink_convertion;
+	$uls_permalink_convertion = false;
+	
 	//add styles
 	wp_enqueue_style('uls-user-language-form', plugins_url('/css/styles.css', __FILE__));
 	ob_start();
@@ -87,14 +91,23 @@ function uls_language_link_switch($url, $url_type = 'prefix', $type = 'links', $
 	<?php foreach($available_languages as $label => $code): ?>
 		<?php if($code == $current_language): ?>
 			<span class="<?php echo 'selected-language'?>"><?php echo __($label, 'user-language-switch'); ?></span>
-		<?php else: ?>
-			<a href="<?php echo uls_get_url_translated($url, $code); ?>"><?php echo __($label, 'user-language-switch'); ?></a>
+		<?php else:
+			$translation_id = uls_get_post_translation_id(get_the_ID(), $code);
+			if(false !== $translation_id): ?>
+				<a href="<?php echo uls_get_url_translated(get_permalink($translation_id), $code); ?>"><?php echo __($label, 'user-language-switch'); ?></a>
+			<?php else: ?>
+				<a href="<?php echo uls_get_url_translated($url, $code); ?>"><?php echo __($label, 'user-language-switch'); ?></a>
+			<?php endif; ?>
 		<?php endif; ?>
 	<?php endforeach; ?>
 	</div>
 	<?
 	$res = ob_get_contents();
 	ob_end_clean();
+	
+	//set conversion of permalinks to true again
+	$uls_permalink_convertion = true; 
+	
 	return $res;
 }
 /**
