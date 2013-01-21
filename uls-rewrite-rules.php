@@ -18,7 +18,7 @@ function uls_create_custom_rewrite_rules() {
 
 	//create prefixed rules
 	$new_rules = array(
-		//$languages . '/?$' => 'index.php?lang=$matches[1]' //home page rule
+		$languages . '/?$' => 'index.php?lang=$matches[1]' //home page rule
 	);
 	foreach($wp_rewrite->rules as $left => $right){
 		//ignore attachment rules
@@ -30,8 +30,8 @@ function uls_create_custom_rewrite_rules() {
 	}
 	
 	//add new rules
-	$wp_rewrite->rules = $new_rules + $wp_rewrite->rules;
 	//_db2($wp_rewrite->rules);
+	$wp_rewrite->rules = $new_rules + $wp_rewrite->rules;
 	//_db2($wp_rewrite->rules);
 	return $wp_rewrite->rules;
 }
