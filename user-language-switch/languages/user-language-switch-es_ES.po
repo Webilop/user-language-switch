@@ -1,0 +1,114 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: User Language Switch\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-01-07 15:31-0500\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Carlos Guzman <caralbgm@gmail.com>\n"
+"Language-Team: \n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Language: Spanish\n"
+"X-Poedit-KeywordsList: __;_x;_e\n"
+"X-Poedit-Basepath: ../\n"
+"X-Poedit-Country: SPAIN\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: uls-options.php:40
+msgid "General Settings"
+msgstr "Configuración General"
+
+#: uls-options.php:42
+msgid "Default language for admin side"
+msgstr "Idioma por defecto para el lado administrador"
+
+#: uls-options.php:45
+msgid "User meta field to store the admin side language"
+msgstr "Campo en user meta para guardar el idioma del lado administrador"
+
+#: uls-options.php:48
+msgid "Default language for website"
+msgstr "Idioma por defecto para el sitio web"
+
+#: uls-options.php:51
+msgid "User meta field to store the website language language"
+msgstr "Campo en user meta para guardar el idioma del sitio web"
+
+#: uls-options.php:54
+msgid "Allow users change their admin side language"
+msgstr "Permitir a los usuarios cambiar su idioma para ver el lado administrador"
+
+#: uls-options.php:57
+msgid "Allow users change their website language"
+msgstr "Permitir a los usuarios cambiar su idioma para ver el sitio web"
+
+#: uls-options.php:60
+msgid "Collaborate"
+msgstr "Colaborar"
+
+#: uls-options.php:85
+#: uls-options.php:151
+msgid "User Language Switch"
+msgstr "Switch de idioma de usuarios"
+
+#: uls-options.php:90
+#: uls-options.php:178
+msgid "User Language Preferences"
+msgstr "Configuración del idioma de usuarios"
+
+#: uls-options.php:90
+msgid "User Language"
+msgstr "Idioma de usuario"
+
+#: uls-options.php:129
+msgid "You can install more languages in your site following the instructions in "
+msgstr ""
+
+#: uls-options.php:129
+msgid "WordPress in Your Language"
+msgstr ""
+
+#: uls-options.php:138
+msgid "You can collaborate with the team."
+msgstr ""
+
+#: uls-options.php:147
+#: uls-options.php:166
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: uls-options.php:182
+msgid "Preferences saved."
+msgstr "Configuración guardada"
+
+#: uls-options.php:186
+msgid "Error saving preferences."
+msgstr "Error guardando la configuración"
+
+#: uls-options.php:199
+msgid "Displayed language in the admin side"
+msgstr "Idioma mostrado en el lado administrador"
+
+#: uls-options.php:207
+msgid "Displayed language in the front-end side"
+msgstr "Idioma mostrado en el sitio web"
+
+#: uls-options.php:216
+#: uls-functions.php:30
+msgid "Save"
+msgstr "Guardar"
+
+#: uls-functions.php:29
+msgid "Language"
+msgstr "Idioma"
+
+#: uls-functions.php:31
+msgid "Language saved"
+msgstr "Idioma guardado"
+
+#: uls-functions.php:32
+msgid "Error saving language"
+msgstr "Error guardando el idioma"
+
