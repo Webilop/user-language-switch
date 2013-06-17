@@ -28,7 +28,7 @@ function uls_init_plugin(){
 	//load translation
 	$plugin_dir = dirname( plugin_basename( __FILE__ ) ) . '/languages/';
 	load_plugin_textdomain( 'user-language-switch', false, $plugin_dir );
-	
+
 	//init flag of permalink convertion to true
 	global $uls_permalink_convertion;
 	$uls_permalink_convertion = true;
@@ -42,7 +42,7 @@ function uls_redirect_page_by_language(){
 		$language = uls_get_user_language();
 		if('' == $language)
 			$language = uls_get_site_language();
-		
+
 		//get the translation page
 		$translation_id = uls_get_post_translation_id(get_the_ID(), $language);
 		if(false !== $translation_id){
@@ -54,9 +54,9 @@ function uls_redirect_page_by_language(){
 
 /**
  * This function load the language from the current URL.
- * 
+ *
  * @param $only_lang boolean if it is true, then it returns the 2 letters of the language. It is the language code without location.
- * 
+ *
  * @return mixed it returns a string containing a language code or false if there isn't any language detected.
  */
 function uls_get_user_language_from_url($only_lang = false){
@@ -83,20 +83,20 @@ function uls_get_user_language_from_url($only_lang = false){
 				$language = $parts[0];
 		}
 	}
-	
+
 	return uls_valid_language($language) ? $language : false;
 }
 
 
 /**
  * This function retrives the user language selected in the admin side.
- * 
+ *
  * @param $only_lang boolean if it is true, then it returns the 2 letters of the language. It is the language code without location.
  * @param $type string (backend|frontend) specifiy which language it will return.
- * 
+ *
  * @return mixed it returns a string containing a language code. If user don't have permissions to change languages or user hasn't configured a language, then the default language is returned. If user isn't logged in, then false is returned.
  */
-function uls_get_user_saved_language($only_flag = false, $type = null){
+function uls_get_user_saved_language($only_lang = false, $type = null){
 	if( is_user_logged_in() ){
 		//detect if the user is in backend or frontend
 		if($type == null){
@@ -106,13 +106,13 @@ function uls_get_user_saved_language($only_flag = false, $type = null){
 		}
 
 		//check if the user can change the language
-		$options = get_option('uls_settings');
+		$options = uls_get_options();
 		if($options["user_{$type}_configuration"])
 			$language = get_user_meta(get_current_user_id(), "uls_{$type}_language", true);
 		//set the default language if the user doesn't have a preference
 		if(empty($language))
 			$language = $options["default_{$type}_language"];
-		
+
 		//remove location
 		if($only_lang){
 			$pos = strpos($language, '_');
@@ -121,45 +121,45 @@ function uls_get_user_saved_language($only_flag = false, $type = null){
 		}
 		return $language;
 	}
-           	
+
 	return false;
 }
 
 /**
  * This function load the language from the URL, session or from settings saved for the user. If there isn't a language in the URL or user hasn't set it, then default language is returned.
- * 
+ *
  * @param $only_lang boolean if it is true, then it returns the 2 letters of the language. It is the language code without location.
- * 
+ *
  * @return string language code. If there isn't a language in the URL or user hasn't set it, then default language is returned.
  */
 function uls_get_user_language($only_lang = false){
 	//get language from URL
 	$language = uls_get_user_language_from_url($only_lang);
-	
+
 	//change the language by user preferences
 	if( empty($language) && is_user_logged_in() )
 		$language = uls_get_user_saved_language();
-	
+
 	//remove location
 	if(!empty($language) && $only_lang){
 		$pos = strpos($language, '_');
 		if(false !== $pos)
 			return substr($language, 0, $pos);
 	}
-	
+
 	return $language;
 }
 
 /**
  * Get the default language of the site.
- * 
+ *
  * @param $side string (frontend | backend)
  * @param $only_lang boolean if it is true, then it returns the 2 letters of the language. It is the language code without location.
- * 
+ *
  * @return string language code.
  */
 function uls_get_site_language($side = 'frontend', $only_flag = false){
-	$options = get_option('uls_settings');
+	$options = uls_get_options();
 	return $options["default_{$side}_language"];
 }
 
@@ -195,7 +195,7 @@ function uls_language_loading($lang){
 		//get default location for the language, if the language isn't valid, then it returns null
 		$language = uls_get_location_by_language($language);
 	}
-	
+
 	//change the language by user preferences
 	if( empty($language) && is_user_logged_in() ){
 		//detect if the user is in backend or frontend
@@ -214,13 +214,13 @@ function uls_language_loading($lang){
 	//$language = 'es_ES';
 	//echo $lang . '-' . $language.'<br/>';*/
 	$language = uls_get_user_language();
-	
+
 	//if it is only the code language
 	if(!empty($language) && false === strpos($language, '_')){
 		//get default location for the language, if the language isn't valid, then it returns null
 		$language = uls_get_location_by_language($language);
 	}
-	
+
 	$res = empty($language) ? $lang : $language;
 	//_db2($_SERVER);
 	//echo "res: $res<br/>";
@@ -232,10 +232,10 @@ add_filter('locale', 'uls_language_loading');
  * It returns the configured or default code language for a language abbreviatio. The code language is the pair of language and country (i.e: en_US, es_ES)-
  */
 function uls_get_location_by_language($language){
-	
+
 	//TO-DO: Configuration of default locations for languages in the admin side.
 	//TO-DO: Get available languages in rewrite rules
-	
+
 	//get language names
 	require 'uls-languages.php';
 	return !empty($default_code_by_abbreviation[$language]) ? $default_code_by_abbreviation[$language] : null;
@@ -243,9 +243,9 @@ function uls_get_location_by_language($language){
 
 /**
  * Validate if language is valid.
- * 
+ *
  * @param $language string language to validate.
- * 
+ *
  * @return boolean true if language is valid, otherwise it returns false.
  */
 function uls_valid_language($language){
@@ -257,21 +257,26 @@ function uls_valid_language($language){
 
 /**
  * Return the post id of translation post of a post.
- * 
+ *
  * @param $post_id integer id of post to translate.
  * @param $language string language of translation. If it is null or invalid, current language loaded in the page is used.
- * 
+ *
  * @return mixed it returns id of translation post as an integer or false if translation doesn't exist.
  */
 function uls_get_post_translation_id($post_id, $language = null){
 	//get language
 	if(!uls_valid_language($language))
 		$language = uls_get_user_language();
+
 	//get the translation of the post
 	$post_language = get_post_meta($post_id, 'uls_language', true);
+
 	if($post_language == $language)
 		return $post_id;
 	$translation = get_post_meta($post_id, 'uls_translation_' . $language, true);
+  if("" == $translation)
+    $translation = get_post_meta($post_id, 'uls_translation_' . strtolower($language), true);
+
 	return empty($translation) ? false : $translation;
 }
 
@@ -284,7 +289,7 @@ function uls_link_filter($post_url, $post = null){
 	global $uls_permalink_convertion;
 	if( ! $uls_permalink_convertion )
 		return $post_url;
-	
+
 	//TO-DO: what happen if user is in backend? see next line
 	//if user is in backend
 	if( is_admin() ) return $post_url;
@@ -296,12 +301,16 @@ function uls_link_filter($post_url, $post = null){
 	if(is_object($post))
 		$post_id = $post->ID;
 	//echo "post_id: " . $post_id . "<br/>";
-	
+
 	//get post language
 	$post_language = get_post_meta($post_id, 'uls_language', true);
-	
+
 	//get language from URL
 	$language = uls_get_user_language_from_url();
+
+  //get the general options
+  $options = uls_get_options();
+
 	//echo "lang: " . $language . "<br/>";
 	//if there is a language in the URL, then append the language in the link
 	if(false !== $language){
@@ -315,7 +324,7 @@ function uls_link_filter($post_url, $post = null){
 		else
 			return uls_get_url_translated($post_url, $language, $options["url_type"]);
 	}
-	
+
 	//if language is the same to the user saved language
 	$saved_language = uls_get_user_saved_language();
 	//echo "saved: $saved_language<br/>";
@@ -341,7 +350,7 @@ function uls_link_filter($post_url, $post = null){
  * This function add the language flag in the url.
  */
 function uls_get_url_translated($url, $language, $type = 'prefix', $remove_default_language = true){
-		
+
 	//if URL will omit default language
 	if($remove_default_language){
 		//if language is the same for the user
@@ -351,7 +360,7 @@ function uls_get_url_translated($url, $language, $type = 'prefix', $remove_defau
 		elseif(! is_user_logged_in() && $language == uls_get_site_language())
 			$language = '';
 	}
-	
+
 	//add language to the url
 	switch($type){
 		case 'query_var':
@@ -359,7 +368,7 @@ function uls_get_url_translated($url, $language, $type = 'prefix', $remove_defau
 			if(empty($parts['query'])){
 				if(!empty($language))
 					$parts['query'] = 'lang=' . $language;
-				$url = $parts['scheme'] . '://' . $parts['host'] . (empty($parts['port']) ? '' : ':' . $parts['port']) . (empty($parts['path']) ? '' : $parts['path']) . (empty($parts['query']) ? '' : '?' . $parts['query']) . (empty($parts['fragment']) ? '' : '#' . $parts['fragment']);    
+				$url = $parts['scheme'] . '://' . $parts['host'] . (empty($parts['port']) ? '' : ':' . $parts['port']) . (empty($parts['path']) ? '' : $parts['path']) . (empty($parts['query']) ? '' : '?' . $parts['query']) . (empty($parts['fragment']) ? '' : '#' . $parts['fragment']);
 				return $url;
 			}
 			$query_parts = explode('&', $parts['query']);
@@ -376,10 +385,10 @@ function uls_get_url_translated($url, $language, $type = 'prefix', $remove_defau
 			$parts['query'] = implode('&', $new_query_parts);
 			$url = $parts['scheme'] . '://' . $parts['host'] . (empty($parts['port']) ? '' : ':' . $parts['port']) . (empty($parts['path']) ? '' : $parts['path']) . (empty($parts['query']) ? '' : '?' . $parts['query']) . (empty($parts['fragment']) ? '' : '#' . $parts['fragment']);
 			break;
-		
+
 		case 'subdomain':
 			break;
-		
+
 		default:
 			$parts = parse_url($url);
 			$blog_parts = parse_url(get_bloginfo('url'));
@@ -423,4 +432,5 @@ function uls_get_url_translated($url, $language, $type = 'prefix', $remove_defau
 function uls_get_available_languages(){
 	return array('English' => 'en_US', 'Spanish' => 'es_ES');
 }
+
 ?>
