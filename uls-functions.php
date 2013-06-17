@@ -84,7 +84,7 @@ function uls_link_shortcode($atts){
 }
 
 /**
- * This function creates a set of links with available languages
+ * This function creates a set of links with available languages.
  *
  * @param $url string base URL to convert.
  * @param $url_type string type of language flag to add in the URL (query_var, prefix, subdomain)
@@ -93,7 +93,14 @@ function uls_link_shortcode($atts){
  *
  * @return string returns the HTML code with links to translated versions.
  */
-function uls_language_link_switch($url, $url_type = 'prefix', $type = 'links', $class = null){
+function uls_language_link_switch($url = null, $url_type = 'prefix', $type = 'links', $class = null){
+  //if URL is null, then it uses the current URL
+  if(null == $url){
+    $url =(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"]=="on") ? "https://" : "http://";
+    $url .= $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+  }
+
+  //get the available languages
 	$available_languages = uls_get_available_languages();
 
 	$class = (null == $class) ? 'uls-language-link-switch' : 'uls-language-link-switch ' . $class;
@@ -112,17 +119,35 @@ function uls_language_link_switch($url, $url_type = 'prefix', $type = 'links', $
 	ob_start();
 	?>
 	<div class="<?php echo $class; ?>">
-	<?php foreach($available_languages as $label => $code): ?>
-		<?php if($code == $current_language): ?>
+	<?php foreach($available_languages as $label => $code):
+	  $displayed = false;
+		if($code == $current_language):
+		  $displayed = true; ?>
 			<span class="<?php echo 'selected-language'?>"><?php echo __($label, 'user-language-switch'); ?></span>
 		<?php else:
-			$translation_id = uls_get_post_translation_id(get_the_ID(), $code);
-			if(false !== $translation_id): ?>
-				<a href="<?php echo uls_get_url_translated(get_permalink($translation_id), $code); ?>"><?php echo __($label, 'user-language-switch'); ?></a>
-			<?php else: ?>
-				<a href="<?php echo uls_get_url_translated($url, $code); ?>"><?php echo __($label, 'user-language-switch'); ?></a>
-			<?php endif; ?>
-		<?php endif; ?>
+      $current_post_id = url_to_postid($url);
+      //if the current page has a post related
+      if(0 != $current_post_id):
+  			$translation_id = uls_get_post_translation_id($current_post_id, $code);
+  			if(false !== $translation_id):
+          $displayed = true;
+          ?>
+  				<a href="<?php echo uls_get_url_translated(get_permalink($translation_id), $code); ?>"><?php echo __($label, 'user-language-switch'); ?></a>
+        <?php endif; //translation url?>
+  		<?php endif; //current_post_id?>
+		<?php endif;
+
+    //if the translation isn't displayed yet
+    if(!$displayed):
+      //get the translation based on the URL
+      $translation_url = uls_get_url_map_translation($url);
+      if(false !== $translation_url): ?>
+        <a href="<?php echo uls_get_url_translated($translation_url, $code); ?>"><?php echo __($label, 'user-language-switch'); ?></a>
+      <?php else: ?>
+  		  <a href="<?php echo uls_get_url_translated($url, $code); ?>"><?php echo __($label, 'user-language-switch'); ?></a>
+  		<?php endif; ?>
+  	<?php endif; //displayed ?>
+
 	<?php endforeach; ?>
 	</div>
 	<?
@@ -146,9 +171,11 @@ function uls_language_selector_shortcode($atts){
 		'class' => null
 	), $atts ) );
 
-	//if URL is null, then it uses current URL
-	if(null == $url)
-		$url = get_permalink();
+	//if URL is null, then it uses the current URL
+	if(null == $url){
+	  $url =(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"]=="on") ? "https://" : "http://";
+	  $url .= $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+	}
 
 	return uls_language_link_switch($url, $url_type, $type, $class);
 }
@@ -294,4 +321,26 @@ function uls_save_user_language(){
 	echo json_encode(array('success' => true));
 	exit;
 }
+
+/**
+ * This function get the URL of the translation of an URL. It retrieve the URL from the mapping saved in the options page.
+ *
+ * @param $url string URL of the page to get the translation.
+ * @param $language string language of translation. If it is null or invalid, current language loaded in the page is used.
+ *
+ * @return string it returns the URL of the translation or false if the URL isn't contained in the mapping.
+ */
+function uls_get_url_map_translation($url, $language = null){
+  //get language
+  if(!uls_valid_language($language))
+    $language = uls_get_user_language();
+
+  //get the mappging
+  $options = get_option('uls_settings');
+  if(isset($options['translation_mapping'][$language][$url]))
+    return $options['translation_mapping'][$language][$url];
+
+  return false;
+}
+
 ?>
