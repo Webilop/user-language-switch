@@ -1,29 +1,53 @@
 <?php
  /**
- * This function containg general functions to use in themes or other plugins.
+ * This file containg general functions to use in themes or other plugins.
  */
 
 /**
+ * Get the general options saved for the plugin.
+ *
+ * @return array associative array with the options for the plugin.
+ */
+function uls_get_options(){
+  //get the general options
+  $options = get_option('uls_settings');
+
+  //default values
+  $defaults = array(
+    'default_backend_language' => null,
+    'default_frontend_language' => null,
+    'user_backend_configuration' => true,
+    'user_frontend_configuration' => true,
+    'backend_language_field_name' => 'uls_backend_language',
+    'frontend_language_field_name' => 'uls_frontend_language',
+    'url_type' => 'prefix',
+  );
+
+  //merge with default values
+  return array_merge($defaults, $options);
+}
+
+/**
  * Return the permalink of the translation link of a post.
- * 
+ *
  * @param $post_id integer id of post.
  * @param $language string language of translation. If it is null or invalid, current language loaded in the page is used.
- * 
+ *
  * @return string the permalink of the translation link of a post.
  */
 function uls_get_permalink($post_id, $language = null){
 	$translation_id = uls_get_post_translation_id($post_id, $language);
-	return empty($translation_id) ? get_permalink($post_id) : get_permalink($translation_id);   
+	return empty($translation_id) ? get_permalink($post_id) : get_permalink($translation_id);
 }
 
 /**
  * Return the HTML link of the translation of a post.
- * 
+ *
  * @param $post_id integer id of post.
  * @param $language string language of translation. If it is null or invalid, current language loaded in the page is used.
  * @param $label string inner text of the link.
  * @param $class string text to include as class parameter in the link
- * 
+ *
  * @return string the HTML link of the translation link of a post.
  */
 function uls_get_link($post_id, $language = null, $label = null, $class='uls-link' ){
@@ -47,7 +71,7 @@ function uls_link_shortcode($atts){
 		'title' => null,
 		'label' => null
 	), $atts ) );
-	
+
 	//get post
 	if(null == $id && null != $title){
 		$post = get_page_by_title($title, 'OBJECT', $post_type);
@@ -61,28 +85,28 @@ function uls_link_shortcode($atts){
 
 /**
  * This function creates a set of links with available languages
- * 
+ *
  * @param $url string base URL to convert.
  * @param $url_type string type of language flag to add in the URL (query_var, prefix, subdomain)
  * @param $type string type of links to generate (links, select) (TO-SO: select isn't available yet.)
  * @param $class string additional CSS class to add in the div of links generated.
- * 
+ *
  * @return string returns the HTML code with links to translated versions.
  */
 function uls_language_link_switch($url, $url_type = 'prefix', $type = 'links', $class = null){
 	$available_languages = uls_get_available_languages();
-	
+
 	$class = (null == $class) ? 'uls-language-link-switch' : 'uls-language-link-switch ' . $class;
-	
+
 	//get the current language
 	$current_language = uls_get_user_language();
 	if('' == $current_language)
 		$current_language = uls_get_site_language();
-	
+
 	//set conversion of permalinks to false
 	global $uls_permalink_convertion;
 	$uls_permalink_convertion = false;
-	
+
 	//add styles
 	wp_enqueue_style('uls-user-language-form', plugins_url('/css/styles.css', __FILE__));
 	ob_start();
@@ -104,10 +128,10 @@ function uls_language_link_switch($url, $url_type = 'prefix', $type = 'links', $
 	<?
 	$res = ob_get_contents();
 	ob_end_clean();
-	
+
 	//set conversion of permalinks to true again
-	$uls_permalink_convertion = true; 
-	
+	$uls_permalink_convertion = true;
+
 	return $res;
 }
 /**
@@ -121,11 +145,11 @@ function uls_language_selector_shortcode($atts){
 		'url_type' => 'query_var',
 		'class' => null
 	), $atts ) );
-	
+
 	//if URL is null, then it uses current URL
 	if(null == $url)
 		$url = get_permalink();
-	
+
 	return uls_language_link_switch($url, $url_type, $type, $class);
 }
 
@@ -135,16 +159,16 @@ function uls_language_selector_shortcode($atts){
  * @param $name string name of the HTML element.
  * @param $default_value string value of the default selected option.
  * @param $class string CSS classes for the HTML element.
- * 
+ *
  * @return string HTML code of the language selector input.
  */
 function uls_language_selector_input($id, $name, $default_value = '', $class = ''){
 	//get available languages
 	$available_languages = uls_get_available_languages();
-	
+
 	//get language names
 	require 'uls-languages.php';
-	
+
 	//create HTML input
 	ob_start();
 	?>
@@ -162,13 +186,13 @@ function uls_language_selector_input($id, $name, $default_value = '', $class = '
 
 /**
  * This function creates a form to update language selection of an user to display in the front end side. If user isn't logged in or can't change the language, then it returns null.
- * 
+ *
  * @param $default_language string language code used as default value of the input selector. If it is null, then the language saved by the user is selected.
  * @param $label string label to use for the language field.
  * @param $submit_label string label to use in the button to submit the form.
  * @param $usccess_message string Message to display if language is saved successfully.
  * @param $error_message string Message to display if language isn't saved.
- * 
+ *
  * @return mixed HTML code of the form as a string. If user isn't logged in or user can't choose a language(settings of the plugin) then null is returned.
  */
 function uls_create_user_language_switch_form($default_language = null, $label = null, $submit_label = null, $success_message = null, $error_message = null){
@@ -181,7 +205,7 @@ function uls_create_user_language_switch_form($default_language = null, $label =
 	$type = 'frontend';
 	if( ! $options["user_{$type}_configuration"])
 		return null;
-	
+
 	//get default values
 	$label = empty($label) ? __('Language', 'user-language-switch') : $label;
 	$submit_label = empty($submit_label) ? __('Save', 'user-language-switch') : $submit_label;
@@ -193,11 +217,11 @@ function uls_create_user_language_switch_form($default_language = null, $label =
 	//set the default language if the user doesn't have a preference
 	if(empty($language))
 		$language = $options["default_{$type}_language"];
-	
+
 	//available languages
 	$available_languages = array('English' => 'en_US', 'Spanish' => 'es_ES');
 	ob_start();
-	
+
 	//include some JS libraries
 	wp_enqueue_script('jquery-form');
 	wp_enqueue_style('uls-user-language-form', plugins_url('/css/styles.css', __FILE__));
@@ -205,7 +229,7 @@ function uls_create_user_language_switch_form($default_language = null, $label =
 	<div class="uls-user-language-form-div">
 		<form id="uls_user_language_form" action="<?php echo admin_url('admin-ajax.php'); ?>" method="POST">
 			<input type="hidden" name="action" value="uls_user_language_switch" />
-			<?php if(function_exists("wp_nonce_field")): ?> 
+			<?php if(function_exists("wp_nonce_field")): ?>
 				<?php wp_nonce_field('uls_user_language_switch','uls_wpnonce'); ?>
 			<?php endif; ?>
 			<label for="uls_language"><?php echo $label; ?></label>
@@ -262,11 +286,11 @@ function uls_save_user_language(){
 
 	//save settings for the user
 	$options = get_option('uls_settings');
-	
+
 	//if user can save settings and there is a value
 	if($options["user_frontend_configuration"] && !empty($_POST[$options['frontend_language_field_name']]) && uls_valid_language($_POST[$options['frontend_language_field_name']]))
 		update_user_meta(get_current_user_id(), $options['frontend_language_field_name'], $_POST[$options['frontend_language_field_name']]);
-		
+
 	echo json_encode(array('success' => true));
 	exit;
 }
