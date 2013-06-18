@@ -10,10 +10,10 @@
  */
 function uls_create_custom_rewrite_rules() {
 	global $wp_rewrite;
-	
+
 	//get available languages
 	$languages = '(en|es|en_US|es_ES)';
-	
+
 	$wp_rewrite->add_rewrite_tag( '%lang%', $languages, 'lang=' );
 
 	//create prefixed rules
@@ -28,7 +28,7 @@ function uls_create_custom_rewrite_rules() {
 			}, $right) . '&lang=$matches[1]';
 		//}
 	}
-	
+
 	//add new rules
 	//_db2($wp_rewrite->rules);
 	$wp_rewrite->rules = $new_rules + $wp_rewrite->rules;
@@ -55,9 +55,10 @@ function uls_flush_rewrite_rules() {
 }
 
 /**
- * Link functions to hooks. 
+ * Link functions to hooks.
  */
-add_action( 'init', 'uls_flush_rewrite_rules' );
+register_activation_hook(ULS_FILE_PATH, 'uls_flush_rewrite_rules');
+//add_action( 'init', 'uls_flush_rewrite_rules' );
 add_action( 'generate_rewrite_rules', 'uls_create_custom_rewrite_rules' );
 add_filter( 'query_vars', 'uls_add_custom_page_variables' );
 
@@ -70,7 +71,7 @@ function uls_buddypress_rewrite_rules($directory_pages){
 	$language = uls_get_user_language_from_url();
 	if(null == $language)
 		return $directory_pages;
-	
+
 	foreach($directory_pages as &$page)
 		$page->slug = $language . '/' . $page->slug;
 
