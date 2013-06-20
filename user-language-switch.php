@@ -426,11 +426,4 @@ function uls_get_url_translated($url, $language, $type = 'prefix', $remove_defau
 	return $url;
 }
 
-/**
- * Get the available lanuages on the system.
- */
-function uls_get_available_languages(){
-	return array('English' => 'en_US', 'Spanish' => 'es_ES');
-}
-
 ?>

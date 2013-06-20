@@ -181,6 +181,15 @@ function uls_language_selector_shortcode($atts){
 }
 
 /**
+ * Get the available lanuages on the system.
+ *
+ * @return array associative array with the available languages in the system. The keys are the language names and the values are the language codes.
+ */
+function uls_get_available_languages(){
+  return array('English' => 'en_US', 'Spanish' => 'es_ES');
+}
+
+/**
  * This function creates an HTML slect input with the available languages for the site.
  * @param $id string id of the HTML element.
  * @param $name string name of the HTML element.
