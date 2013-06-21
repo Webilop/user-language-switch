@@ -465,8 +465,87 @@ function uls_language_selector_input($id, $name, $default_value = '', $class = '
 function uls_get_available_languages(){
    $theme_root = get_template_directory();
    $lang_array = get_available_languages( $theme_root.'/languages/' );
+   $wp_lang = get_available_languages(WP_CONTENT_DIR.'/languages/');
+   if(!empty($wp_lang)) $lang_array = array_merge((array)$lang_array, (array)$wp_lang);
    if (!in_array(get_locale(),$lang_array)) array_push($lang_array, get_locale());
+   $lang_array = array_unique($lang_array);
    return $lang_array;
 }
 
+add_action( 'init', 'wpb_initialize_cmb_meta_boxes', 9999 );
+/**
+ * Initialize the metabox class.
+ *
+ * @return void
+ */
+function wpb_initialize_cmb_meta_boxes() {
+    if ( ! class_exists( 'cmb_Meta_Box' ) )
+        require_once(plugin_dir_path( __FILE__ ) . 'init.php');
+}
+/**
+ * Add meta boxes.
+ *
+ * @return array
+ */
+function wpb_sample_metaboxes( $meta_boxes ) {
+   $prefix = 'uls_'; // Prefix for all fields
+   $languages = uls_get_available_languages();
+   $options = array(array('name'=>'Select one option', 'value'=>''));
+   require 'uls-languages.php';
+   $fields = array();
+   foreach ( $languages as $lang ){
+      $new = array('name' => $country_languages[$lang], 'value' => $lang);
+      array_push($options, $new);
+      // get posts by language
+      query_posts(array(
+         'meta_query' => array(
+            array (
+                   'key' => 'uls_language',
+                   'value'=>$lang,
+            )
+         )
+      ));
+      $posts = array(array('name'=>'Select a post', 'value'=>''));
+       while ( have_posts() ) : the_post();
+           $post = array('name'=>get_the_title(), 'value'=>get_the_ID());
+           array_push($posts, $post);
+       endwhile;
+       wp_reset_query();
+      $field = array(
+         'name' => 'Select the version in '.$country_languages[$lang],
+         'id' => $prefix.'translation_'.$lang,
+         'type' => 'select',
+         'options' => $posts
+      );
+      array_push($fields, $field);
+   }
+      $fields[] = array(
+            'name' => 'Select a language',
+            'id' => $prefix . 'language',
+            'type' => 'select',
+            'options' => $options,
+         );
+   $meta_boxes[] = array(
+      'id' => 'language',
+      'title' => 'Language',
+      'pages' => array('page','post'), // post type
+      'context' => 'normal',
+      'priority' => 'high',
+      'show_names' => true, // Show field names on the left
+      'fields' => $fields
+   );
+
+   return $meta_boxes;
+}
+add_filter( 'cmb_meta_boxes', 'wpb_sample_metaboxes' );
+
+function my_scripts_method() {
+   wp_enqueue_script(
+      'ajax-script',
+      get_template_directory_uri() . '/js/ajax_script.js',
+      array( 'jquery' )
+   );
+}
+
+add_action( 'wp_enqueue_scripts', 'my_scripts_method' );
 ?>
