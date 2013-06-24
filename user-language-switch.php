@@ -473,6 +473,7 @@ function uls_get_available_languages(){
 }
 
 add_action( 'init', 'wpb_initialize_cmb_meta_boxes', 9999 );
+
 /**
  * Initialize the metabox class.
  *
@@ -482,12 +483,15 @@ function wpb_initialize_cmb_meta_boxes() {
     if ( ! class_exists( 'cmb_Meta_Box' ) )
         require_once(plugin_dir_path( __FILE__ ) . 'init.php');
 }
+
 /**
  * Add meta boxes.
  *
  * @return array
  */
 function wpb_sample_metaboxes( $meta_boxes ) {
+include getcwd().'/includes/screen.php';
+$post_type = get_post_type($_GET['post']);
    $prefix = 'uls_'; // Prefix for all fields
    $languages = uls_get_available_languages();
    $options = array(array('name'=>'Select one option', 'value'=>''));
@@ -496,20 +500,31 @@ function wpb_sample_metaboxes( $meta_boxes ) {
    foreach ( $languages as $lang ){
       $new = array('name' => $country_languages[$lang], 'value' => $lang);
       array_push($options, $new);
-      // get posts by language
-      query_posts(array(
+      $t1 = get_posts(array(
+         'post_type' => $post_type,
          'meta_query' => array(
             array (
                    'key' => 'uls_language',
-                   'value'=>$lang,
+                   'value'=>array($lang),
             )
          )
       ));
+      $t2 = get_posts(array(
+         'post_type' => $post_type,
+         'meta_query' => array(
+            array (
+                   'key' => 'uls_language',
+                   'compare'=> 'NOT EXISTS',
+            )
+         )
+      ));
+      $the_posts = array_merge( $t1, $t2 );
+
       $posts = array(array('name'=>'Select a post', 'value'=>''));
-       while ( have_posts() ) : the_post();
-           $post = array('name'=>get_the_title(), 'value'=>get_the_ID());
+       foreach ($the_posts as $post):
+           $post = array('name'=>$post->post_title, 'value'=>$post->ID);
            array_push($posts, $post);
-       endwhile;
+       endforeach;
        wp_reset_query();
       $field = array(
          'name' => 'Select the version in '.$country_languages[$lang],
@@ -539,13 +554,14 @@ function wpb_sample_metaboxes( $meta_boxes ) {
 }
 add_filter( 'cmb_meta_boxes', 'wpb_sample_metaboxes' );
 
-function my_scripts_method() {
-   wp_enqueue_script(
-      'ajax-script',
-      get_template_directory_uri() . '/js/ajax_script.js',
-      array( 'jquery' )
-   );
+/**
+ * Register javascript file
+ *
+ */
+function add_scripts() {
+    wp_register_script( 'add-bx-js',   WP_CONTENT_URL . '/plugins/user-language-switch/js/js_script.js', array('jquery') );
+    wp_enqueue_script( 'add-bx-js' );
 }
 
-add_action( 'wp_enqueue_scripts', 'my_scripts_method' );
+add_action( 'admin_enqueue_scripts', 'add_scripts' );
 ?>
