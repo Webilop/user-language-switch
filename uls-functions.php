@@ -215,7 +215,7 @@ function uls_create_user_language_switch_form($default_language = null, $label =
       $language = $options["default_{$type}_language"];
 
    //available languages
-   $available_languages = array('English' => 'en_US', 'Spanish' => 'es_ES');
+   $available_languages = uls_get_available_languages();
    ob_start();
 
    //include some JS libraries
