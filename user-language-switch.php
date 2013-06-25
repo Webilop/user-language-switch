@@ -469,7 +469,12 @@ function uls_get_available_languages(){
    if(!empty($wp_lang)) $lang_array = array_merge((array)$lang_array, (array)$wp_lang);
    if (!in_array(get_locale(),$lang_array)) array_push($lang_array, get_locale());
    $lang_array = array_unique($lang_array);
-   return $lang_array;
+   require 'uls-languages.php';
+   $final_array= array();
+   foreach($lang_array as $lang):
+      $final_array[$country_languages[$lang]] = $lang;
+   endforeach;
+   return $final_array;
 }
 
 add_action( 'init', 'wpb_initialize_cmb_meta_boxes', 9999 );
@@ -519,7 +524,7 @@ $post_type = get_post_type($_GET['post']);
       ));
       $the_posts = array_merge( $t1, $t2 );
 
-      $posts = array(array('name'=>'Select a post', 'value'=>''));
+      $posts = array(array('name'=>'Select the translated post', 'value'=>''));
        foreach ($the_posts as $post):
            $post = array('name'=>$post->post_title, 'value'=>$post->ID);
            array_push($posts, $post);
