@@ -539,16 +539,24 @@ $post_type = get_post_type($_GET['post']);
             'type' => 'select',
             'options' => $options,
          );
+   $args=array(
+     'public'   => true,
+     '_builtin' => false
+   );
+   $output = 'names'; // names or objects, note names is the default
+   $operator = 'and'; // 'and' or 'or'
+   $the_post_types=get_post_types($args,$output,$operator);
+   $add_to_posts = array('page','post');
+   if(!empty($the_post_types)) array_merge($add_to_posts, $the_post_types);
    $meta_boxes[] = array(
       'id' => 'language',
       'title' => 'Language',
-      'pages' => array('page','post'), // post type
+      'pages' => $add_to_posts, // post type
       'context' => 'normal',
       'priority' => 'high',
       'show_names' => true, // Show field names on the left
       'fields' => $fields
    );
-
    return $meta_boxes;
 }
 add_filter( 'cmb_meta_boxes', 'wpb_sample_metaboxes' );
