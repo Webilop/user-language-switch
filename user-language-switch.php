@@ -467,7 +467,7 @@ function uls_get_available_languages(){
    $lang_array = get_available_languages( $theme_root.'/languages/' );
    $wp_lang = get_available_languages(WP_CONTENT_DIR.'/languages/');
    if(!empty($wp_lang)) $lang_array = array_merge((array)$lang_array, (array)$wp_lang);
-   if (!in_array(get_locale(),$lang_array)) array_push($lang_array, get_locale());
+   if (!in_array('en_US',$lang_array)) array_push($lang_array, 'en_US');
    $lang_array = array_unique($lang_array);
    require 'uls-languages.php';
    $final_array= array();
@@ -593,7 +593,7 @@ function save_association( $post_id ) {
          if( !empty( $related_post ) ){
             echo $related_post. 'uls_translation_'.$selected_language.'-'. $parent->ID;
             if ( ! update_post_meta ( $related_post, 'uls_language', $lang ) ) add_post_meta( $related_post, 'uls_language', $lang );
-            if ( ! update_post_meta ( $related_post, 'uls_translation_'.$selected_language, $parent->ID ) ) add_post_meta( $related_post, 'uls_translation_'.$selected_language, $parent->ID );
+            if ( ! update_post_meta ( $related_post, 'uls_translation_'.strtolower($selected_language), $parent->ID ) ) add_post_meta( $related_post, 'uls_translation_'.strtolower($selected_language), $parent->ID );
          }
       }
    }
