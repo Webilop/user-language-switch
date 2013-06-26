@@ -532,7 +532,7 @@ $post_type = get_post_type($_GET['post']);
        wp_reset_query();
       $field = array(
          'name' => 'Select the version in '.$country_languages[$lang],
-         'id' => $prefix.'translation_'.$lang,
+         'id' => $prefix.'translation_'.strtolower($lang),
          'type' => 'select',
          'options' => $posts
       );
@@ -550,9 +550,13 @@ $post_type = get_post_type($_GET['post']);
    );
    $output = 'names'; // names or objects, note names is the default
    $operator = 'and'; // 'and' or 'or'
-   $the_post_types=get_post_types($args,$output,$operator);
+   $custom_post_types = get_post_types($args,$output,$operator);
    $add_to_posts = array('page','post');
-   if(!empty($the_post_types)) array_merge($add_to_posts, $the_post_types);
+   if(!empty($custom_post_types)):
+   foreach ($custom_post_types as $custom):
+   array_push($add_to_posts, $custom);
+   endforeach;
+   endif;
    $meta_boxes[] = array(
       'id' => 'language',
       'title' => 'Language',
@@ -589,10 +593,10 @@ function save_association( $post_id ) {
       $parent  = get_post( $parent_id );
       $selected_language = $_POST['uls_language'];
       foreach ($languages as $lang){
-         $related_post = $_POST['uls_translation_'.$lang];
+         $related_post = $_POST['uls_translation_'.strtolower($lang)];
          if( !empty( $related_post ) ){
             echo $related_post. 'uls_translation_'.$selected_language.'-'. $parent->ID;
-            if ( ! update_post_meta ( $related_post, 'uls_language', $lang ) ) add_post_meta( $related_post, 'uls_language', $lang );
+            if ( ! update_post_meta ( $related_post, 'uls_language', strtolower($lang) ) ) add_post_meta( $related_post, 'uls_language', strtolower($lang) );
             if ( ! update_post_meta ( $related_post, 'uls_translation_'.strtolower($selected_language), $parent->ID ) ) add_post_meta( $related_post, 'uls_translation_'.strtolower($selected_language), $parent->ID );
          }
       }

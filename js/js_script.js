@@ -5,7 +5,7 @@ $(document).ready(function() {
          val = $(this).val();
          if( val != '' ){
             $("select[name^='uls_translation_']").removeAttr('disabled');
-            $("select#uls_translation_"+val).attr('disabled', 'disabled');
+            $("select#uls_translation_"+val.toLowerCase()).attr('disabled', 'disabled');
          }
      }
   );
@@ -15,6 +15,9 @@ $(document).ready(function() {
       if(select_value != ''){
          var delete_link = '<a href="#" onclick="remove_association(\''+select_value+'\',\''+$(this).attr('id')+'\',\''+selected_language+'\');return false;" id="remove_'+$(this).attr('id')+'" title="Remove association">Remove association</a>';
          $(this).closest('td').append(delete_link);
+      }
+      if($(this).attr('id')=='uls_translation_'+selected_language.toLowerCase()){
+         $(this).attr('disabled', 'disabled');
       }
   });
 });
