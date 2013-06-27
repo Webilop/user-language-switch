@@ -21,6 +21,6 @@
    margin: 0px 5px;
    color: #000000;
 }
-div.wrap > form table.form-table.cmb_metabox{
+div.wrap > form div.postbox-container table.form-table{
    width: 100%;
 }
