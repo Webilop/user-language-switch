@@ -334,3 +334,4 @@ div.time-picker li.selected { background: #0063CE; color: #fff; }
      width: 200px; /*must have*/
      height: 200px; /*must have*/
  }
+ div.wrap > form table.form-table.cmb_metabox{width: 100%;}
