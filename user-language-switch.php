@@ -25,9 +25,9 @@ License: GPL2
 */
 ?>
 <?php
-function _db2($var){
+/*function _db($var){
    echo "<pre>"; print_r($var); echo "</pre>";
-}
+}*/
 
 define( 'ULS_PLUGIN_URL', plugin_dir_url(__FILE__) );
 define( 'ULS_PLUGIN_PATH', plugin_dir_path(__FILE__) );
@@ -51,8 +51,11 @@ function uls_init_plugin(){
   global $uls_permalink_convertion;
   $uls_permalink_convertion = true;
 
+  //if the current page language is not the same of the user or site language, then redirect the user to the correct language
+  uls_redirect_by_page_language();
+
   //init session to detect if you are in the home page by "first time"
-  session_start();
+  if(!session_id()) session_start();
 }
 
 /**
@@ -114,7 +117,7 @@ function uls_get_user_saved_language($only_lang = false, $type = null){
   //if the user is logged in
 	if( is_user_logged_in()){
 	  //if the the browser language detection is enabled
-    if('frontend' != $type && ! uls_redirect_by_browser_language($options)){
+    if('frontend' != $type || ! uls_redirect_by_browser_language($options)){
   		if($options["user_{$type}_configuration"])
   			$language = get_user_meta(get_current_user_id(), "uls_{$type}_language", true);
   		//set the default language if the user doesn't have a preference
@@ -279,8 +282,8 @@ function uls_redirect_by_browser_language($options){
         $redirectUrl = uls_get_url_translated($homeUrl, $language);
 
         //check if it is the first redirection
-         if(!session_id()) session_start();
-        if(!empty($_SESSION['uls_home_redirection']) && !empty($_COOKIE['uls_home_redirection'])){
+        if(!session_id()) session_start();
+        if(empty($_SESSION['uls_home_redirection']) && empty($_COOKIE['uls_home_redirection'])){
           //save temporal vars to avoid redirection in the home page again
           $time = date_format(new DateTime(), 'Y-m-d H:i');
           setcookie('uls_home_redirection', $time, time()+2*60*60); //set a cookie for 2 hour
@@ -302,56 +305,45 @@ function uls_redirect_by_browser_language($options){
 }
 
 /**
+ * If the language of the current page is not the same of the user language neither the site language, then the user is redirected to the URL containing the language flag. It is to avoid SEO problems(multiple URLs to the same content).
+ */
+function uls_redirect_by_page_language(){
+  //get the language from URL
+  $urlLanguage = uls_get_user_language_from_url();
+  //get the language from the site
+  $siteLanguage = uls_get_site_language();
+
+  //get the id of the current page
+  $url =(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"]=="on") ? "https://" : "http://";
+  $url .= $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+  $id = url_to_postid($url);
+
+  //if the page has an id
+  if(0 < $id){
+    //get the language of the page
+    $postLanguage = get_post_meta($id, 'uls_language', true);
+    //if the page has a language
+    if("" != $postLanguage){
+      //if the language is not the same of the site and it is not in the URL
+      if($postLanguage != $siteLanguage && $postLanguage != $urlLanguage){
+        //if the user is logged in and the language of the post is the same of the user's language, then the redirection is not necessary
+        if(is_user_logged_in() && uls_get_user_saved_language() == $postLanguage)
+          return;
+
+        $redirectUrl = uls_get_url_translated($url, $postLanguage);
+        if($redirectUrl != $url){
+          wp_redirect($redirectUrl);
+          exit;
+        }
+      }//if it is necessary a redirection
+    }//if the page has a language
+  }//if the page has an id
+}
+
+/**
  * This function handle the language saved for the users. It is attached to the WP hook "locale".
  */
 function uls_language_loading($lang){
-   //load functios to detect logged user
-   /*if( ! function_exists('is_user_logged_in'))
-      require_once realpath(__DIR__.'/../../..') . "/wp-includes/pluggable.php";
-
-   //get language from URL
-   global $wp_query;
-   $language = !empty($wp_query->query_vars['lang']) ? $wp_query->query_vars['lang'] : null;
-   if(null == $language){
-      //get the language form query vars
-      if(isset($_SERVER['argv']) && is_array($_SERVER['argv']))
-         foreach($_SERVER['argv'] as $arg)
-            if(false !== strpos($arg, 'lang='))
-               $language = substr($arg, 5);
-      if(null == $language){
-         //get the langauge from the URL
-         $url = str_replace(get_bloginfo('url'), '', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-         if($url[0] == '/') $url = substr($url, 1);
-         $parts = explode('/', $url);
-         if(count($parts) > 0)
-            $language = $parts[0];
-      }
-   }
-
-   //if it is only the code language
-   if(!empty($language) && false === strpos($language, '_')){
-      //get default location for the language, if the language isn't valid, then it returns null
-      $language = uls_get_location_by_language($language);
-   }
-
-   //change the language by user preferences
-   if( empty($language) && is_user_logged_in() ){
-      //detect if the user is in backend or frontend
-      $type = 'frontend';
-      if( is_admin() )
-         $type = 'backend';
-
-      //check if the user can change the language
-      $options = get_option('uls_settings');
-      if($options["user_{$type}_configuration"])
-         $language = get_user_meta(get_current_user_id(), "uls_{$type}_language", true);
-      //set the default language if the user doesn't have a preference
-      if(empty($language))
-         $language = $options["default_{$type}_language"];
-   }
-   //$language = 'es_ES';
-   //echo $lang . '-' . $language.'<br/>';*/
-
    global $uls_locale;
    //if this method is already called, then it remove action to avoid recursion
    if($uls_locale)
@@ -369,8 +361,7 @@ function uls_language_loading($lang){
    }
 
    $res = empty($language) ? $lang : $language;
-   //_db2($_SERVER);
-   //echo "res: $res<br/>";
+
    return $res;
 }
 add_filter('locale', 'uls_language_loading');
