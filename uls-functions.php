@@ -93,7 +93,7 @@ function uls_link_shortcode($atts){
  *
  * @return string returns the HTML code with links to translated versions.
  */
-function uls_language_link_switch($url = null, $url_type = 'prefix', $type = 'links', $class = null){
+function uls_language_link_switch($url = null, $url_type = 'prefix', $type = 'links', $ony_lang_name = true, $class = null){
   //if URL is null, then it uses the current URL
   if(null == $url){
     $url =(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"]=="on") ? "https://" : "http://";
@@ -119,7 +119,18 @@ function uls_language_link_switch($url = null, $url_type = 'prefix', $type = 'li
    ob_start();
    ?>
    <div class="<?php echo $class; ?>">
-   <?php foreach($available_languages as $label => $code):
+   <?php
+  include 'uls-languages.php';
+  foreach($available_languages as $code):
+    if(isset($country_languages[$code])){
+      if($ony_lang_name)
+        $label = substr($country_languages[$code], 0, strpos($country_languages[$code], ' '));
+      else
+        $label = $country_languages[$code];
+    }
+    else{
+      $label = $code;
+    }
      $displayed = false;
       if($code == $current_language):
         $displayed = true; ?>
