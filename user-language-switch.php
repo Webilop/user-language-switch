@@ -1,15 +1,33 @@
 <?php
+/*
+Plugin Name: User Language Switch
+Description: Allows backend users to set the language displayed in the back-end and front-end of your site.
+Version: 0.1
+Author: webilop
+Author URI: www.webilop.com
+License: GPL2
+*/
+
+/*  Copyright 2013  webilop  (email : admin@webilop.com)
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License, version 2, as
+    published by the Free Software Foundation.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+?>
+<?php
 function _db2($var){
    echo "<pre>"; print_r($var); echo "</pre>";
 }
-/*
-Plugin Name: User Language Switch
-Description: Allow to your registered users set the language displayed in the back-end and front-end of your site.
-Version: 0.1
-Author: Carlos Guzman
-Author URI:
-License: GPL2
-*/
 
 define( 'ULS_PLUGIN_URL', plugin_dir_url(__FILE__) );
 define( 'ULS_PLUGIN_PATH', plugin_dir_path(__FILE__) );
@@ -33,24 +51,6 @@ function uls_init_plugin(){
    global $uls_permalink_convertion;
    $uls_permalink_convertion = true;
 }
-
-/*add_action('get_header', 'uls_redirect_page_by_language');
-function uls_redirect_page_by_language(){
-   //if user isn't in admin side
-   if( ! is_admin() ){
-      //get the language
-      $language = uls_get_user_language();
-      if('' == $language)
-         $language = uls_get_site_language();
-
-      //get the translation page
-      $translation_id = uls_get_post_translation_id(get_the_ID(), $language);
-      if(false !== $translation_id){
-         wp_redirect(get_permalink($translation_id));
-         exit;
-      }
-   }
-}*/
 
 /**
  * This function load the language from the current URL.
