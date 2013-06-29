@@ -51,6 +51,9 @@ function uls_init_plugin(){
   global $uls_permalink_convertion;
   $uls_permalink_convertion = true;
 
+  //redirects the user based on the browser language
+  uls_redirect_by_browser_language();
+
   //if the current page language is not the same of the user or site language, then redirect the user to the correct language
   uls_redirect_by_page_language();
 
@@ -116,19 +119,14 @@ function uls_get_user_saved_language($only_lang = false, $type = null){
 
   //if the user is logged in
 	if( is_user_logged_in()){
-	  //if the the browser language detection is enabled
-    if('frontend' != $type || ! uls_redirect_by_browser_language($options)){
-  		if($options["user_{$type}_configuration"])
-  			$language = get_user_meta(get_current_user_id(), "uls_{$type}_language", true);
-  		//set the default language if the user doesn't have a preference
-  		if(empty($language))
-  			$language = $options["default_{$type}_language"];
-    }
+    //if the user can modify the language
+		if($options["user_{$type}_configuration"])
+			$language = get_user_meta(get_current_user_id(), "uls_{$type}_language", true);
+
+		//set the default language if the user doesn't have a preference
+		if(empty($language))
+			$language = $options["default_{$type}_language"];
 	}
-  //if the user is not logged in and the browser language detection is enabled
-  else if('frontend' == $type){
-    uls_redirect_by_browser_language($options);
-  }
 
   //remove the location
   if(false != $language && $only_lang){
@@ -260,11 +258,9 @@ function uls_get_site_language($side = 'frontend'){
 /**
  * This function check if the redriection based on the browser language is enabled. If it is and the user is in the home page, then is redirected to the home page with the specified language.
  *
- * @param $options array settings of the plugin.
- *
  * @return mixed it returns false if the redirection is not possible, due to some of the restriction mentioned above. Otherwise, it just redirects the user.
  */
-function uls_redirect_by_browser_language($options){
+function uls_redirect_by_browser_language(){
   $type = 'frontend';
   $url =(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"]=="on") ? "https://" : "http://";
   $url .= $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
@@ -272,6 +268,7 @@ function uls_redirect_by_browser_language($options){
 
   //if user is in the home page
   if($homeUrl == $url){
+    $options = uls_get_options();
     //if the redirection is enabled
     if((!isset($options['user_browser_language_detection']) || $options['user_browser_language_detection']) && "no" != get_user_meta(get_current_user_id(), "uls_{$type}_browser_language", true)){
       $language = uls_get_user_language_from_browser();
@@ -362,6 +359,7 @@ function uls_language_loading($lang){
 
    $res = empty($language) ? $lang : $language;
 
+   $uls_locale = false;
    return $res;
 }
 add_filter('locale', 'uls_language_loading');
@@ -618,14 +616,14 @@ function uls_get_available_languages(){
    return $final_array;
 }
 
-add_action( 'add_meta_boxes', 'uls_initialize_cmb_meta_boxes', 9999 );
+add_action( 'init', 'uls_initialize_meta_boxes', 9999 );
 
 /**
  * Initialize the metabox class.
  *
  * @return void
  */
-function uls_initialize_cmb_meta_boxes() {
+function uls_initialize_meta_boxes() {
     if ( ! class_exists( 'cmb_Meta_Box' ) )
         require_once(plugin_dir_path( __FILE__ ) . 'init.php');
 }
@@ -636,7 +634,10 @@ function uls_initialize_cmb_meta_boxes() {
  * @return array
  */
 function uls_sample_metaboxes( $meta_boxes ) {
-$post_type = get_post_type($_GET['post']);
+   if(!isset($_GET['post']))
+    return array();
+
+   $post_type = get_post_type($_GET['post']);
    $prefix = 'uls_'; // Prefix for all fields
    $languages = uls_get_available_languages();
    $options = array(array('name'=>'Select one option', 'value'=>''));
