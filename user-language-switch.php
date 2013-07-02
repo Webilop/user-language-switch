@@ -121,15 +121,15 @@ function uls_get_user_saved_language($only_lang = false, $type = null){
   }
 
   //if the user is logged in
-	if( is_user_logged_in()){
+   if( is_user_logged_in()){
     //if the user can modify the language
-		if($options["user_{$type}_configuration"])
-			$language = get_user_meta(get_current_user_id(), "uls_{$type}_language", true);
+      if($options["user_{$type}_configuration"])
+         $language = get_user_meta(get_current_user_id(), "uls_{$type}_language", true);
 
-		//set the default language if the user doesn't have a preference
-		if(empty($language))
-			$language = $options["default_{$type}_language"];
-	}
+      //set the default language if the user doesn't have a preference
+      if(empty($language))
+         $language = $options["default_{$type}_language"];
+   }
 
   //remove the location
   if(false != $language && $only_lang){
@@ -230,9 +230,9 @@ function uls_get_user_language($only_lang = false){
    //get language from URL
    $language = uls_get_user_language_from_url($only_lang);
 
-	//get the language from user preferences
-	if( empty($language) ){
-		$language = uls_get_user_saved_language();
+   //get the language from user preferences
+   if( empty($language) ){
+      $language = uls_get_user_saved_language();
   }
 
    //remove location
@@ -254,8 +254,8 @@ function uls_get_user_language($only_lang = false){
  * @return string language code.
  */
 function uls_get_site_language($side = 'frontend'){
-	$options = uls_get_options();
-	return $options["default_{$side}_language"];
+   $options = uls_get_options();
+   return $options["default_{$side}_language"];
 }
 
 /**
@@ -698,10 +698,15 @@ function uls_initialize_meta_boxes() {
  * @return array
  */
 function uls_sample_metaboxes( $meta_boxes ) {
-   if(!isset($_GET['post']))
-    return array();
-
-   $post_type = get_post_type($_GET['post']);
+   if(isset($_GET['post'])){
+      $post_type = get_post_type($_GET['post']);
+   }else{
+      if(isset($_GET['post_type'])){
+         $post_type = $_GET['post_type'];
+      }else{
+         $post_type = 'post';
+      }
+   }
    $prefix = 'uls_'; // Prefix for all fields
    $languages = uls_get_available_languages();
    $options = array(array('name'=>'Select one option', 'value'=>''));
