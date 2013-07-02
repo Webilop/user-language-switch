@@ -769,7 +769,7 @@ function uls_save_association( $post_id ) {
          $related_post = $_POST['uls_translation_'.strtolower($lang)];
          if( !empty( $related_post ) ){
             echo $related_post. 'uls_translation_'.$selected_language.'-'. $parent->ID;
-            if ( ! update_post_meta ( $related_post, 'uls_language', strtolower($lang) ) ) add_post_meta( $related_post, 'uls_language', strtolower($lang) );
+            if ( ! update_post_meta ( $related_post, 'uls_language', $lang ) ) add_post_meta( $related_post, 'uls_language', $lang );
             if ( ! update_post_meta ( $related_post, 'uls_translation_'.strtolower($selected_language), $parent->ID ) ) add_post_meta( $related_post, 'uls_translation_'.strtolower($selected_language), $parent->ID );
          }
       }
