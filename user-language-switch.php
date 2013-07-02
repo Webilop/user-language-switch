@@ -274,7 +274,7 @@ function uls_redirect_by_browser_language(){
       $language = uls_get_user_language_from_browser();
 
       //if the browser language is different to the site language
-      if($language != uls_get_site_language()){
+      if("" != $language && $language != uls_get_site_language()){
         //redirect to the browser language
         $redirectUrl = uls_get_url_translated($homeUrl, $language);
 
@@ -305,6 +305,9 @@ function uls_redirect_by_browser_language(){
  * If the language of the current page is not the same of the user language neither the site language, then the user is redirected to the URL containing the language flag. It is to avoid SEO problems(multiple URLs to the same content).
  */
 function uls_redirect_by_page_language(){
+  //if user is in an admin area, then don't redirect
+  if(is_admin()) return;
+
   //get the language from URL
   $urlLanguage = uls_get_user_language_from_url();
   //get the language from the site
@@ -318,7 +321,7 @@ function uls_redirect_by_page_language(){
   //if the page has an id
   if(0 < $id){
     //get the language of the page
-    $postLanguage = get_post_meta($id, 'uls_language', true);
+    $postLanguage = uls_get_post_language($id);
     //if the page has a language
     if("" != $postLanguage){
       //if the language is not the same of the site and it is not in the URL
@@ -392,7 +395,7 @@ function uls_valid_language($language){
 }
 
 /**
- * Return the post id of translation post of a post.
+ * Return the id of the translation of a post.
  *
  * @param $post_id integer id of post to translate.
  * @param $language string language of translation. If it is null or invalid, current language loaded in the page is used.
@@ -400,20 +403,23 @@ function uls_valid_language($language){
  * @return mixed it returns id of translation post as an integer or false if translation doesn't exist.
  */
 function uls_get_post_translation_id($post_id, $language = null){
-   //get language
-   if(!uls_valid_language($language))
-      $language = uls_get_user_language();
+  //get language
+  if(!uls_valid_language($language))
+    $language = uls_get_user_language();
 
-   //get the translation of the post
-   $post_language = get_post_meta($post_id, 'uls_language', true);
+  //get the translation of the post
+  $post_language = uls_get_post_language($post_id);
 
-   if($post_language == $language)
-      return $post_id;
-   $translation = get_post_meta($post_id, 'uls_translation_' . $language, true);
+  //if the language of the post is the same language of the translation
+  if($post_language == $language)
+    return $post_id;
+
+  //get the translation
+  $translation = get_post_meta($post_id, 'uls_translation_' . $language, true);
   if("" == $translation)
     $translation = get_post_meta($post_id, 'uls_translation_' . strtolower($language), true);
 
-   return empty($translation) ? false : $translation;
+  return empty($translation) ? false : $translation;
 }
 
 add_filter('post_type_link', 'uls_link_filter', 10, 2);
@@ -439,7 +445,7 @@ function uls_link_filter($post_url, $post = null){
    //echo "post_id: " . $post_id . "<br/>";
 
    //get post language
-   $post_language = get_post_meta($post_id, 'uls_language', true);
+   $post_language = uls_get_post_language($post_id);
 
    //get language from URL
    $language = uls_get_user_language_from_url();
@@ -614,6 +620,31 @@ function uls_get_available_languages(){
        $final_array[$lang] = $lang;
    endforeach;
    return $final_array;
+}
+
+/**
+ * Get the language of a post.
+ *
+ * @param $id integer id of the post.
+ *
+ * @return string the code of the language or an empty string if the post doesn't have a language.
+ */
+function uls_get_post_language($id){
+  $postLanguage = get_post_meta($id, 'uls_language', true);
+  if("" == $postLanguage) return "";
+
+  //format the language code
+  $p = strpos($postLanguage, "_");
+  if($p !== false){
+    $postLanguage = substr($postLanguage, 0, $p) . strtoupper(substr($postLanguage, $p));
+  }
+
+  //validate the language
+  if (uls_valid_language($postLanguage)) {
+    return $postLanguage;
+  }
+
+  return "";
 }
 
 add_action( 'init', 'uls_initialize_meta_boxes', 9999 );
