@@ -57,6 +57,9 @@ function uls_init_plugin(){
   //if the current page language is not the same of the user or site language, then redirect the user to the correct language
   uls_redirect_by_page_language();
 
+  //if the URL contains the language and it is the same of the site langauge or the user langauge saved, then remove the language from the URL.
+  uls_redirect_by_languange_redundancy();
+
   //init session to detect if you are in the home page by "first time"
   if(!session_id()) session_start();
 }
@@ -299,6 +302,36 @@ function uls_redirect_by_browser_language(){
   }//is in home
 
   return false;
+}
+
+/**
+ * if the URL contains the language and it is the same of the site langauge or the user langauge saved, then remove the language from the URL using a redirection to the page.
+ */
+function uls_redirect_by_languange_redundancy(){
+  //if user is in an admin area, then don't redirect
+  if(is_admin()) return;
+
+  //get the language from URL
+  $urlLanguage = uls_get_user_language_from_url();
+  if(false == $urlLanguage) return;
+
+  //get the language from the site
+  $siteLanguage = uls_get_site_language();
+
+  //if the language of the site is the same of the language in the URL
+  if($siteLanguage == $urlLanguage){
+    //get the id of the current page
+    $url =(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"]=="on") ? "https://" : "http://";
+    $url .= $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+
+    //get the URL withou the code language
+    $redirectUrl = uls_get_url_translated($url, $siteLanguage);
+
+    if($redirectUrl != $url){
+      wp_redirect($redirectUrl);
+      exit;
+    }
+  }
 }
 
 /**
@@ -552,7 +585,7 @@ function uls_get_url_translated($url, $language, $type = 'prefix', $remove_defau
             else {
                $path_parts = explode('/', str_replace($blog_parts['path'], '', $parts['path']));
                $available_languages = uls_get_available_languages();
-               if(!empty($path_parts) && in_array($path_parts[1], $available_languages)){
+               if(!empty($path_parts) && count($path_parts) > 1 && in_array($path_parts[1], $available_languages)){
                   unset($path_parts[1]);
                }
                if(empty($language))
