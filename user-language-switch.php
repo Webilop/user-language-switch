@@ -787,9 +787,11 @@ add_filter( 'cmb_meta_boxes', 'uls_sample_metaboxes' );
 function uls_add_scripts() {
     wp_register_script( 'add-bx-js',   WP_CONTENT_URL . '/plugins/user-language-switch/js/js_script.js', array('jquery') );
     wp_enqueue_script( 'add-bx-js' );
+    // make the ajaxurl var available to the above script
+    wp_localize_script( 'add-bx-js', 'the_ajax_script', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
 }
 
-add_action( 'admin_enqueue_scripts', 'uls_add_scripts' );
+add_action( 'wp_print_scripts', 'uls_add_scripts' );
 
 /**
  * Save language associations
@@ -814,4 +816,24 @@ function uls_save_association( $post_id ) {
    }
 }
 add_action( 'save_post', 'uls_save_association' );
+
+/**
+ * Remove associations
+ */
+function text_ajax_process_request() {
+   // first check if data is being sent and that it is the data we want
+      $relation_id = $_POST['pid'];
+      $lang = $_POST['lang'];
+      $post_id = $_POST['post'];
+      $meta = $_POST['meta'];
+   if ( isset( $_POST["pid"] ) ) {
+      // now set our response var equal to that of the POST varif(isset($relation_id)){
+      delete_post_meta( $relation_id, 'uls_translation_'.$lang );
+      delete_post_meta( $post_id, $meta );
+      // send the response back to the front end
+      echo $relation_id.'-'.$lang.'-'.$post_id.'-'.$meta;
+      die();
+   }
+}
+add_action('wp_ajax_test_response', 'text_ajax_process_request');
 ?>

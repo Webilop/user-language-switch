@@ -26,21 +26,21 @@ function remove_association(str,name,lang){
    if (str==''){
      return;
    }
-   if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
-     xmlhttp=new XMLHttpRequest();
-     }
-   else{// code for IE6, IE5
-     xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-     }
-   xmlhttp.onreadystatechange=function(){
-     if (xmlhttp.readyState==4 && xmlhttp.status==200){
-       $("#remove_"+name).remove();
-       $("#"+name).val('');
-       }
-     }
    var post_id = getUrlVars()["post"];
-   xmlhttp.open("GET","../wp-content/plugins/user-language-switch/remove_assoc.php?pid="+str+"&lang="+lang+"&post="+post_id+"&meta="+name,true);
-   xmlhttp.send();
+   var data = {
+         action: 'test_response',
+         pid: str,
+         lang: lang,
+         post: post_id,
+         meta: name
+   };
+   // the_ajax_script.ajaxurl is a variable that will contain the url to the ajax processing file
+   $.post(the_ajax_script.ajaxurl, data, function(response) {
+         $("#remove_"+name).remove();
+         $("#"+name).val('');
+         alert(response);
+   });
+   return false;
 }
 
 function getUrlVars() {

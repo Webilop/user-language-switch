@@ -11,6 +11,12 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 User Language Switch allows you to associate the original version and the translation of pages, posts and custom post types through custom fields
  in an easy and friendly way. The available languages are taken from the current theme and the wordpress installation.
 
+= Localization =
+
+*English (default).
+*Spanish
+
+= Documentation =
 
 == Installation ==
 
