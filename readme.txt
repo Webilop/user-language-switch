@@ -18,6 +18,9 @@ User Language Switch allows you to associate the original version and the transl
 
 = Documentation =
 
+You can find the installation and configuration steps at: http://www.webilop.com/products/user-language-switch-wordpress-plugin/
+Documentation in spanish is also available: http://www.webilop.com/productos/plugin-wordpress-user-language-switch/
+
 == Installation ==
 
 This section describes how to install the plugin and get it working.
