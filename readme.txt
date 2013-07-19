@@ -1,6 +1,6 @@
 === User Language Switch ===
 Contributors: webilop
-Tags: language, localization, switch language
+Tags: language, localization, language switcher, content translation, multilanguage
 Requires at least: 3.0.1
 Tested up to: 3.5.1
 Stable tag: trunk

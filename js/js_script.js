@@ -38,7 +38,6 @@ function remove_association(str,name,lang){
    $.post(the_ajax_script.ajaxurl, data, function(response) {
          $("#remove_"+name).remove();
          $("#"+name).val('');
-         alert(response);
    });
    return false;
 }
