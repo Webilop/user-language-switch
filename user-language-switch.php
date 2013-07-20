@@ -72,31 +72,24 @@ function uls_init_plugin(){
  * @return mixed it returns a string containing a language code or false if there isn't any language detected.
  */
 function uls_get_user_language_from_url($only_lang = false){
-   //load functios to detect logged user
-   if( ! function_exists('is_user_logged_in'))
-      require_once realpath(__DIR__.'/../../..') . "/wp-includes/pluggable.php";
+  //get language from URL
+  $language = null;
+  //get the language form query vars
+  if(!empty($_SERVER['QUERY_STRING'])){
+    parse_str($_SERVER['QUERY_STRING']);
+    if(!empty($lang))
+      $language = $lang;
+  }
+  if(is_null($language)){
+    //get the langauge from the URL
+    $url = str_replace(get_bloginfo('url'), '', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
+    if($url[0] == '/') $url = substr($url, 1);
+    $parts = explode('/', $url);
+    if(count($parts) > 0)
+      $language = $parts[0];
+  }
 
-   //get language from URL
-   global $wp_query;
-   $language = !empty($wp_query->query_vars['lang']) ? $wp_query->query_vars['lang'] : null;
-   if(null == $language){
-      //get the language form query vars
-      if(!empty($_SERVER['QUERY_STRING'])){
-         parse_str($_SERVER['QUERY_STRING']);
-         if(!empty($lang))
-            $language = $lang;
-      }
-      if(null == $language){
-         //get the langauge from the URL
-         $url = str_replace(get_bloginfo('url'), '', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-         if($url[0] == '/') $url = substr($url, 1);
-         $parts = explode('/', $url);
-         if(count($parts) > 0)
-            $language = $parts[0];
-      }
-   }
-
-   return uls_valid_language($language) ? $language : false;
+  return uls_valid_language($language) ? $language : false;
 }
 
 
