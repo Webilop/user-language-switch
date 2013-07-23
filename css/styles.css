@@ -24,3 +24,14 @@
 div.wrap > form table.form-table.cmb_metabox{
    width: 100%;
 }
+.about-webilop {
+   float: right;
+   width: 28%;
+   border: 1px solid #CCC;
+   padding: 0px 7px 7px;
+   background: #f5f5f5;
+   border-radius: 4px;
+}
+#uls_configuration_form{
+   float: left;
+}

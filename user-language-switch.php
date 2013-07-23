@@ -829,4 +829,14 @@ function text_ajax_process_request() {
    }
 }
 add_action('wp_ajax_test_response', 'text_ajax_process_request');
+
+  /**
+  * Enqueue plugin style-file
+  */
+  function add_my_scripts() {
+    // Respects SSL, Style.css is relative to the current file
+    wp_register_style( 'html-style', plugins_url('css/styles.css', __FILE__) );
+    wp_enqueue_style( 'html-style' );
+  }
+  add_action( 'admin_enqueue_scripts', 'add_my_scripts' );
 ?>

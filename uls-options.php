@@ -135,7 +135,7 @@ class ULS_Options{
     */
    static function create_collaboration_section(){
       ?>
-      <p><?php _e('You can collaborate with the team.'); ?></p>
+      <p><?php _e('You can collaborate with the development of this plugin, please send us any suggestion or bug notification to support[at]webilop.com'); ?></p>
       <?php
    }
 
@@ -216,6 +216,15 @@ class ULS_Options{
             <input type="submit" class="button-primary" value="<?php _e('Save','user-language-switch'); ?>" />
          </p>
       </form>
+          <div class="about-webilop">
+    <h3 class="hndle"><?php _e('About','html5_video');?></h3>
+    <div class="inside">
+    <p><strong>User Language Switch </strong><?php _e('was developed by ', 'html5_video');?><a title="Webilop. web and mobile development" href="http://www.webilop.com">Webilop</a></p>
+    <p><?php _e('Webilop is a company focused on web and mobile solutions. We develop custom mobile applications and templates and plugins for CMSs such as Wordpress and Joomla!.', 'html5_video');?></p>
+   <div><h4><?php _e('Follow us', 'html5_video')?></h4><a title="Facebook" href="https://www.facebook.com/webilop" target="_blank"><img src="<?php echo WP_PLUGIN_URL;?>/user-language-switch/images/facebook.png"></a>
+<a title="LinkedIn" href="http://www.linkedin.com/company/webilop" target="_blank"><img src="<?php echo WP_PLUGIN_URL;?>/user-language-switch/images/linkedin.png"></a>
+<a title="Twitter" href="https://twitter.com/webilop" target="_blank"><img src="<?php echo WP_PLUGIN_URL;?>/user-language-switch/images/twitter.png"></a>
+<a title="Google Plus" href="https://plus.google.com/104606011635671696803" target="_blank" rel="publisher"><img src="<?php echo WP_PLUGIN_URL;?>/user-language-switch/images/gplus.png"></a></div>
    </div>
    <?php 
    }
@@ -246,8 +255,10 @@ class ULS_Options{
     * @param $links array Current links to display.
     */
    static function create_settings_link($links){
+      $docs_link = '<a title="documentation" target="_blank" href="http://www.webilop.com/products/user-language-switch-wordpress-plugin/">Docs</a>';
+      array_unshift($links, $docs_link);
       $settings_link = '<a href="options-general.php?page=uls-settings-page">Settings</a>'; 
-      array_unshift($links, $settings_link); 
+      array_unshift($links, $settings_link);
       return $links; 
    }
 }

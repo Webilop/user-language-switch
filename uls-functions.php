@@ -114,8 +114,6 @@ function uls_language_link_switch($url = null, $url_type = 'prefix', $type = 'li
    global $uls_permalink_convertion;
    $uls_permalink_convertion = false;
 
-   //add styles
-   wp_enqueue_style('uls-user-language-form', plugins_url('/css/styles.css', __FILE__));
    ob_start();
    ?>
    <div class="<?php echo $class; ?>">
@@ -231,7 +229,6 @@ function uls_create_user_language_switch_form($default_language = null, $label =
 
    //include some JS libraries
    wp_enqueue_script('jquery-form');
-   wp_enqueue_style('uls-user-language-form', plugins_url('/css/styles.css', __FILE__));
    ?>
    <div class="uls-user-language-form-div">
       <form id="uls_user_language_form" action="<?php echo admin_url('admin-ajax.php'); ?>" method="POST">
