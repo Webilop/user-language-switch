@@ -58,6 +58,8 @@ class ULS_Options{
       
       //create section for collaboration
       add_settings_section('uls_collaboration_section', __('Collaborate','user-language-switch'), 'ULS_Options::create_collaboration_section', 'uls-settings-page');
+      //create about section 
+      add_settings_section('uls_about_section', __('About','user-language-switch'), 'ULS_Options::create_about_section', 'uls-settings-page');
    }
 
    /**
@@ -135,8 +137,24 @@ class ULS_Options{
     */
    static function create_collaboration_section(){
       ?>
-      <p><?php _e('You can collaborate with the development of this plugin, please send us any suggestion or bug notification to support[at]webilop.com'); ?></p>
+      <div class="section-inside"><p><?php _e('You can collaborate with the development of this plugin, please send us any suggestion or bug notification to support[at]webilop.com'); ?></p></div>
       <?php
+   }
+
+   /**
+    * Create the section to collaborate with the development.
+    */
+   static function create_about_section(){
+    ?>
+    <div class="section-inside">
+    <p><strong>User Language Switch </strong><?php _e('was developed by ', 'html5_video');?><a title="Webilop. web and mobile development" href="http://www.webilop.com">Webilop</a></p>
+    <p><?php _e('Webilop is a company focused on web and mobile solutions. We develop custom mobile applications and templates and plugins for CMSs such as Wordpress and Joomla!.', 'html5_video');?></p>
+    <div><h4><?php _e('Follow us', 'html5_video')?></h4><a title="Facebook" href="https://www.facebook.com/webilop" target="_blank"><img src="<?php echo WP_PLUGIN_URL;?>/user-language-switch/images/facebook.png"></a>
+    <a title="LinkedIn" href="http://www.linkedin.com/company/webilop" target="_blank"><img src="<?php echo WP_PLUGIN_URL;?>/user-language-switch/images/linkedin.png"></a>
+    <a title="Twitter" href="https://twitter.com/webilop" target="_blank"><img src="<?php echo WP_PLUGIN_URL;?>/user-language-switch/images/twitter.png"></a>
+    <a title="Google Plus" href="https://plus.google.com/104606011635671696803" target="_blank" rel="publisher"><img src="<?php echo WP_PLUGIN_URL;?>/user-language-switch/images/gplus.png"></a></div>
+    </div>
+    <?php
    }
 
    /**
