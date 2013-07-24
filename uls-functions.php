@@ -88,12 +88,13 @@ function uls_link_shortcode($atts){
  *
  * @param $url string base URL to convert.
  * @param $url_type string type of language flag to add in the URL (query_var, prefix, subdomain)
- * @param $type string type of links to generate (links, select) (TO-SO: select isn't available yet.)
+ * @param $type string type of links to generate (links, select) (TO-DO: select isn't available yet.)
+ * @param $only_lang_name if it is true, then the links don't contain the country name.
  * @param $class string additional CSS class to add in the div of links generated.
  *
  * @return string returns the HTML code with links to translated versions.
  */
-function uls_language_link_switch($url = null, $url_type = 'prefix', $type = 'links', $ony_lang_name = true, $class = null){
+function uls_language_link_switch($url = null, $url_type = 'prefix', $type = 'links', $only_lang_name = true, $class = null){
   //if URL is null, then it uses the current URL
   if(null == $url){
     $url =(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"]=="on") ? "https://" : "http://";
@@ -121,7 +122,7 @@ function uls_language_link_switch($url = null, $url_type = 'prefix', $type = 'li
   include 'uls-languages.php';
   foreach($available_languages as $code):
     if(isset($country_languages[$code])){
-      if($ony_lang_name)
+      if($only_lang_name)
         $label = substr($country_languages[$code], 0, strpos($country_languages[$code], ' '));
       else
         $label = $country_languages[$code];
@@ -173,20 +174,24 @@ function uls_language_link_switch($url = null, $url_type = 'prefix', $type = 'li
  */
 add_shortcode('uls-language-selector', 'uls_language_selector_shortcode');
 function uls_language_selector_shortcode($atts){
-   extract( shortcode_atts( array(
-      'url' => null,
-      'type' => 'links',
-      'url_type' => 'query_var',
-      'class' => null
-   ), $atts ) );
+  extract( shortcode_atts( array(
+    'url' => null,
+    'type' => 'links',
+    'url_type' => 'prefix',
+    'only_language' => true,
+    'class' => null
+  ), $atts ) );
 
-   //if URL is null, then it uses the current URL
-   if(null == $url){
-     $url =(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"]=="on") ? "https://" : "http://";
-     $url .= $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-   }
+  //if URL is null, then it uses the current URL
+  if(null == $url){
+    $url =(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"]=="on") ? "https://" : "http://";
+    $url .= $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+  }
 
-   return uls_language_link_switch($url, $url_type, $type, $class);
+  if("false" == $only_language)
+    $only_language = false;
+
+  return uls_language_link_switch($url, $url_type, $type, $only_language, $class);
 }
 
 /**
