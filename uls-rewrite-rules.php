@@ -23,9 +23,7 @@ function uls_create_custom_rewrite_rules() {
 	foreach($wp_rewrite->rules as $left => $right){
 		//ignore attachment rules
 		//if(false === strpos($left, '/attachment/')){
-			$new_rules[$languages . '/' . $left] = preg_replace_callback('/matches\[(\d{1,2})\]/', function($matches){
-				return 'matches[' . ($matches[1] + 1) . ']';
-			}, $right) . '&lang=$matches[1]';
+			$new_rules[$languages . '/' . $left] = preg_replace_callback('/matches\[(\d{1,2})\]/', 'uls_replace_matched_rule', $right) . '&lang=$matches[1]';
 		//}
 	}
 
@@ -34,6 +32,9 @@ function uls_create_custom_rewrite_rules() {
 	$wp_rewrite->rules = $new_rules + $wp_rewrite->rules;
 	//_db2($wp_rewrite->rules);
 	return $wp_rewrite->rules;
+}
+function uls_replace_matched_rule($matches){
+  return 'matches[' . ($matches[1] + 1) . ']';
 }
 
 /**
