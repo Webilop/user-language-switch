@@ -2,7 +2,7 @@
 /*
 Plugin Name: User Language Switch
 Description: Allows backend users to set the language displayed in the back-end and front-end of your site.
-Version: 0.1
+Version: 1.0
 Author: webilop
 Author URI: www.webilop.com
 License: GPL2
