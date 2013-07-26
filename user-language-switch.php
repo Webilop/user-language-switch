@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: User Language Switch
-Description: Allows backend users to set the language displayed in the back-end and front-end of your site.
+Description: Allows backend users to set the language displayed in the back-end and front-end of your site. It also allows to translate pages and posts.
 Version: 1.0
 Author: webilop
 Author URI: www.webilop.com
