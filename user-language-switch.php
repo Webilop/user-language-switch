@@ -51,14 +51,20 @@ function uls_init_plugin(){
   global $uls_permalink_convertion;
   $uls_permalink_convertion = true;
 
+  //get the language from URL
+  $urlLanguage = uls_get_user_language_from_url();
+
+  //get the language from the site
+  $siteLanguage = uls_get_site_language();
+
+  //redirect the user to the language specified by the url
+  uls_redirect_by_url_language($urlLanguage, $siteLanguage);
+
   //redirects the user based on the browser language
-  uls_redirect_by_browser_language();
+  uls_redirect_by_browser_language($siteLanguage);
 
   //if the current page language is not the same of the user or site language, then redirect the user to the correct language
-  uls_redirect_by_page_language();
-
-  //if the URL contains the language and it is the same of the site langauge or the user langauge saved, then remove the language from the URL.
-  uls_redirect_by_languange_redundancy();
+  uls_redirect_by_page_language($urlLanguage, $siteLanguage);
 
   //init session to detect if you are in the home page by "first time"
   if(!session_id()) session_start();
@@ -252,11 +258,67 @@ function uls_get_site_language($side = 'frontend'){
 }
 
 /**
+ * This function check if the language specified in the URL is the same to the language of the post displayed and to the site language.
+ * - If the language in the URL is the same to the language of the site, then it is removed from the URL.
+ * - If the language in the URL is the same to the language saved by the user, then it is removed from the URL.
+ * - If the language in the URL is the same to the language of the post, then the user is not redirected to some different page.
+ * - If the language in the URL is not the same to the language of the post and the post doesn't have a translation for this language,
+ * then the user is not redirected to some different page.
+ * - If the language in the URL is not the same to the language of the post and the post has a translation for this language, then the
+ * user is redirected to the translation.
+ *
+ * @param $urlLanguage string the language in the URL
+ * @param $siteLanguage string the language of the site
+ */
+function uls_redirect_by_url_language($urlLanguage, $siteLanguage){
+  //if user is in an admin area, then don't redirect
+  if(is_admin()) return;
+  //if there is not language in the URL
+  if(false == $urlLanguage) return;
+
+  //if the language in the URL is the same to the language of the site or to the language saved by the user
+  if($siteLanguage == $urlLanguage || (is_user_logged_in() && uls_get_user_saved_language() == $urlLanguage)){
+    uls_redirect_by_languange_redundancy($urlLanguage, $siteLanguage);
+  }
+  //if the language of the URL is not the same to the language of the site
+  else{
+    //get the id of the current page
+    $url =(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"]=="on") ? "https://" : "http://";
+    $url .= $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+    $id = url_to_postid($url);
+
+    //if the page has an id
+    if(0 < $id){
+      //get the language of the page
+      $postLanguage = uls_get_post_language($id);
+      //if the page has a language
+      if("" != $postLanguage){
+        //if the language in the URL is not the same of the language of the post
+        if($postLanguage != $urlLanguage){
+          //get the translation
+          $translation = uls_get_post_translation_id($id, $urlLanguage);
+          //if the post has a translation
+          if($translation !== false){
+            $redirectUrl = uls_get_url_translated(get_permalink($translation), $urlLanguage);
+            if($redirectUrl != $url){
+              wp_redirect($redirectUrl);
+              exit;
+            }
+          }//if the post has a translation
+        }//if it is necessary a redirection
+      }//if the page has a language
+    }//if the page has an id
+  }
+}
+
+/**
  * This function check if the redriection based on the browser language is enabled. If it is and the user is in the home page, then is redirected to the home page with the specified language.
+ *
+ * @param $siteLanguage string the language of the site
  *
  * @return mixed it returns false if the redirection is not possible, due to some of the restriction mentioned above. Otherwise, it just redirects the user.
  */
-function uls_redirect_by_browser_language(){
+function uls_redirect_by_browser_language($siteLanguage){
   $type = 'frontend';
   $url =(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"]=="on") ? "https://" : "http://";
   $url .= $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
@@ -270,7 +332,7 @@ function uls_redirect_by_browser_language(){
       $language = uls_get_user_language_from_browser();
 
       //if the browser language is different to the site language
-      if("" != $language && $language != uls_get_site_language()){
+      if("" != $language && $language != $siteLanguage){
         //redirect to the browser language
         $redirectUrl = uls_get_url_translated($homeUrl, $language);
 
@@ -299,17 +361,20 @@ function uls_redirect_by_browser_language(){
 
 /**
  * if the URL contains the language and it is the same of the site langauge or the user langauge saved, then remove the language from the URL using a redirection to the page.
+ *
+ * @param $urlLangauge string the language detected in the URL.
+ * @param $siteLanguage string the language of the site.
  */
-function uls_redirect_by_languange_redundancy(){
+function uls_redirect_by_languange_redundancy($urlLanguage = null, $siteLanguage = null){
   //if user is in an admin area, then don't redirect
   if(is_admin()) return;
 
-  //get the language from URL
-  $urlLanguage = uls_get_user_language_from_url();
+  //if there is no language in the url
   if(false == $urlLanguage) return;
 
   //get the language from the site
-  $siteLanguage = uls_get_site_language();
+  if(is_null($siteLanguage))
+    $siteLanguage = uls_get_site_language();
 
   //if the language of the site is the same of the language in the URL
   if($siteLanguage == $urlLanguage){
@@ -329,15 +394,13 @@ function uls_redirect_by_languange_redundancy(){
 
 /**
  * If the language of the current page is not the same of the user language neither the site language, then the user is redirected to the URL containing the language flag. It is to avoid SEO problems(multiple URLs to the same content).
+ *
+ * @param $urlLanguage string the language in the URL
+ * @param $siteLanguage string the language of the site
  */
-function uls_redirect_by_page_language(){
+function uls_redirect_by_page_language($urlLanguage, $siteLanguage){
   //if user is in an admin area, then don't redirect
   if(is_admin()) return;
-
-  //get the language from URL
-  $urlLanguage = uls_get_user_language_from_url();
-  //get the language from the site
-  $siteLanguage = uls_get_site_language();
 
   //get the id of the current page
   $url =(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"]=="on") ? "https://" : "http://";
@@ -799,7 +862,7 @@ function uls_save_association( $post_id ) {
       $parent  = get_post( $parent_id );
       $selected_language = $_POST['uls_language'];
       foreach ($languages as $lang){
-         $related_post = $_POST['uls_translation_'.strtolower($lang)];
+         $related_post = isset($_POST['uls_translation_'.strtolower($lang)]) ? $_POST['uls_translation_'.strtolower($lang)] : null;
          if( !empty( $related_post ) ){
             echo $related_post. 'uls_translation_'.$selected_language.'-'. $parent->ID;
             if ( ! update_post_meta ( $related_post, 'uls_language', $lang ) ) add_post_meta( $related_post, 'uls_language', $lang );
