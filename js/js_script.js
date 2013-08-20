@@ -1,5 +1,5 @@
-jQuery.noConflict();
-jQuery(document).ready(function($) {
+jQuery(document).ready(function() {
+  $ = jQuery;
   $("select#uls_language").change(
      function() {
          val = $(this).val();
