@@ -237,7 +237,7 @@ class ULS_Options{
           <div class="about-webilop">
     <h3 class="hndle"><?php _e('About','user-language-switch');?></h3>
     <div class="inside">
-    <p><strong>User Language Switch </strong><?php _e('was developed by ', 'user-language-switch');?> <a title="Webilop. web and mobile development" href="http://www.webilop.com">Webilop</a></p>
+    <p><strong>User Language Switch </strong><?php _e('was developed by ', 'user-language-switch');?><a title="Webilop. web and mobile development" href="http://www.webilop.com">Webilop</a></p>
     <p><?php _e('Webilop is a company focused on web and mobile solutions. We develop custom mobile applications and templates and plugins for CMSs such as Wordpress and Joomla!.', 'user-language-switch');?></p>
    <div><h4><?php _e('Follow us', 'user-language-switch')?></h4><a title="Facebook" href="https://www.facebook.com/webilop" target="_blank"><img src="<?php echo WP_PLUGIN_URL;?>/user-language-switch/images/facebook.png"></a>
 <a title="LinkedIn" href="http://www.linkedin.com/company/webilop" target="_blank"><img src="<?php echo WP_PLUGIN_URL;?>/user-language-switch/images/linkedin.png"></a>

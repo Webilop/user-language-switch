@@ -1,5 +1,5 @@
-jQuery(document).ready(function() {
-  $ = jQuery;
+$ = jQuery;
+$(document).ready(function() {
   $("select#uls_language").change(
      function() {
          val = $(this).val();
@@ -23,7 +23,6 @@ jQuery(document).ready(function() {
 });
 
 function remove_association(str,name,lang){
-   $ = jQuery;
    if (str==''){
      return;
    }

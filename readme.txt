@@ -1,25 +1,27 @@
 === User Language Switch ===
 Contributors: webilop
-Tags: language, localization, language switcher, content translation, multilanguage
+Tags: language, localization, language switcher, content translation, multilanguage site, content localization
 Requires at least: 3.0.1
 Tested up to: 3.5.1
-Stable tag: trunk
+Stable tag: 1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 == Description ==
-User Language Switch allows you to associate the original version and the translation of pages, posts and custom post types through custom fields
- in an easy and friendly way. The available languages are taken from the current theme and the wordpress installation.
+User Language Switch allows each backend user to set the language displayed in the back-end and front-end of the site. ULS also allows to associate the original version and the translation of pages, posts and custom post types through custom fields in an easy and friendly way. 
+You can easily create the language links by adding the [uls-language-selector] shortcode.
+The available languages are taken from the current theme and the wordpress installation.
 
 = Localization =
 
 *English (default).
 *Spanish
+*Persian
 
 = Documentation =
 
 You can find the installation and configuration steps at: http://www.webilop.com/products/user-language-switch-wordpress-plugin/
-Documentation in spanish is also available: http://www.webilop.com/productos/plugin-wordpress-user-language-switch/
+Documentation in spanish is also available at: http://www.webilop.com/productos/plugin-wordpress-user-language-switch/
 
 == Installation ==
 
@@ -29,8 +31,9 @@ This section describes how to install the plugin and get it working.
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Once you have activated the plugin, select the option 'User language' in your wordpress menu and select the default langauges for the backend and the frontend.
 4. Go to your post/page and select the post language, and the translated versions of the plugin using the custom fields under the 'Language' box.
-5.Add the following php code to the template or theme file where you want the language links to appear:
-<?php echo uls_language_link_switch(); ?>
+5. In order to create the language links, you can:
+a) add the [uls-language-selector] shortcode or 
+b) add the following php code to the template or theme file where you want the language links to appear: echo uls_language_link_switch();
 
 
 == Frequently Asked Questions ==
@@ -43,5 +46,13 @@ Make sure you create a 'languages' folder in your theme folder containing the .m
 
 == Screenshots ==
 
-1. screenshot1.png illustrates the User Language options available in the backend. It allows you to select the languages that will be used in the backend and the frontend as default.
-2. screenshot2.png shows the 'Language' meta box that will appear in every post, page and custom post type from where you will be able to select the post language and its translated version.
+1. This screenshot illustrates the User Language options available in the backend. It allows you to select the languages that will be used in the backend and the frontend as default.
+2. Screenshot 2 shows the 'Language' meta box that will appear in every post, page and custom post type from where you will be able to select the post language and its translated version.
+
+== Changelog ==
+= 1.0 =
+* First general availability plug-in version
+= 1.1 =
+* Anonymous functions deleted in order to support php versions earlier than 5.3
+= 1.2 =
+* Persian language added to localization. Special thanks to Khalil Delavaran (khalil.delavaran[at]gmail.com) for this contribution.
