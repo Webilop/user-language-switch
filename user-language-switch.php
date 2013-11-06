@@ -252,7 +252,7 @@ function uls_get_site_language($side = 'frontend'){
 }
 
 /**
- * This function check if the redriection based on the browser language is enabled. If it is and the user is in the home page, then is redirected to the home page with the specified language.
+ * This function check if the redirection based on the browser language is enabled. If it is and the user is in the home page, then is redirected to the home page with the specified language.
  *
  * @return mixed it returns false if the redirection is not possible, due to some of the restriction mentioned above. Otherwise, it just redirects the user.
  */
@@ -309,7 +309,9 @@ function uls_redirect_by_languange_redundancy(){
   if(false == $urlLanguage) return;
 
   //get the language from the site
-  $siteLanguage = uls_get_site_language();
+  $siteLanguage = uls_get_user_saved_language();
+  if(empty($siteLanguage))
+    $siteLanguage = uls_get_site_language();
 
   //if the language of the site is the same of the language in the URL
   if($siteLanguage == $urlLanguage){
@@ -337,7 +339,9 @@ function uls_redirect_by_page_language(){
   //get the language from URL
   $urlLanguage = uls_get_user_language_from_url();
   //get the language from the site
-  $siteLanguage = uls_get_site_language();
+  $siteLanguage = uls_get_user_saved_language();
+  if(empty($siteLanguage))
+    $siteLanguage = uls_get_site_language();
 
   //get the id of the current page
   $url =(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"]=="on") ? "https://" : "http://";
@@ -348,20 +352,33 @@ function uls_redirect_by_page_language(){
   if(0 < $id){
     //get the language of the page
     $postLanguage = uls_get_post_language($id);
+    
     //if the page has a language
     if("" != $postLanguage){
-      //if the language is not the same of the site and it is not in the URL
-      if($postLanguage != $siteLanguage && $postLanguage != $urlLanguage){
-        //if the user is logged in and the language of the post is the same of the user's language, then the redirection is not necessary
-        if(is_user_logged_in() && uls_get_user_saved_language() == $postLanguage)
-          return;
-
+      //if the language(saved and default) of the site is different to the language of the page and there is no prefix in the site.
+      if($siteLanguage != $postLanguage && empty($urlLanguage)){
+        //redirect to the current page with the correct prefix
         $redirectUrl = uls_get_url_translated($url, $postLanguage);
         if($redirectUrl != $url){
           wp_redirect($redirectUrl);
           exit;
         }
-      }//if it is necessary a redirection
+      }
+      //if the language of the site is the same of the language in the URL and different to the language of the post
+      //or if the language of the site is the same of the language of the post but different to the language of the URL
+      else if(($siteLanguage == $urlLanguage && $urlLanguage != $postLanguage)
+        || ($siteLanguage == $postLanguage && $urlLanguage != $postLanguage)){
+        //check the translation of the post using the language of the URL
+        $translation_id = uls_get_post_translation_id($id, $urlLanguage);
+        if(!empty($translation_id)){
+          //redirect to the language of the URL
+          $redirectUrl = get_permalink($translation_id);
+          if($redirectUrl != $url){
+            wp_redirect($redirectUrl);
+            exit;
+          }
+        }
+      }
     }//if the page has a language
   }//if the page has an id
 }
@@ -790,30 +807,26 @@ add_action( 'wp_print_scripts', 'uls_add_scripts' );
  * Save language associations
  */
 function uls_save_association( $post_id ) {
-   //verify post is a revision
-   $parent_id = wp_is_post_revision( $post_id );
-   if ( $parent_id ) {
-      $post_title = get_the_title( $post_id );
-      $post_url = get_permalink( $post_id );
-      $languages = uls_get_available_languages();
-      $parent  = get_post( $parent_id );
-      $selected_language = $_POST['uls_language'];
-      foreach ($languages as $lang){
-         $related_post = $_POST['uls_translation_'.strtolower($lang)];
-         if( !empty( $related_post ) ){
-            echo $related_post. 'uls_translation_'.$selected_language.'-'. $parent->ID;
-            if ( ! update_post_meta ( $related_post, 'uls_language', $lang ) ) add_post_meta( $related_post, 'uls_language', $lang );
-            if ( ! update_post_meta ( $related_post, 'uls_translation_'.strtolower($selected_language), $parent->ID ) ) add_post_meta( $related_post, 'uls_translation_'.strtolower($selected_language), $parent->ID );
-         }
-      }
-   }
+  //verify post is a revision
+  $parent_id = wp_is_post_revision( $post_id );
+  if($parent_id === false)
+   $parent_id = $post_id;
+
+  $languages = uls_get_available_languages();
+  $selected_language = isset($_POST['uls_language']) ? $_POST['uls_language'] : null;
+  if(!empty($selected_language))
+    foreach ($languages as $lang){
+      $related_post = isset($_POST['uls_translation_'.strtolower($lang)]) ? $_POST['uls_translation_'.strtolower($lang)] : null;
+      if( !empty( $related_post ) )
+        update_post_meta ( $related_post, 'uls_translation_'.strtolower($selected_language), $parent_id );
+    }
 }
 add_action( 'save_post', 'uls_save_association' );
 
 /**
  * Remove associations
  */
-function text_ajax_process_request() {
+function uls_text_ajax_process_request() {
    // first check if data is being sent and that it is the data we want
       $relation_id = $_POST['pid'];
       $lang = $_POST['lang'];
@@ -828,15 +841,15 @@ function text_ajax_process_request() {
       die();
    }
 }
-add_action('wp_ajax_test_response', 'text_ajax_process_request');
+add_action('wp_ajax_test_response', 'uls_text_ajax_process_request');
 
   /**
   * Enqueue plugin style-file
   */
-  function add_my_scripts() {
+  function uls_add_my_scripts() {
     // Respects SSL, Style.css is relative to the current file
     wp_register_style( 'html-style', plugins_url('css/styles.css', __FILE__) );
     wp_enqueue_style( 'html-style' );
   }
-  add_action( 'admin_enqueue_scripts', 'add_my_scripts' );
+  add_action( 'admin_enqueue_scripts', 'uls_add_my_scripts' );
 ?>
