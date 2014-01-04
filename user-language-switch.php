@@ -352,7 +352,7 @@ function uls_redirect_by_page_language(){
   if(0 < $id){
     //get the language of the page
     $postLanguage = uls_get_post_language($id);
-    
+
     //if the page has a language
     if("" != $postLanguage){
       //if the language(saved and default) of the site is different to the language of the page and there is no prefix in the site.
@@ -703,11 +703,11 @@ function uls_initialize_meta_boxes() {
 }
 
 /**
- * Add meta boxes.
+ * Add meta boxes to select the language an traductions of a post.
  *
  * @return array
  */
-function uls_sample_metaboxes( $meta_boxes ) {
+function uls_language_metaboxes( $meta_boxes ) {
    if(isset($_GET['post'])){
       $post_type = get_post_type($_GET['post']);
    }else{
@@ -732,7 +732,8 @@ function uls_sample_metaboxes( $meta_boxes ) {
                    'key' => 'uls_language',
                    'value'=>array($lang),
             )
-         )
+         ),
+         'posts_per_page' => -1,
       ));
       $t2 = get_posts(array(
          'post_type' => $post_type,
@@ -741,7 +742,8 @@ function uls_sample_metaboxes( $meta_boxes ) {
                    'key' => 'uls_language',
                    'compare'=> 'NOT EXISTS',
             )
-         )
+         ),
+         'posts_per_page' => -1,
       ));
       $the_posts = array_merge( $t1, $t2 );
 
@@ -789,19 +791,7 @@ function uls_sample_metaboxes( $meta_boxes ) {
    );
    return $meta_boxes;
 }
-add_filter( 'cmb_meta_boxes', 'uls_sample_metaboxes' );
-
-/**
- * Register javascript file
- */
-function uls_add_scripts() {
-    wp_register_script( 'add-bx-js',   WP_CONTENT_URL . '/plugins/user-language-switch/js/js_script.js', array('jquery') );
-    wp_enqueue_script( 'add-bx-js' );
-    // make the ajaxurl var available to the above script
-    wp_localize_script( 'add-bx-js', 'the_ajax_script', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
-}
-
-add_action( 'wp_print_scripts', 'uls_add_scripts' );
+add_filter( 'cmb_meta_boxes', 'uls_language_metaboxes' );
 
 /**
  * Save language associations
@@ -843,13 +833,26 @@ function uls_text_ajax_process_request() {
 }
 add_action('wp_ajax_test_response', 'uls_text_ajax_process_request');
 
-  /**
-  * Enqueue plugin style-file
-  */
-  function uls_add_my_scripts() {
-    // Respects SSL, Style.css is relative to the current file
-    wp_register_style( 'html-style', plugins_url('css/styles.css', __FILE__) );
-    wp_enqueue_style( 'html-style' );
-  }
-  add_action( 'admin_enqueue_scripts', 'uls_add_my_scripts' );
+/**
+* Enqueue plugin style-file
+*/
+function uls_add_styles() {
+  // Respects SSL, Style.css is relative to the current file
+  wp_register_style( 'html-style', plugins_url('css/styles.css', __FILE__) );
+  wp_enqueue_style( 'html-style' );
+}
+add_action( 'admin_enqueue_scripts', 'uls_add_styles' );
+
+/**
+ * Register javascript file
+ */
+function uls_add_scripts() {
+    wp_register_script( 'add-bx-js',   WP_CONTENT_URL . '/plugins/user-language-switch/js/js_script.js', array('jquery') );
+    wp_enqueue_script( 'add-bx-js' );
+    // make the ajaxurl var available to the above script
+    wp_localize_script( 'add-bx-js', 'the_ajax_script', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
+}
+
+add_action( 'wp_print_scripts', 'uls_add_scripts' );
+
 ?>

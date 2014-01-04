@@ -2,8 +2,8 @@
 Contributors: webilop
 Tags: language, localization, language switcher, content translation, multilanguage site, content localization
 Requires at least: 3.0.1
-Tested up to: 3.5.1
-Stable tag: 1.2
+Tested up to: 3.6
+Stable tag: 1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,7 +16,8 @@ The available languages are taken from the current theme and the wordpress insta
 
 *English (default).
 *Spanish
-*Persian
+*Persian - Special thanks to Khalil Delavaran(khalil.delavaran[at]gmail.com) for this contribution.
+*Serbo-Croatian -  Special thanks to Borisa Djuraskovic(borisad@webhostinghub.com) from Web Hosting Hub(http://www.webhostinghub.com) for this contribution.
 
 = Documentation =
 
@@ -55,4 +56,9 @@ Make sure you create a 'languages' folder in your theme folder containing the .m
 = 1.1 =
 * Anonymous functions deleted in order to support php versions earlier than 5.3
 = 1.2 =
-* Persian language added to localization. Special thanks to Khalil Delavaran (khalil.delavaran[at]gmail.com) for this contribution.
+* Persian language added to localization. Special thanks to Khalil Delavaran(khalil.delavaran[at]gmail.com) for this contribution.
+= 1.3 =
+* Serbo-Croatian language added. Special thanks to Borisa Djuraskovic(borisad@webhostinghub.com) from Web Hosting Hub(http://www.webhostinghub.com) for this contribution.
+* Fix of bug in redirections between translated pages and prefixes to avoid repeated pages with the same content.
+* Fix ob bug creating the links of the laguage switch. Some linkes used to not be created properly.
+* Fix of bug in the selection of translations for a post. All the available translations used to not be loaded.

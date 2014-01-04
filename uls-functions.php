@@ -102,40 +102,40 @@ function uls_language_link_switch($url = null, $url_type = 'prefix', $type = 'li
   }
 
   //get the available languages
-   $available_languages = uls_get_available_languages();
+  $available_languages = uls_get_available_languages();
 
-   $class = (null == $class) ? 'uls-language-link-switch' : 'uls-language-link-switch ' . $class;
+  $class = (null == $class) ? 'uls-language-link-switch' : 'uls-language-link-switch ' . $class;
 
-   //get the current language
-   $current_language = uls_get_user_language();
-   if('' == $current_language)
-      $current_language = uls_get_site_language();
+  //get the current language
+  $current_language = uls_get_user_language();
+  if('' == $current_language)
+    $current_language = uls_get_site_language();
 
-   //set conversion of permalinks to false
-   global $uls_permalink_convertion;
-   $uls_permalink_convertion = false;
-
-   ob_start();
-   ?>
-   <div class="<?php echo $class; ?>">
-   <?php
-  include 'uls-languages.php';
-  foreach($available_languages as $code):
-    if(isset($country_languages[$code])){
-      if($only_lang_name)
-        $label = substr($country_languages[$code], 0, strpos($country_languages[$code], ' '));
-      else
-        $label = $country_languages[$code];
-    }
-    else{
-      $label = $code;
-    }
+  //set conversion of permalinks to false
+  global $uls_permalink_convertion;
+  $uls_permalink_convertion = false;
+  ob_start();
+  ?>
+  <div class="<?php echo $class; ?>">
+  <?php
+    include 'uls-languages.php';
+    foreach($available_languages as $code):
+     if(isset($country_languages[$code])){
+       if($only_lang_name)
+         $label = substr($country_languages[$code], 0, strpos($country_languages[$code], ' '));
+       else
+         $label = $country_languages[$code];
+     }
+     else{
+       $label = $code;
+     }
      $displayed = false;
       if($code == $current_language):
         $displayed = true; ?>
          <span class="<?php echo 'selected-language'?>"><?php echo __($label, 'user-language-switch'); ?></span>
       <?php else:
-      $current_post_id = url_to_postid($url);
+      global $post;
+      $current_post_id = empty($post->ID) ? url_to_postid($url) : $post->ID;
       //if the current page has a post related
       if(0 != $current_post_id):
          $translation_id = uls_get_post_translation_id($current_post_id, $code);

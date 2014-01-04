@@ -1,0 +1,148 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: User Language Switch\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-07-23 10:40-0500\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Borisa Djuraskovic <borisad@webhostinghub.com>\n"
+"Language-Team: \n"
+"Language: es_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: __;_x;_e\n"
+"X-Poedit-Basepath: ../\n"
+"X-Generator: Poedit 1.5.7\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: init.php:633
+msgid "Please Try Again"
+msgstr "Pokušajte opet"
+
+#: init.php:650
+msgid "Remove Embed"
+msgstr "UKLONITE  Embed"
+
+#: init.php:656
+#, php-format
+msgid "No oEmbed Results Found for %s. View more info at"
+msgstr "Nijedan  Embed rezultat nije pronadjen za  %s.  Više info na"
+
+#: uls-functions.php:215
+msgid "Language"
+msgstr "Jezik"
+
+#: uls-functions.php:216 uls-options.php:216
+msgid "Save"
+msgstr "Sačuvaj"
+
+#: uls-functions.php:217
+msgid "Language saved"
+msgstr "Jezik sačuvan"
+
+#: uls-functions.php:218
+msgid "Error saving language"
+msgstr "Greška prilikom sačuvavanja jezika"
+
+#: uls-options.php:40
+msgid "General Settings"
+msgstr "Opšte postavke"
+
+#: uls-options.php:42
+msgid "Default language for admin side"
+msgstr "Default jezik za admin stranu"
+
+#: uls-options.php:45
+msgid "User meta field to store the admin side language"
+msgstr "Korisnik meta za skladištanje admin strana jezika"
+
+#: uls-options.php:48
+msgid "Default language for website"
+msgstr "Default jezik za website"
+
+#: uls-options.php:51
+msgid "User meta field to store the website language language"
+msgstr "Korisnik metapolje za skladištanje website jezika"
+
+#: uls-options.php:54
+msgid "Allow users change their admin side language"
+msgstr "Dozvoli korinicima da menjaju njihovu admin stranu jezik"
+
+#: uls-options.php:57
+msgid "Allow users change their website language"
+msgstr "Dozvoli korinicima da menjaju svoje wesajt jezik"
+
+#: uls-options.php:60
+msgid "Collaborate"
+msgstr "Saradjujte"
+
+#: uls-options.php:85 uls-options.php:151
+msgid "User Language Switch"
+msgstr "Promena jezika korisnika"
+
+#: uls-options.php:90 uls-options.php:178
+msgid "User Language Preferences"
+msgstr "Preference jezika korisnika"
+
+#: uls-options.php:90
+msgid "User Language"
+msgstr "Jezik korisnika"
+
+#: uls-options.php:129
+msgid ""
+"You can install more languages in your site following the instructions in "
+msgstr "Možete instalirati više jezika na svom sajtu prateći uputstva"
+
+#: uls-options.php:129
+msgid "WordPress in Your Language"
+msgstr "WordPress na vašem jeziku"
+
+#: uls-options.php:138
+msgid ""
+"You can collaborate with the development of this plugin, please send us any "
+"suggestion or bug notification to support[at]webilop.com"
+msgstr ""
+"Možete da sarađuju sa razvojem ovog dodatka , molimo vas da nam pošaljete "
+"bilo kakvu sugestiju ili bug obaveštenje da support [ u ] webilop.com"
+
+#: uls-options.php:147 uls-options.php:166
+msgid "You do not have sufficient permissions to access this page."
+msgstr "Nemate dovoljno dozvola da pristupite ovoj stranici."
+
+#: uls-options.php:182
+msgid "Preferences saved."
+msgstr "Preference sačuvane."
+
+#: uls-options.php:186
+msgid "Error saving preferences."
+msgstr "Greške prilikom sačuvavanja preferenci"
+
+#: uls-options.php:199
+msgid "Displayed language in the admin side"
+msgstr "Prikazan jezik na andmin strani"
+
+#: uls-options.php:207
+msgid "Displayed language in the front-end side"
+msgstr "Prikazan jezik na prednjem kraju"
+
+#: uls-options.php:220
+msgid "About"
+msgstr "O"
+
+#: uls-options.php:222
+msgid "was developed by "
+msgstr "Razvijeno od strane"
+
+#: uls-options.php:223
+msgid ""
+"Webilop is a company focused on web and mobile solutions. We develop custom "
+"mobile applications and templates and plugins for CMSs such as Wordpress and "
+"Joomla!."
+msgstr ""
+"Webilop je kompanija fokusirana na Internet i mobilnim rešenjima . Mi "
+"razvijamo obične mobilne aplikacije i šablone i dodatke za CMSs kao što su "
+"Wordpress i Joomla . !"
+
+#: uls-options.php:224
+msgid "Follow us"
+msgstr "Pratite nas"
