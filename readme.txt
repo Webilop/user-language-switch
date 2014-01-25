@@ -17,7 +17,7 @@ The available languages are taken from the current theme and the wordpress insta
 *English (default).
 *Spanish
 *Persian - Special thanks to Khalil Delavaran(khalil.delavaran[at]gmail.com) for this contribution.
-*Serbo-Croatian -  Special thanks to Borisa Djuraskovic(borisad@webhostinghub.com) from Web Hosting Hub(http://www.webhostinghub.com) for this contribution.
+*Serbo-Croatian - Special thanks to Borisa Djuraskovic(borisad@webhostinghub.com) from Web Hosting Hub(http://www.webhostinghub.com) for this contribution.
 
 = Documentation =
 
@@ -62,3 +62,4 @@ Make sure you create a 'languages' folder in your theme folder containing the .m
 * Fix of bug in redirections between translated pages and prefixes to avoid repeated pages with the same content.
 * Fix ob bug creating the links of the laguage switch. Some linkes used to not be created properly.
 * Fix of bug in the selection of translations for a post. All the available translations used to not be loaded.
+* Addition of Estonian language(et) as abreviation for et_EE.

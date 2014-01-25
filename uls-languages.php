@@ -351,5 +351,6 @@ $language_codes = array(
 $default_code_by_abbreviation = array(
 	'en' => 'en_US',
 	'es' => 'es_ES',
+  'et' => 'et_EE',
 );
 ?>
