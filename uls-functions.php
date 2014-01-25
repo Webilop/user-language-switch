@@ -134,8 +134,13 @@ function uls_language_link_switch($url = null, $url_type = 'prefix', $type = 'li
         $displayed = true; ?>
          <span class="<?php echo 'selected-language'?>"><?php echo __($label, 'user-language-switch'); ?></span>
       <?php else:
-      global $post;
-      $current_post_id = empty($post->ID) ? url_to_postid($url) : $post->ID;
+      //$current_post_id = empty($post->ID) ? url_to_postid($url) : $post->ID;
+      $current_post_id = url_to_postid($url);
+      if(0 == $current_post_id && !is_home()){
+         wp_reset_query();
+         the_post();
+         $current_post_id = get_the_ID();
+      }
       //if the current page has a post related
       if(0 != $current_post_id):
          $translation_id = uls_get_post_translation_id($current_post_id, $code);
