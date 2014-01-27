@@ -14,10 +14,10 @@ The available languages are taken from the current theme and the wordpress insta
 
 = Localization =
 
-*English (default).
-*Spanish
-*Persian - Special thanks to Khalil Delavaran(khalil.delavaran[at]gmail.com) for this contribution.
-*Serbo-Croatian - Special thanks to Borisa Djuraskovic(borisad@webhostinghub.com) from Web Hosting Hub(http://www.webhostinghub.com) for this contribution.
+* English (default).
+* Spanish
+* Persian - Special thanks to Khalil Delavaran(khalil.delavaran[at]gmail.com) for this contribution.
+* Serbo-Croatian - Special thanks to Borisa Djuraskovic(borisad@webhostinghub.com) from Web Hosting Hub(http://www.webhostinghub.com) for this contribution.
 
 = Documentation =
 
