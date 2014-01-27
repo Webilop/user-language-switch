@@ -631,8 +631,16 @@ function uls_language_selector_input($id, $name, $default_value = '', $class = '
    ob_start();
    ?>
    <select id="<?php echo $id; ?>" name="<?php echo $name; ?>" class="<?php echo $class; ?>" >
-      <?php foreach($available_languages as $lang): ?>
-      <option value="<?php echo $lang; ?>" <?php selected($lang, $default_value); ?>><?php _e($country_languages[$lang],'user-language-switch'); ?></option>
+      <?php foreach($available_languages as $lang):
+      $language_name = $lang;
+      if(!empty($country_languages[$lang]))
+        $language_name = $country_languages[$lang];
+      else{
+        $aux_name = array_search($lang, $language_codes);
+        if(false !== $aux_name)
+          $language_name = $aux_name;
+      } ?>
+      <option value="<?php echo $lang; ?>" <?php selected($lang, $default_value); ?>><?php _e($language_name,'user-language-switch'); ?></option>
       <?php endforeach; ?>
    </select>
    <?php
@@ -723,7 +731,16 @@ function uls_language_metaboxes( $meta_boxes ) {
    require 'uls-languages.php';
    $fields = array();
    foreach ( $languages as $lang ){
-      $new = array('name' => $country_languages[$lang], 'value' => $lang);
+      $language_name = $lang;
+      if(!empty($country_languages[$lang]))
+        $language_name = $country_languages[$lang];
+      else{
+        $aux_name = array_search($lang, $language_codes);
+        if(false !== $aux_name)
+          $language_name = $aux_name;
+      }
+    
+      $new = array('name' => $language_name, 'value' => $lang);
       array_push($options, $new);
       $t1 = get_posts(array(
          'post_type' => $post_type,
@@ -754,7 +771,7 @@ function uls_language_metaboxes( $meta_boxes ) {
        endforeach;
        wp_reset_query();
       $field = array(
-         'name' => 'Select the version in '.$country_languages[$lang],
+         'name' => 'Select the version in '. $language_name,
          'id' => $prefix.'translation_'.strtolower($lang),
          'type' => 'select',
          'options' => $posts
