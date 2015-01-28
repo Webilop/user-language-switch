@@ -165,7 +165,7 @@ function uls_language_link_switch($url = null, $url_type = 'prefix', $type = 'li
 
    <?php endforeach; ?>
    </div>
-   <?
+   <?php
    $res = ob_get_contents();
    ob_end_clean();
 

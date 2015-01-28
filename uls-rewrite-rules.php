@@ -12,7 +12,8 @@ function uls_create_custom_rewrite_rules() {
 	global $wp_rewrite;
 
 	//get available languages
-	$languages = '(en|es|en_US|es_ES)';
+	// $languages = '(en|es|en_US|es_ES)';
+	$languages = "(".implode("|", array_values(uls_get_available_languages())).")";
 
 	$wp_rewrite->add_rewrite_tag( '%lang%', $languages, 'lang=' );
 
