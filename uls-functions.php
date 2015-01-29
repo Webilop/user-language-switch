@@ -51,13 +51,23 @@ function uls_get_permalink($post_id, $language = null){
  * @return string the HTML link of the translation link of a post.
  */
 function uls_get_link($post_id, $language = null, $label = null, $class='uls-link' ){
-   $translation_id = uls_get_post_translation_id($post_id, $language);
-   if(empty($translation_id))
-      $translation_id = $post_id;
-   if(null == $label)
-      return '<a class="' . $class . '" href="' . get_permalink($post_id) . '" >' . get_the_title($translation_id) . '</a>';
-   else
-      return '<a class="' . $class . '" href="' . get_permalink($post_id) . '" >' . $label . '</a>';
+  $translation_id = uls_get_post_translation_id($post_id, $language);
+  if(empty($translation_id))
+    $translation_id = $post_id;
+
+  //set conversion of permalinks to false
+  global $uls_permalink_convertion;
+  $uls_permalink_convertion = false;
+
+  $translation_url = get_permalink($translation_id);
+
+  //set conversion of permalinks to true again
+  $uls_permalink_convertion = true;
+
+  if(null == $label)
+    return '<a class="' . $class . '" href="' . $translation_url . '" >' . get_the_title($translation_id) . '</a>';
+  else
+    return '<a class="' . $class . '" href="' . $translation_url . '" >' . $label . '</a>';
 }
 /**
  * Add shortcode to get link.
@@ -131,7 +141,8 @@ function uls_language_link_switch($url = null, $url_type = 'prefix', $type = 'li
      }
      $displayed = false;
       if($code == $current_language):
-        $displayed = true; ?>
+        $displayed = true;
+      ?>
          <span class="<?php echo 'selected-language'?>"><?php echo __($label, 'user-language-switch'); ?></span>
       <?php else:
       //$current_post_id = empty($post->ID) ? url_to_postid($url) : $post->ID;
@@ -321,7 +332,6 @@ function uls_get_url_map_translation($url, $language = null){
   //get language
   if(!uls_valid_language($language))
     $language = uls_get_user_language();
-
   //get the mappging
   $options = get_option('uls_settings');
   if(isset($options['translation_mapping'][$language][$url]))
