@@ -50,22 +50,38 @@ function uls_get_permalink($post_id, $language = null){
  *
  * @return string the HTML link of the translation link of a post.
  */
-function uls_get_link($post_id, $language = null, $label = null, $class='uls-link' ){
-  $translation_id = uls_get_post_translation_id($post_id, $language);
-  if(empty($translation_id))
-    $translation_id = $post_id;
+function uls_get_link($post_id = null, $language = null, $label = null, $class='uls-link' ){
+  if ($post_id == null) {
+    if (is_home()) {
+      $url = get_home_url();
+      $translation_url = uls_get_url_translated($url, $language);
+    }
+    else if (is_archive()) {
+      $url = get_post_type_archive_link( get_post_type() );
+      $translation_url = uls_get_url_translated($url, $language);
+      $title = post_type_archive_title("",false);
+    }
+  }
+  else {
+    $translation_id = uls_get_post_translation_id($post_id, $language);
+    if(empty($translation_id))
+      $translation_id = $post_id;
+    //set conversion of permalinks to false
+    global $uls_permalink_convertion;
+    $uls_permalink_convertion = false;
 
-  //set conversion of permalinks to false
-  global $uls_permalink_convertion;
-  $uls_permalink_convertion = false;
+    $translation_url = get_permalink($translation_id);
 
-  $translation_url = get_permalink($translation_id);
+    //set conversion of permalinks to true again
+    $uls_permalink_convertion = true;
 
-  //set conversion of permalinks to true again
-  $uls_permalink_convertion = true;
+    $title = get_the_title($translation_id);
+  }
+
+  // echo $translation_url;
 
   if(null == $label)
-    return '<a class="' . $class . '" href="' . $translation_url . '" >' . get_the_title($translation_id) . '</a>';
+    return '<a class="' . $class . '" href="' . $translation_url . '" >' . $title . '</a>';
   else
     return '<a class="' . $class . '" href="' . $translation_url . '" >' . $label . '</a>';
 }

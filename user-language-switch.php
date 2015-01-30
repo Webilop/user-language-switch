@@ -573,7 +573,6 @@ function uls_get_url_translated($url, $language, $type = 'prefix', $remove_defau
 
       case 'subdomain':
          break;
-
       default:
          $parts = parse_url($url);
          $blog_parts = parse_url(get_bloginfo('url'));
@@ -739,7 +738,7 @@ function uls_language_metaboxes( $meta_boxes ) {
         if(false !== $aux_name)
           $language_name = $aux_name;
       }
-    
+
       $new = array('name' => $language_name, 'value' => $lang);
       array_push($options, $new);
       $t1 = get_posts(array(
