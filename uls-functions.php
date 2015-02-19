@@ -66,11 +66,12 @@ function uls_get_link($post_id = null, $language = null, $label = null, $class='
     $translation_id = uls_get_post_translation_id($post_id, $language);
     if(empty($translation_id))
       $translation_id = $post_id;
+
     //set conversion of permalinks to false
     global $uls_permalink_convertion;
     $uls_permalink_convertion = false;
 
-    $translation_url = get_permalink($translation_id);
+    $translation_url = uls_get_url_translated(get_permalink($translation_id), $language);
 
     //set conversion of permalinks to true again
     $uls_permalink_convertion = true;
