@@ -2,8 +2,8 @@
 Contributors: webilop
 Tags: language, localization, language switcher, content translation, multilanguage site, content localization
 Requires at least: 3.0.1
-Tested up to: 3.6
-Stable tag: 1.3
+Tested up to: 4.2
+Stable tag: 1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,7 +22,7 @@ The available languages are taken from the current theme and the wordpress insta
 = Documentation =
 
 You can find the installation and configuration steps at: http://www.webilop.com/products/user-language-switch-wordpress-plugin/
-Documentation in spanish is also available at: http://www.webilop.com/productos/plugin-wordpress-user-language-switch/
+Documentation in spanish is also available at: http://www.webilop.com/es_ES/productos/plugin-wordpress-user-language-switch/
 
 == Installation ==
 
@@ -60,6 +60,6 @@ Make sure you create a 'languages' folder in your theme folder containing the .m
 = 1.3 =
 * Serbo-Croatian language added. Special thanks to Borisa Djuraskovic(borisad@webhostinghub.com) from Web Hosting Hub(http://www.webhostinghub.com) for this contribution.
 * Fix of bug in redirections between translated pages and prefixes to avoid repeated pages with the same content.
-* Fix ob bug creating the links of the laguage switch. Some linkes used to not be created properly.
+* Fix of bug creating the links of the laguage switch. Some linkes used to not be created properly.
 * Fix of bug in the selection of translations for a post. All the available translations used to not be loaded.
 * Addition of Estonian language(et) as abreviation for et_EE.
