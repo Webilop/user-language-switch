@@ -871,4 +871,77 @@ function uls_add_scripts() {
 
 add_action( 'wp_print_scripts', 'uls_add_scripts' );
 
+
+add_action( 'admin_print_scripts', 'webilop_admin_scripts' );
+function webilop_admin_scripts() {
+  wp_enqueue_style( 'webilop-flags-style', plugins_url('css/flags.css', __FILE__) );
+}
+
+add_filter('manage_posts_columns', 'webilop_add_posts_columns');
+function webilop_add_posts_columns($columns) {
+    unset($columns['date']);
+    $columns['language'] = 'Language';
+    $columns['translation'] = 'Translations';
+    $columns['date'] = 'Date';
+    return $columns;
+}
+add_action('manage_posts_custom_column',  'webilop_show_posts_columns');
+function webilop_show_posts_columns($name) {
+    global $post;
+    $string = "";
+    switch ($name) {
+        case 'language':
+            $views = strtolower(get_post_meta($post->ID, 'uls_language', true));
+	    echo '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag flag-'.substr($views, -2).'" alt="'.$views.'" />';
+	    break;
+        case 'translation':
+            $views = get_post_meta($post->ID);
+	    foreach($views as $key => $value) 
+	       if(strpos($key,'uls_translation_') !== false) 
+		  $string[substr($key, -5)] =  substr($key, -5); 
+
+            $views = get_post_meta($post->ID, 'uls_language', true);
+	    if($string != ""){
+	       unset($string[strtolower($views)]);
+	       foreach ($string as $key => $value)
+		  echo '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag flag-'.substr($key, -2).'" alt="'.$views.'" />';
+	    }else
+	       echo $string; 
+	    break;
+    }
+}
+add_filter('manage_pages_columns', 'webilop_add_pages_columns');
+function webilop_add_pages_columns($columns) {
+    unset($columns['date']);
+    $columns['language'] = 'Language';
+    $columns['translation'] = 'Translations';
+    $columns['date'] = 'Date';
+    return $columns;
+}
+
+add_action('manage_pages_custom_column',  'webilop_show_pages_columns');
+function webilop_show_pages_columns($name) {
+    global $post;
+    $string = "";
+    switch ($name) {
+        case 'language':
+            $views = strtolower(get_post_meta($post->ID, 'uls_language', true));
+	    echo '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag flag-'.substr($views, -2).'" alt="'.$views.'" />';
+	    break;
+        case 'translation':
+            $views = get_post_meta($post->ID);
+	    foreach($views as $key => $value) 
+	       if(strpos($key,'uls_translation_') !== false) 
+		  $string[substr($key, -5)] =  substr($key, -5); 
+
+            $views = get_post_meta($post->ID, 'uls_language', true);
+	    if($string != ""){
+	       unset($string[strtolower($views)]);
+	       foreach ($string as $key => $value)
+		  echo '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag flag-'.substr($key, -2).'" alt="'.$views.'" />';
+	    }else
+	       echo $string; 
+	    break;
+    }
+} 
 ?>
