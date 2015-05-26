@@ -898,13 +898,15 @@ function webilop_show_posts_columns($name) {
             $views = get_post_meta($post->ID);
 	    foreach($views as $key => $value) 
 	       if(strpos($key,'uls_translation_') !== false) 
-		  $string[substr($key, -5)] =  substr($key, -5); 
+		  $string[substr($key, -5)] =  $value[0]; 
 
             $views = get_post_meta($post->ID, 'uls_language', true);
 	    if($string != ""){
 	       unset($string[strtolower($views)]);
 	       foreach ($string as $key => $value)
-		  echo '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag flag-'.substr($key, -2).'" alt="'.$views.'" />';
+		  echo '<a href="'.get_edit_post_link($value).'">'.
+			   '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag flag-'.substr($key, -2).'" alt="'.$views.'" />'.
+		       '</a>';
 	    }else
 	       echo $string; 
 	    break;
@@ -931,14 +933,17 @@ function webilop_show_pages_columns($name) {
         case 'translation':
             $views = get_post_meta($post->ID);
 	    foreach($views as $key => $value) 
-	       if(strpos($key,'uls_translation_') !== false) 
-		  $string[substr($key, -5)] =  substr($key, -5); 
+	       if(strpos($key,'uls_translation_') === 0) { 
+		  $string[substr($key, -5)] =  $value[0]; 
+	       }
 
             $views = get_post_meta($post->ID, 'uls_language', true);
 	    if($string != ""){
 	       unset($string[strtolower($views)]);
 	       foreach ($string as $key => $value)
-		  echo '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag flag-'.substr($key, -2).'" alt="'.$views.'" />';
+		  echo '<a href="'.get_edit_post_link($value).'">'.
+			   '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag flag-'.substr($key, -2).'" alt="'.$views.'" />'.
+		       '</a>';
 	    }else
 	       echo $string; 
 	    break;
