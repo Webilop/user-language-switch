@@ -38,24 +38,25 @@ class ULS_Options{
    
       //create section for registration
       add_settings_section('uls_general_settings_section', __('General Settings','user-language-switch'), 'ULS_Options::create_general_settings_section', 'uls-settings-page');
+      
+      $options['input_name'] = 'default_frontend_language';
+      add_settings_field($options['input_name'], __('Default language','user-language-switch'), 'ULS_Options::create_language_selector_input', 'uls-settings-page','uls_general_settings_section',$options);
+      
+      /*$options['input_name'] = 'frontend_language_field_name';
+      add_settings_field($options['input_name'], __('User meta field to store the website language language','user-language-switch'), 'ULS_Options::create_text_input', 'uls-settings-page','uls_general_settings_section',$options);*/
+      
       $options['input_name'] = 'default_backend_language';
       add_settings_field($options['input_name'], __('Default language for admin side','user-language-switch'), 'ULS_Options::create_language_selector_input', 'uls-settings-page','uls_general_settings_section',$options);
       
-      $options['input_name'] = 'backend_language_field_name';
-      add_settings_field($options['input_name'], __('User meta field to store the admin side language','user-language-switch'), 'ULS_Options::create_text_input', 'uls-settings-page','uls_general_settings_section',$options);
-      
-      $options['input_name'] = 'default_frontend_language';
-      add_settings_field($options['input_name'], __('Default language for website','user-language-switch'), 'ULS_Options::create_language_selector_input', 'uls-settings-page','uls_general_settings_section',$options);
-      
-      $options['input_name'] = 'frontend_language_field_name';
-      add_settings_field($options['input_name'], __('User meta field to store the website language language','user-language-switch'), 'ULS_Options::create_text_input', 'uls-settings-page','uls_general_settings_section',$options);
-      
-      $options['input_name'] = 'user_backend_configuration';
-      add_settings_field($options['input_name'], __('Allow users change their admin side language','user-language-switch'), 'ULS_Options::create_checkbox_input', 'uls-settings-page','uls_general_settings_section',$options);
+      /*$options['input_name'] = 'backend_language_field_name';
+      add_settings_field($options['input_name'], __('User meta field to store the admin side language','user-language-switch'), 'ULS_Options::create_text_input', 'uls-settings-page','uls_general_settings_section',$options);*/
       
       $options['input_name'] = 'user_frontend_configuration';
-      add_settings_field($options['input_name'], __('Allow users change their website language','user-language-switch'), 'ULS_Options::create_checkbox_input', 'uls-settings-page','uls_general_settings_section',$options);
+      add_settings_field($options['input_name'], __('Allow registered users to change the language that user looks the website','user-language-switch'), 'ULS_Options::create_checkbox_input', 'uls-settings-page','uls_general_settings_section',$options);
       
+      $options['input_name'] = 'user_backend_configuration';
+      add_settings_field($options['input_name'], __('Allow registered users to change the language that user looks the back-end side','user-language-switch'), 'ULS_Options::create_checkbox_input', 'uls-settings-page','uls_general_settings_section',$options);
+
       //create section for collaboration
       add_settings_section('uls_collaboration_section', __('Collaborate','user-language-switch'), 'ULS_Options::create_collaboration_section', 'uls-settings-page');
       //create about section 
@@ -137,7 +138,7 @@ class ULS_Options{
     */
    static function create_collaboration_section(){
       ?>
-      <div class="section-inside"><p><?php _e('You can collaborate with the development of this plugin, please send us any suggestion or bug notification to support[at]webilop.com'); ?></p></div>
+      <div class="section-inside"><p><?php _e('You can collaborate with the development of this plugin, please send us any suggestion or bug notification to '); ?><a href="mailto:support@webilop.com">support@webilop.com</a></p></div>
       <?php
    }
 
@@ -148,11 +149,7 @@ class ULS_Options{
     ?>
     <div class="section-inside">
     <p><strong>User Language Switch </strong><?php _e('was developed by ', 'user-language-switch');?><a title="Webilop. web and mobile development" href="http://www.webilop.com">Webilop</a></p>
-    <p><?php _e('Webilop is a company focused on web and mobile solutions. We develop custom mobile applications and templates and plugins for CMSs such as Wordpress and Joomla!.', 'user-language-switch');?></p>
-    <div><h4><?php _e('Follow us', 'user-language-switch')?></h4><a title="Facebook" href="https://www.facebook.com/webilop" target="_blank"><img src="<?php echo WP_PLUGIN_URL;?>/user-language-switch/images/facebook.png"></a>
-    <a title="LinkedIn" href="http://www.linkedin.com/company/webilop" target="_blank"><img src="<?php echo WP_PLUGIN_URL;?>/user-language-switch/images/linkedin.png"></a>
-    <a title="Twitter" href="https://twitter.com/webilop" target="_blank"><img src="<?php echo WP_PLUGIN_URL;?>/user-language-switch/images/twitter.png"></a>
-    <a title="Google Plus" href="https://plus.google.com/104606011635671696803" target="_blank" rel="publisher"><img src="<?php echo WP_PLUGIN_URL;?>/user-language-switch/images/gplus.png"></a></div>
+    <p><?php _e('Webilop is a company focused on web and mobile solutions. We develop custom mobile applications, templates and plugins for CMS platforms like Wordpress. We can help you with your website, contact us at ', 'user-language-switch');?><a href="mailto:contact@webilop.com">contact@webilop.com</a></p>
     </div>
     <?php
    }
@@ -212,19 +209,19 @@ class ULS_Options{
          <input type="hidden" name="action" value="uls_user_language_preferences" />
          <table class="form-table">
             <tbody>
-               <?php if($options['user_backend_configuration']): ?>
+               <?php if($options['user_frontend_configuration']): ?>
                <tr valign="top">
-                  <th scope="row"><?php _e('Displayed language in the admin side','user-language-switch'); ?></th>
+                  <th scope="row"><?php _e('Language for the website','user-language-switch'); ?></th>
                   <td>
-                     <?php echo uls_language_selector_input($options['backend_language_field_name'],$options['backend_language_field_name'],$default_backend_language); ?>
+                     <?php echo uls_language_selector_input($options['frontend_language_field_name'],$options['frontend_language_field_name'],$default_frontend_language); ?>
                   </td>
                </tr>
                <?php endif; ?>
-               <?php if($options['user_frontend_configuration']): ?>
+               <?php if($options['user_backend_configuration']): ?>
                <tr valign="top">
-                  <th scope="row"><?php _e('Displayed language in the front-end side','user-language-switch'); ?></th>
+                  <th scope="row"><?php _e('Language for the back-end side','user-language-switch'); ?></th>
                   <td>
-                     <?php echo uls_language_selector_input($options['frontend_language_field_name'],$options['frontend_language_field_name'],$default_frontend_language); ?>
+                     <?php echo uls_language_selector_input($options['backend_language_field_name'],$options['backend_language_field_name'],$default_backend_language); ?>
                   </td>
                </tr>
                <?php endif; ?>
@@ -238,11 +235,7 @@ class ULS_Options{
     <h3 class="hndle"><?php _e('About','user-language-switch');?></h3>
     <div class="inside">
     <p><strong>User Language Switch </strong><?php _e('was developed by ', 'user-language-switch');?><a title="Webilop. web and mobile development" href="http://www.webilop.com">Webilop</a></p>
-    <p><?php _e('Webilop is a company focused on web and mobile solutions. We develop custom mobile applications and templates and plugins for CMSs such as Wordpress and Joomla!.', 'user-language-switch');?></p>
-   <div><h4><?php _e('Follow us', 'user-language-switch')?></h4><a title="Facebook" href="https://www.facebook.com/webilop" target="_blank"><img src="<?php echo WP_PLUGIN_URL;?>/user-language-switch/images/facebook.png"></a>
-<a title="LinkedIn" href="http://www.linkedin.com/company/webilop" target="_blank"><img src="<?php echo WP_PLUGIN_URL;?>/user-language-switch/images/linkedin.png"></a>
-<a title="Twitter" href="https://twitter.com/webilop" target="_blank"><img src="<?php echo WP_PLUGIN_URL;?>/user-language-switch/images/twitter.png"></a>
-<a title="Google Plus" href="https://plus.google.com/104606011635671696803" target="_blank" rel="publisher"><img src="<?php echo WP_PLUGIN_URL;?>/user-language-switch/images/gplus.png"></a></div>
+    <p><?php _e('Webilop is a company focused on web and mobile solutions. We develop custom mobile applications, templates and plugins for CMS platforms like Wordpress. We can help you with your website, contact us at ', 'user-language-switch');?><a href="mailto:contact@webilop.com">contact@webilop.com</a></p>
    </div>
    <?php 
    }
