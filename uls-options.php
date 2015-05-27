@@ -5,11 +5,15 @@
 class ULS_Options{
    static private $default_options = array(
       'user_backend_configuration' => true,
-      'user_frontend_configuration' => true,
+      'user_frontend_configuration' => true, 
       'default_backend_language' => 'en_US',
       'default_frontend_language' => 'en_US',
       'backend_language_field_name' => 'uls_backend_language',
       'frontend_language_field_name' => 'uls_frontend_language',
+      'activate_tab_language_switch' => true, 
+      'tab_color_picker_language_switch' => '#FFFFFF', 
+      'tab_position_language_switch' => 'RM',
+      'fixed_position_language_switch' => true, 
    );
 
    /**
@@ -31,36 +35,96 @@ class ULS_Options{
     */
    static function init_settings(){
       //register settings
-      register_setting('uls_settings', 'uls_settings', 'ULS_Options::validate_settings');
+      register_setting('uls_settings',
+	 'uls_settings',
+	 'ULS_Options::validate_settings');
       
       //get options
       $options = get_option('uls_settings');
    
       //create section for registration
-      add_settings_section('uls_general_settings_section', __('General Settings','user-language-switch'), 'ULS_Options::create_general_settings_section', 'uls-settings-page');
+      add_settings_section('uls_general_settings_section',
+	 __('General Settings','user-language-switch'),
+	 'ULS_Options::create_general_settings_section',
+	 'uls-settings-page');
+
+      $options['input_name'] = 'activate_tab_language_switch';
+      add_settings_field($options['input_name'],
+	 __('Activate Tab','user-language-switch'),
+	 'ULS_Options::create_checkbox_input',
+	 'uls-settings-page',
+	 'uls_general_settings_section',
+	 $options); 
+
+      $options['input_name'] = 'fixed_position_language_switch';
+      add_settings_field($options['input_name'],
+	 __('Tab Fixed Pisition ','user-language-switch'),
+	 'ULS_Options::create_checkbox_input',
+	 'uls-settings-page',
+	 'uls_general_settings_section',
+	 $options); 
+
+      $options['input_name'] = 'tab_position_language_switch'; 
+      $options['select_options'] = array('TL' => 'Top-Left','TC' => 'Top-Center','TR' => 'Top-Right',
+					   'BL' => 'Bottom-Left','BC' => 'Bottom-Center','BR' => 'Bottom-Right',
+					   'LL' => 'Left-Left','LM' => 'Left-Middle','LR' => 'Left-Right', 
+					   'RL' => 'Ringht-Left','RM' => 'Ringht-Middle','RR' => 'Ringht-Right', ); 
+      add_settings_field($options['input_name'],
+	 __('Tab Position','user-language-switch'),
+	 'ULS_Options::create_select_input',
+	 'uls-settings-page',
+	 'uls_general_settings_section',
+	 $options); 
+      
+      $options['input_name'] = 'tab_color_picker_language_switch'; 
+      add_settings_field($options['input_name'],
+	 __('Tab Backgorund Color','user-language-switch'),
+	 'ULS_Options::create_text_input',
+	 'uls-settings-page',
+	 'uls_general_settings_section',
+	 $options); 
       
       $options['input_name'] = 'default_frontend_language';
-      add_settings_field($options['input_name'], __('Default language','user-language-switch'), 'ULS_Options::create_language_selector_input', 'uls-settings-page','uls_general_settings_section',$options);
-      
-      /*$options['input_name'] = 'frontend_language_field_name';
-      add_settings_field($options['input_name'], __('User meta field to store the website language language','user-language-switch'), 'ULS_Options::create_text_input', 'uls-settings-page','uls_general_settings_section',$options);*/
+      add_settings_field($options['input_name'],
+	 __('Default language','user-language-switch'),
+	 'ULS_Options::create_language_selector_input',
+	 'uls-settings-page',
+	 'uls_general_settings_section',
+	 $options); 
       
       $options['input_name'] = 'default_backend_language';
-      add_settings_field($options['input_name'], __('Default language for admin side','user-language-switch'), 'ULS_Options::create_language_selector_input', 'uls-settings-page','uls_general_settings_section',$options);
-      
-      /*$options['input_name'] = 'backend_language_field_name';
-      add_settings_field($options['input_name'], __('User meta field to store the admin side language','user-language-switch'), 'ULS_Options::create_text_input', 'uls-settings-page','uls_general_settings_section',$options);*/
+      add_settings_field($options['input_name'],
+	 __('Default language for admin side','user-language-switch'),
+	 'ULS_Options::create_language_selector_input',
+	 'uls-settings-page',
+	 'uls_general_settings_section',
+	 $options);
       
       $options['input_name'] = 'user_frontend_configuration';
-      add_settings_field($options['input_name'], __('Allow registered users to change the language that user looks the website','user-language-switch'), 'ULS_Options::create_checkbox_input', 'uls-settings-page','uls_general_settings_section',$options);
+      add_settings_field($options['input_name'],
+	 __('Allow registered users to change the language that user looks the website','user-language-switch'),
+	 'ULS_Options::create_checkbox_input',
+	 'uls-settings-page',
+	 'uls_general_settings_section',$options);
       
       $options['input_name'] = 'user_backend_configuration';
-      add_settings_field($options['input_name'], __('Allow registered users to change the language that user looks the back-end side','user-language-switch'), 'ULS_Options::create_checkbox_input', 'uls-settings-page','uls_general_settings_section',$options);
+      add_settings_field($options['input_name'],
+	 __('Allow registered users to change the language that user looks the back-end side','user-language-switch'),
+	 'ULS_Options::create_checkbox_input',
+	 'uls-settings-page',
+	 'uls_general_settings_section',
+	 $options);
 
       //create section for collaboration
-      add_settings_section('uls_collaboration_section', __('Collaborate','user-language-switch'), 'ULS_Options::create_collaboration_section', 'uls-settings-page');
+      add_settings_section('uls_collaboration_section',
+	 __('Collaborate','user-language-switch'),
+	 'ULS_Options::create_collaboration_section',
+	 'uls-settings-page');
       //create about section 
-      add_settings_section('uls_about_section', __('About','user-language-switch'), 'ULS_Options::create_about_section', 'uls-settings-page');
+      add_settings_section('uls_about_section',
+	 __('About','user-language-switch'),
+	 'ULS_Options::create_about_section',
+	 'uls-settings-page');
    }
 
    /**
@@ -77,6 +141,7 @@ class ULS_Options{
       //get values of checkboxes
       $options['user_backend_configuration'] = isset($_POST['user_backend_configuration']);
       $options['user_frontend_configuration'] = isset($_POST['user_frontend_configuration']);
+      $options['activate_tab_language_switch'] = isset($_POST['activate_tab_language_switch']); 
 
       return $options;
    }
@@ -85,12 +150,19 @@ class ULS_Options{
     * Add entries in menu sidebar in back end.
     */
    static function register_menu(){
-      add_options_page( __('User Language Switch','user-language-switch'), __('User Language Switch','user-language-switch'), 'manage_options', 'uls-settings-page', 'ULS_Options::create_settings_page' );
+      add_options_page( __('User Language Switch','user-language-switch'),
+	 __('User Language Switch','user-language-switch'),
+	 'manage_options', 'uls-settings-page',
+	 'ULS_Options::create_settings_page' );
       
       //if users can configurate their languages
       $options = get_option('uls_settings');
       if($options['user_backend_configuration'] || $options['user_frontend_configuration'])
-         add_menu_page( __('User Language Preferences','user-language-switch'), __('User Language','user-language-switch'), 'read', 'uls-user-language-page', 'ULS_Options::create_user_language_page' );
+         add_menu_page( __('User Language Preferences','user-language-switch'),
+	    __('User Language','user-language-switch'),
+	    'read',
+	    'uls-user-language-page',
+	    'ULS_Options::create_user_language_page' );
    }
 
    /**
@@ -98,7 +170,7 @@ class ULS_Options{
     * @param $options array plugin options saved.
     */
    static function create_language_selector_input($options){
-      $default_value = (isset($options[$options['input_name']])) ? $options[$options['input_name']] : self::$default_options['input_name'];
+      $default_value = (isset($options[$options['input_name']])) ? $options[$options['input_name']] : self::$default_options[$options['input_name']];
       echo uls_language_selector_input($options['input_name'],$options['input_name'],$default_value);
    }
 
@@ -107,7 +179,7 @@ class ULS_Options{
     * @param $options array plugin options saved.
     */
    static function create_checkbox_input($options){
-      $default_value = (isset($options[$options['input_name']])) ? $options[$options['input_name']] : self::$default_options['input_name'];
+      $default_value = (isset($options[$options['input_name']])) ? $options[$options['input_name']] : self::$default_options[$options['input_name']];
       ?>
       <input type="checkbox" name="<?php echo $options['input_name']; ?>" <?php checked($default_value); ?> />
       <?php
@@ -118,9 +190,20 @@ class ULS_Options{
     * @param $options array plugin options saved.
     */
    static function create_text_input($options){
-      $default_value = (isset($options[$options['input_name']])) ? $options[$options['input_name']] : self::$default_options['input_name'];
+      $default_value = (isset($options[$options['input_name']])) ? $options[$options['input_name']] : self::$default_options[$options['input_name']];
       ?>
       <input type="text" name="<?php echo $options['input_name']; ?>" value="<?php echo $default_value; ?>" />
+      <?php
+   }
+
+   static function create_select_input($options){
+      $default_value = (isset($options[$options['input_name']])) ? $options[$options['input_name']] : self::$default_options[$options['input_name']];
+      ?>
+      <select name="<?php echo $options['input_name']; ?>">
+	 <?php foreach($options['select_options'] as $key => $value): ?>
+	    <option value="<?= $key ?>" <?php selected($key,$default_value); ?> ><?= $value ?></option>
+	 <?php endforeach; ?>
+      </select> 
       <?php
    }
 
@@ -186,8 +269,13 @@ class ULS_Options{
       if(empty($default_backend_language))
          $default_backend_language = $options['default_backend_language'];
       $default_frontend_language = get_user_meta(get_current_user_id(), $options['frontend_language_field_name'], true);
+
       if(empty($default_frontend_language))
          $default_frontend_language = $options['default_frontend_language'];
+
+      $activate_tab_language_switch = get_user_meta(get_current_user_id(), $options['activate_tab_language_switch_field_name'], true);
+      if(empty($activate_tab_language_switch))
+         $activate_tab_language_switch = $options['activate_tab_language_switch'];
    ?>
    <div class="wrap">
       <h2><?php _e('User Language Preferences','user-language-switch'); ?></h2>
