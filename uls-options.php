@@ -67,8 +67,8 @@ class ULS_Options{
       $options['input_name'] = 'tab_position_language_switch'; 
       $options['select_options'] = array('TL' => 'Top-Left','TC' => 'Top-Center','TR' => 'Top-Right',
 					   'BL' => 'Bottom-Left','BC' => 'Bottom-Center','BR' => 'Bottom-Right',
-					   'LL' => 'Left-Left','LM' => 'Left-Middle','LR' => 'Left-Right', 
-					   'RL' => 'Ringht-Left','RM' => 'Ringht-Middle','RR' => 'Ringht-Right', ); 
+					   'LT' => 'Left-Top','LM' => 'Left-Middle','LB' => 'Left-Bottom', 
+					   'RT' => 'Ringht-Top','RM' => 'Ringht-Middle','RB' => 'Ringht-Bottom', ); 
       add_settings_field($options['input_name'],
 	 __('Tab Position','user-language-switch'),
 	 'ULS_Options::create_select_input',
@@ -142,6 +142,7 @@ class ULS_Options{
       $options['user_backend_configuration'] = isset($_POST['user_backend_configuration']);
       $options['user_frontend_configuration'] = isset($_POST['user_frontend_configuration']);
       $options['activate_tab_language_switch'] = isset($_POST['activate_tab_language_switch']); 
+      $options['fixed_position_language_switch'] = isset($_POST['fixed_position_language_switch']); 
 
       return $options;
    }

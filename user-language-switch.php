@@ -856,6 +856,7 @@ function uls_add_styles() {
   // Respects SSL, Style.css is relative to the current file
   wp_register_style( 'html-style', plugins_url('css/styles.css', __FILE__) );
   wp_enqueue_style( 'html-style' );
+  wp_enqueue_style( 'webilop-flags_16x11-style', plugins_url('css/flags/flags_16x11.css', __FILE__) );
 }
 add_action( 'admin_enqueue_scripts', 'uls_add_styles' );
 
@@ -867,15 +868,10 @@ function uls_add_scripts() {
     wp_enqueue_script( 'add-bx-js' );
     // make the ajaxurl var available to the above script
     wp_localize_script( 'add-bx-js', 'the_ajax_script', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
-}
-
+    wp_enqueue_style( 'webilop-flags_32x32-style', plugins_url('css/flags/flags_32x32.css', __FILE__) );
+} 
 add_action( 'wp_print_scripts', 'uls_add_scripts' );
 
-
-add_action( 'admin_print_scripts', 'webilop_admin_scripts' );
-function webilop_admin_scripts() {
-  wp_enqueue_style( 'webilop-flags-style', plugins_url('css/flags.css', __FILE__) );
-}
 
 add_filter('manage_posts_columns', 'webilop_add_posts_columns');
 function webilop_add_posts_columns($columns) {
@@ -892,7 +888,7 @@ function webilop_show_posts_columns($name) {
     switch ($name) {
         case 'language':
             $views = strtolower(get_post_meta($post->ID, 'uls_language', true));
-	    echo '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag flag-'.substr($views, -2).'" alt="'.$views.'" />';
+	    echo '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.substr($views, -2).'" alt="'.$views.'" />';
 	    break;
         case 'translation':
             $views = get_post_meta($post->ID);
@@ -905,7 +901,7 @@ function webilop_show_posts_columns($name) {
 	       unset($string[strtolower($views)]);
 	       foreach ($string as $key => $value)
 		  echo '<a href="'.get_edit_post_link($value).'">'.
-			   '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag flag-'.substr($key, -2).'" alt="'.$views.'" />'.
+			   '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.substr($key, -2).'" alt="'.$views.'" />'.
 		       '</a>';
 	    }else
 	       echo $string; 
@@ -928,7 +924,7 @@ function webilop_show_pages_columns($name) {
     switch ($name) {
         case 'language':
             $views = strtolower(get_post_meta($post->ID, 'uls_language', true));
-	    echo '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag flag-'.substr($views, -2).'" alt="'.$views.'" />';
+	    echo '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.substr($views, -2).'" alt="'.$views.'" />';
 	    break;
         case 'translation':
             $views = get_post_meta($post->ID);
@@ -942,11 +938,12 @@ function webilop_show_pages_columns($name) {
 	       unset($string[strtolower($views)]);
 	       foreach ($string as $key => $value)
 		  echo '<a href="'.get_edit_post_link($value).'">'.
-			   '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag flag-'.substr($key, -2).'" alt="'.$views.'" />'.
+			   '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.substr($key, -2).'" alt="'.$views.'" />'.
 		       '</a>';
 	    }else
 	       echo $string; 
 	    break;
     }
 } 
+
 ?>
