@@ -32,43 +32,43 @@ class ULS_Options{
    static function init_settings(){
       //register settings
       register_setting('uls_settings', 'uls_settings', 'ULS_Options::validate_settings');
-      
+
       //get options
       $options = get_option('uls_settings');
-   
+
       //create section for registration
       add_settings_section('uls_general_settings_section', __('General Settings','user-language-switch'), 'ULS_Options::create_general_settings_section', 'uls-settings-page');
       $options['input_name'] = 'default_backend_language';
       add_settings_field($options['input_name'], __('Default language for admin side','user-language-switch'), 'ULS_Options::create_language_selector_input', 'uls-settings-page','uls_general_settings_section',$options);
-      
+
       $options['input_name'] = 'backend_language_field_name';
       add_settings_field($options['input_name'], __('User meta field to store the admin side language','user-language-switch'), 'ULS_Options::create_text_input', 'uls-settings-page','uls_general_settings_section',$options);
-      
+
       $options['input_name'] = 'default_frontend_language';
       add_settings_field($options['input_name'], __('Default language for website','user-language-switch'), 'ULS_Options::create_language_selector_input', 'uls-settings-page','uls_general_settings_section',$options);
-      
+
       $options['input_name'] = 'frontend_language_field_name';
-      add_settings_field($options['input_name'], __('User meta field to store the website language language','user-language-switch'), 'ULS_Options::create_text_input', 'uls-settings-page','uls_general_settings_section',$options);
-      
+      add_settings_field($options['input_name'], __('User meta field to store the website language','user-language-switch'), 'ULS_Options::create_text_input', 'uls-settings-page','uls_general_settings_section',$options);
+
       $options['input_name'] = 'user_backend_configuration';
       add_settings_field($options['input_name'], __('Allow users change their admin side language','user-language-switch'), 'ULS_Options::create_checkbox_input', 'uls-settings-page','uls_general_settings_section',$options);
-      
+
       $options['input_name'] = 'user_frontend_configuration';
       add_settings_field($options['input_name'], __('Allow users change their website language','user-language-switch'), 'ULS_Options::create_checkbox_input', 'uls-settings-page','uls_general_settings_section',$options);
-      
+
       //create section for collaboration
       add_settings_section('uls_collaboration_section', __('Collaborate','user-language-switch'), 'ULS_Options::create_collaboration_section', 'uls-settings-page');
-      //create about section 
+      //create about section
       add_settings_section('uls_about_section', __('About','user-language-switch'), 'ULS_Options::create_about_section', 'uls-settings-page');
    }
 
    /**
-    * Validate setting input fields. 
+    * Validate setting input fields.
     */
    static function validate_settings($input){
       //create default options
       $options = self::$default_options;
-      
+
       foreach($options as $k => $v)
          if(isset($_POST[$k]) && !empty($_POST[$k]) && '' != trim($_POST[$k]))
             $options[$k] = trim($_POST[$k]);
@@ -85,7 +85,7 @@ class ULS_Options{
     */
    static function register_menu(){
       add_options_page( __('User Language Switch','user-language-switch'), __('User Language Switch','user-language-switch'), 'manage_options', 'uls-settings-page', 'ULS_Options::create_settings_page' );
-      
+
       //if users can configurate their languages
       $options = get_option('uls_settings');
       if($options['user_backend_configuration'] || $options['user_frontend_configuration'])
@@ -131,13 +131,13 @@ class ULS_Options{
       <p><?php _e('You can install more languages in your site following the instructions in ','user-language-switch'); ?><a href="http://codex.wordpress.org/WordPress_in_Your_Language" target="_blank"><?php _e('WordPress in Your Language','user-language-switch'); ?></a>.</p>
       <?php
    }
-   
+
    /**
     * Create the section to collaborate with the development.
     */
    static function create_collaboration_section(){
       ?>
-      <div class="section-inside"><p><?php _e('You can collaborate with the development of this plugin, please send us any suggestion or bug notification to support[at]webilop.com'); ?></p></div>
+      <div class="section-inside"><p><?php _e('You can collaborate with the development of this plugin, please send us any suggestion or bug notification to support[at]webilop.com', 'user-language-switch'); ?></p></div>
       <?php
    }
 
@@ -170,7 +170,7 @@ class ULS_Options{
       <form method="post" action="options.php">
          <?php settings_fields( 'uls_settings' ); ?>
          <?php do_settings_sections( 'uls-settings-page' ); ?>
-         <?php submit_button('Save'); ?>
+         <?php submit_button(__('Save', 'user-language-switch')); ?>
       </form>
    </div>
    <?php
@@ -206,7 +206,7 @@ class ULS_Options{
          <?php endif; ?>
       <?php endif; ?>
       <form id="uls_configuration_form" method="post" action="<?php echo admin_url('admin-ajax.php'); ?>">
-         <?php if(function_exists("wp_nonce_field")): ?> 
+         <?php if(function_exists("wp_nonce_field")): ?>
             <?php wp_nonce_field('uls_user_language_preferences','uls_wpnonce'); ?>
          <?php endif; ?>
          <input type="hidden" name="action" value="uls_user_language_preferences" />
@@ -244,7 +244,7 @@ class ULS_Options{
 <a title="Twitter" href="https://twitter.com/webilop" target="_blank"><img src="<?php echo WP_PLUGIN_URL;?>/user-language-switch/images/twitter.png"></a>
 <a title="Google Plus" href="https://plus.google.com/104606011635671696803" target="_blank" rel="publisher"><img src="<?php echo WP_PLUGIN_URL;?>/user-language-switch/images/gplus.png"></a></div>
    </div>
-   <?php 
+   <?php
    }
 
    /**
@@ -263,7 +263,7 @@ class ULS_Options{
          update_user_meta(get_current_user_id(), $options['backend_language_field_name'], $_POST[$options['backend_language_field_name']]);
       if(!empty($_POST[$options['frontend_language_field_name']]))
          update_user_meta(get_current_user_id(), $options['frontend_language_field_name'], $_POST[$options['frontend_language_field_name']]);
-         
+
       wp_redirect($_SERVER['HTTP_REFERER'] . "&message=saved");
       exit;
    }
@@ -275,9 +275,9 @@ class ULS_Options{
    static function create_settings_link($links){
       $docs_link = '<a title="documentation" target="_blank" href="http://www.webilop.com/products/user-language-switch-wordpress-plugin/">Docs</a>';
       array_unshift($links, $docs_link);
-      $settings_link = '<a href="options-general.php?page=uls-settings-page">Settings</a>'; 
+      $settings_link = '<a href="options-general.php?page=uls-settings-page">Settings</a>';
       array_unshift($links, $settings_link);
-      return $links; 
+      return $links;
    }
 }
 

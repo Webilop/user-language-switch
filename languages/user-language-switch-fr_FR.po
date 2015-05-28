@@ -1,0 +1,154 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: User Language Switch\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-05-26 10:00+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Carlos Guzman <caralbgm@gmail.com>\n"
+"Language-Team: \n"
+"Language: es_ES\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: __;_x;_e\n"
+"X-Poedit-Basepath: ../\n"
+"X-Generator: Poedit 1.7.6\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: init.php:633
+msgid "Please Try Again"
+msgstr ""
+
+#: init.php:650
+msgid "Remove Embed"
+msgstr ""
+
+#: init.php:656
+#, php-format
+msgid "No oEmbed Results Found for %s. View more info at"
+msgstr ""
+
+#: uls-functions.php:253
+msgid "Language"
+msgstr "Langue"
+
+#: uls-functions.php:254 uls-options.php:234
+msgid "Save"
+msgstr "Enregistrer"
+
+#: uls-functions.php:255
+msgid "Language saved"
+msgstr "Langue enregistrée"
+
+#: uls-functions.php:256
+msgid "Error saving language"
+msgstr "Erreur lors de l'enregistrement de la langue"
+
+#: uls-options.php:40
+msgid "General Settings"
+msgstr "Paramètres généraux"
+
+#: uls-options.php:42
+msgid "Default language for admin side"
+msgstr "Langue par défaut dans partie administration"
+
+#: uls-options.php:45
+msgid "User meta field to store the admin side language"
+msgstr ""
+"Champ de méta-donnée utilisé pour enregistrer la langue de la partie "
+"administration"
+
+#: uls-options.php:48
+msgid "Default language for website"
+msgstr "Langue par défaut du site Web"
+
+#: uls-options.php:51
+msgid "User meta field to store the website language"
+msgstr "Champ de méta-donnée utilisé pour enregistrer la langue du site Web"
+
+#: uls-options.php:54
+msgid "Allow users change their admin side language"
+msgstr ""
+"Permettre aux utilisateurs de modifier leur langue dans la partie "
+"administration"
+
+#: uls-options.php:57
+msgid "Allow users change their website language"
+msgstr "Permettre aux utilisateurs de modifier leur langue du site Web"
+
+#: uls-options.php:60
+msgid "Collaborate"
+msgstr "Aidez-nous"
+
+#: uls-options.php:62 uls-options.php:238
+msgid "About"
+msgstr "A propos"
+
+#: uls-options.php:87 uls-options.php:169
+msgid "User Language Switch"
+msgstr "User Language Switch"
+
+#: uls-options.php:92 uls-options.php:196
+msgid "User Language Preferences"
+msgstr "Préférences de Langue Utilisateur"
+
+#: uls-options.php:92
+msgid "User Language"
+msgstr "Langue Utilisateur"
+
+#: uls-options.php:131
+msgid ""
+"You can install more languages in your site following the instructions in "
+msgstr ""
+"Vous pouvez installer plus de langues dans votre site en suivant les "
+"instructions sur "
+
+#: uls-options.php:131
+msgid "WordPress in Your Language"
+msgstr "WordPress dans votre langue"
+
+#: uls-options.php:140
+msgid ""
+"You can collaborate with the development of this plugin, please send us any "
+"suggestion or bug notification to support[at]webilop.com"
+msgstr ""
+"Vous pouvez collaborer au développement de ce plugin, merci de nous envoyez "
+"toute suggestion ou bogue à support[at]webilop.com"
+
+#: uls-options.php:150 uls-options.php:240
+msgid "was developed by "
+msgstr "a été développé par "
+
+#: uls-options.php:151 uls-options.php:241
+msgid ""
+"Webilop is a company focused on web and mobile solutions. We develop custom "
+"mobile applications and templates and plugins for CMSs such as Wordpress and "
+"Joomla!."
+msgstr ""
+"Webilop est une société axée sur les solutions web et mobiles. Nous "
+"développons des applications mobiles personnalisées et des modèles et des "
+"plugins pour des CMS comme WordPress et Joomla !"
+
+#: uls-options.php:152 uls-options.php:242
+msgid "Follow us"
+msgstr "Suivez-nous"
+
+#: uls-options.php:165 uls-options.php:184
+msgid "You do not have sufficient permissions to access this page."
+msgstr "Vous n'avez pas assez de droits pour accèder à cette page."
+
+#: uls-options.php:200
+msgid "Preferences saved."
+msgstr "Préférences enregistrées."
+
+#: uls-options.php:204
+msgid "Error saving preferences."
+msgstr "Erreur lors de l'enregistrement des préférences."
+
+#: uls-options.php:217
+msgid "Displayed language in the admin side"
+msgstr "Langue utilisée pour l'affichage dans la partie administration"
+
+#: uls-options.php:225
+msgid "Displayed language in the front-end side"
+msgstr "Langue utilisée pour l'affichage du site Web"
