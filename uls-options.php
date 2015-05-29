@@ -11,7 +11,7 @@ class ULS_Options{
       'backend_language_field_name' => 'uls_backend_language',
       'frontend_language_field_name' => 'uls_frontend_language',
       'activate_tab_language_switch' => true, 
-      'tab_color_picker_language_switch' => '#FFFFFF', 
+      'tab_color_picker_language_switch' => 'rgba(255, 255, 255, 0)', 
       'tab_position_language_switch' => 'RM',
       'fixed_position_language_switch' => true, 
    );

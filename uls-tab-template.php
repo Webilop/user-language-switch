@@ -5,8 +5,9 @@ $position = $options['tab_position_language_switch'];
 
 
 $TabStyle = "";
-$TabBackgroud = ($options['tab_color_picker_language_switch']) ? "" : "";; 
+$TabBackground = "background-color: ".$options['tab_color_picker_language_switch'].";"; 
 $TabFixed = ($options['fixed_position_language_switch']) ? "position: fixed;" : "position: absolute;";
+$bodyRelative = ($options['fixed_position_language_switch']) ? "" : "position: relative;";
 switch($position){
    case 'TL':
       $TabStyle = "#tab_background_color_picker{
@@ -14,7 +15,10 @@ switch($position){
 			left: 0;
 			width: auto;
 			margin-left: 4px;".
-			$TabFixed."
+			$TabFixed.
+			$TabBackground."
+			padding: 5px 5px 5px 10px;
+			border-radius: 0 0 15px 15px;
 			z-index: 10000000000;
 		  }
 		  .tab_flag {
@@ -27,7 +31,10 @@ switch($position){
 			left: 50%;
 			width: auto;
 			margin-left: 4px;".
-			$TabFixed."
+			$TabFixed.
+			$TabBackground."
+			padding: 5px 5px 5px 10px;
+			border-radius: 0 0 15px 15px;
 			z-index: 10000000000;
 		  }
 		  .tab_flag {
@@ -40,7 +47,10 @@ switch($position){
 			right: 0;
 			width: auto;
 			margin-right: 4px;".
-			$TabFixed."
+			$TabFixed.
+			$TabBackground."
+			padding: 5px 5px 5px 10px;
+			border-radius: 0 0 15px 15px;
 			z-index: 10000000000;
 		  }
 		  .tab_flag {
@@ -53,12 +63,19 @@ switch($position){
 			left: 0;
 			width: auto;
 			margin-left: 4px;".
-			$TabFixed."
+			$TabFixed.
+			$TabBackground."
+			padding: 5px 5px 5px 10px;
+			border-radius: 15px 15px 0 0;
 			z-index: 10000000000;
 		  }
 		  .tab_flag {
 		     	display: inline;
+		  }
+		  body {
+		     $bodyRelative
 		  }";
+
       break;
    case 'BC':
       $TabStyle = "#tab_background_color_picker{
@@ -66,11 +83,17 @@ switch($position){
 			left: 50%;
 			width: auto;
 			margin-left: 4px;".
-			$TabFixed."
+			$TabFixed.
+			$TabBackground."
+			padding: 5px 5px 5px 10px;
+			border-radius: 15px 15px 0 0;
 			z-index: 10000000000;
 		  }
 		  .tab_flag {
 		     	display: inline;
+		  }
+		  body {
+		     $bodyRelative
 		  }";
       break;
    case 'BR':
@@ -79,11 +102,17 @@ switch($position){
 			right: 0;
 			width: auto;
 			margin-right: 4px;".
-			$TabFixed."
+			$TabFixed.
+			$TabBackground."
+			padding: 5px 5px 5px 10px;
+			border-radius: 15px 15px 0 0;
 			z-index: 10000000000;
 		  }
 		  .tab_flag {
 		     	display: inline;
+		  }
+		  body {
+		     $bodyRelative
 		  }";
       break;
    case 'LT':
@@ -92,7 +121,10 @@ switch($position){
 			left: 0;
 			height: auto;
 			margin-left: 4px;".
-			$TabFixed."
+			$TabFixed.
+			$TabBackground."
+			padding: 5px 5px 5px 10px;
+			border-radius: 0 15px 15px 0;
 			z-index: 10000000000;
 		     }";
       break;
@@ -102,7 +134,10 @@ switch($position){
 			left: 0;
 			height: auto;
 			margin-left: 4px;".
-			$TabFixed."
+			$TabFixed.
+			$TabBackground."
+			padding: 5px 5px 5px 10px;
+			border-radius: 0 15px 15px 0;
 			z-index: 10000000000;
 		     }";
       break;
@@ -112,7 +147,10 @@ switch($position){
 			left: 0;
 			height: auto;
 			margin-left: 4px;".
-			$TabFixed."
+			$TabFixed.
+			$TabBackground."
+			padding: 5px 5px 5px 10px;
+			border-radius: 0 15px 15px 0;
 			z-index: 10000000000;
 		     }";
       break;
@@ -122,7 +160,10 @@ switch($position){
 			right: 0;
 			height: auto;
 			margin-right: 4px;".
-			$TabFixed."
+			$TabFixed.
+			$TabBackground."
+			padding: 5px 4px 5px 10px;
+			border-radius: 15px 0 0 15px;
 			z-index: 10000000000;
 		     }";
       break;
@@ -132,7 +173,10 @@ switch($position){
 			right: 0;
 			height: auto;
 			margin-right: 4px;".
-			$TabFixed."
+			$TabFixed.
+			$TabBackground."
+			padding: 5px 4px 5px 10px;
+			border-radius: 15px 0 0 15px;
 			z-index: 10000000000;
 		     }";
       break;
@@ -142,7 +186,10 @@ switch($position){
 			right: 0;
 			height: auto;
 			margin-right: 4px;".
-			$TabFixed."
+			$TabFixed.
+			$TabBackground."
+			padding: 5px 4px 5px 10px;
+			border-radius: 15px 0 0 15px;
 			z-index: 10000000000;
 		     }";
       break;
