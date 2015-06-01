@@ -248,7 +248,7 @@ class ULS_Options{
    }
 
    /**
-    * Process and save the user language prefernces.
+    * Process and save the user language preferences.
     */
    static function save_user_language_preferences(){
       //check parameters
@@ -269,7 +269,7 @@ class ULS_Options{
    }
 
    /**
-    * Create the settings link in admi plugin page.
+    * Create the settings link in admin plugin page.
     * @param $links array Current links to display.
     */
    static function create_settings_link($links){

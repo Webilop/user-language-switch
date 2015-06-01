@@ -57,7 +57,7 @@ function uls_init_plugin(){
   //if the current page language is not the same of the user or site language, then redirect the user to the correct language
   uls_redirect_by_page_language();
 
-  //if the URL contains the language and it is the same of the site langauge or the user langauge saved, then remove the language from the URL.
+  //if the URL contains the language and it is the same of the site language or the user langauge saved, then remove the language from the URL.
   uls_redirect_by_languange_redundancy();
 
   //init session to detect if you are in the home page by "first time"
@@ -94,10 +94,10 @@ function uls_get_user_language_from_url($only_lang = false){
 
 
 /**
- * This function retrives the user language selected in the admin side.
+ * This function retrieves the user language selected in the admin side.
  *
  * @param $only_lang boolean if it is true, then it returns the 2 letters of the language. It is the language code without location.
- * @param $type string (backend|frontend) specifiy which language it will return.
+ * @param $type string (backend|frontend) specify which language it will return.
  *
  * @return mixed it returns a string containing a language code. If user don't have permissions to change languages or user hasn't configured a language, then the default language is returned. If user isn't logged in, then false is returned.
  */
@@ -135,7 +135,7 @@ function uls_get_user_saved_language($only_lang = false, $type = null){
 }
 
 /**
- * This function retrives the user language from the browser. It reads the headers sent by the browser about language preferences.
+ * This function retrieves the user language from the browser. It reads the headers sent by the browser about language preferences.
  *
  * @return mixed it returns a string containing a language code or false if there isn't any language detected.
  */
@@ -180,7 +180,7 @@ function uls_get_user_language_from_browser(){
         //search the language in the installed languages using the language and location
         foreach($validLanguages as $vLang){
           if(strtolower($vLang) == $v['code']){
-            //replace the prefered language
+            //replace the preferred language
             if($v['q'] > $max){
               $max = $v['q'];
               $maxLang = $vLang;
@@ -196,7 +196,7 @@ function uls_get_user_language_from_browser(){
         //search only for the language
         foreach($validLanguages as $vLang){
           if(substr($vLang, 0, 2) == substr($v['l'], 0, 2)){
-            //replace the prefered language
+            //replace the preferred language
             if($v['q'] > $max){
               $max = $v['q'];
               $maxLang = $vLang;
@@ -298,7 +298,7 @@ function uls_redirect_by_browser_language(){
 }
 
 /**
- * if the URL contains the language and it is the same of the site langauge or the user langauge saved, then remove the language from the URL using a redirection to the page.
+ * if the URL contains the language and it is the same of the site language or the user langauge saved, then remove the language from the URL using a redirection to the page.
  */
 function uls_redirect_by_languange_redundancy(){
   //if user is in an admin area, then don't redirect
@@ -319,7 +319,7 @@ function uls_redirect_by_languange_redundancy(){
     $url =(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"]=="on") ? "https://" : "http://";
     $url .= $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
 
-    //get the URL withou the code language
+    //get the URL without the code language
     $redirectUrl = uls_get_url_translated($url, $siteLanguage);
 
     if($redirectUrl != $url){
@@ -411,7 +411,7 @@ function uls_language_loading($lang){
 add_filter('locale', 'uls_language_loading');
 
 /**
- * It returns the configured or default code language for a language abbreviatio. The code language is the pair of language and country (i.e: en_US, es_ES)-
+ * It returns the configured or default code language for a language abbreviation. The code language is the pair of language and country (i.e: en_US, es_ES)-
  */
 function uls_get_location_by_language($language){
 
@@ -611,7 +611,7 @@ function uls_get_url_translated($url, $language, $type = 'prefix', $remove_defau
 }
 
 /**
- * This function creates an HTML slect input with the available languages for the site.
+ * This function creates an HTML select input with the available languages for the site.
  * @param $id string id of the HTML element.
  * @param $name string name of the HTML element.
  * @param $default_value string value of the default selected option.
@@ -650,7 +650,7 @@ function uls_language_selector_input($id, $name, $default_value = '', $class = '
 
 
 /**
- * Get the available lanuages on the system.
+ * Get the available languages on the system.
  *
  * @return array associative array with the available languages in the system. The keys are the language names and the values are the language codes.
  */

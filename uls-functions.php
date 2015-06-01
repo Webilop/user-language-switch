@@ -1,6 +1,6 @@
 <?php
  /**
- * This file containg general functions to use in themes or other plugins.
+ * This file contains general functions to use in themes or other plugins.
  */
 
 /**
@@ -203,7 +203,7 @@ function uls_language_link_switch($url = null, $url_type = 'prefix', $type = 'li
    return $res;
 }
 /**
- * Add showrtcode to add language versions
+ * Add shortcode to add language versions
  */
 add_shortcode('uls-language-selector', 'uls_language_selector_shortcode');
 function uls_language_selector_shortcode($atts){
