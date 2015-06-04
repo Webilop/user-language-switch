@@ -13,8 +13,7 @@ switch($position){
       $TabStyle = "#tab_background_color_picker{
 			top: 0;
 			left: 0;
-			width: auto;
-			margin-left: 4px;".
+			width: auto; ".
 			$TabFixed.
 			$TabBackground."
 			padding: 5px 5px 5px 10px;
@@ -29,8 +28,7 @@ switch($position){
       $TabStyle = "#tab_background_color_picker{
 			top: 0;
 			left: 50%;
-			width: auto;
-			margin-left: 4px;".
+			width: auto;".
 			$TabFixed.
 			$TabBackground."
 			padding: 5px 5px 5px 10px;
@@ -45,8 +43,7 @@ switch($position){
       $TabStyle = "#tab_background_color_picker{
 			top: 0;
 			right: 0;
-			width: auto;
-			margin-right: 4px;".
+			width: auto;".
 			$TabFixed.
 			$TabBackground."
 			padding: 5px 5px 5px 10px;
@@ -61,8 +58,7 @@ switch($position){
       $TabStyle = "#tab_background_color_picker{
 			bottom: 0;
 			left: 0;
-			width: auto;
-			margin-left: 4px;".
+			width: auto;".
 			$TabFixed.
 			$TabBackground."
 			padding: 5px 5px 5px 10px;
@@ -81,8 +77,7 @@ switch($position){
       $TabStyle = "#tab_background_color_picker{
 			bottom: 0;
 			left: 50%;
-			width: auto;
-			margin-left: 4px;".
+			width: auto;".
 			$TabFixed.
 			$TabBackground."
 			padding: 5px 5px 5px 10px;
@@ -100,8 +95,7 @@ switch($position){
       $TabStyle = "#tab_background_color_picker{
 			bottom: 0;
 			right: 0;
-			width: auto;
-			margin-right: 4px;".
+			width: auto;".
 			$TabFixed.
 			$TabBackground."
 			padding: 5px 5px 5px 10px;
@@ -119,8 +113,7 @@ switch($position){
       $TabStyle = "#tab_background_color_picker{
 			top: 0;
 			left: 0;
-			height: auto;
-			margin-left: 4px;".
+			height: auto;".
 			$TabFixed.
 			$TabBackground."
 			padding: 5px 5px 5px 10px;
@@ -132,8 +125,7 @@ switch($position){
       $TabStyle = "#tab_background_color_picker{
 			top: 50%;
 			left: 0;
-			height: auto;
-			margin-left: 4px;".
+			height: auto;".
 			$TabFixed.
 			$TabBackground."
 			padding: 5px 5px 5px 10px;
@@ -145,8 +137,7 @@ switch($position){
       $TabStyle = "#tab_background_color_picker{
 			bottom: 0;
 			left: 0;
-			height: auto;
-			margin-left: 4px;".
+			height: auto;".
 			$TabFixed.
 			$TabBackground."
 			padding: 5px 5px 5px 10px;
@@ -158,8 +149,7 @@ switch($position){
       $TabStyle = "#tab_background_color_picker{
 			top: 0;
 			right: 0;
-			height: auto;
-			margin-right: 4px;".
+			height: auto;".
 			$TabFixed.
 			$TabBackground."
 			padding: 5px 4px 5px 10px;
@@ -171,8 +161,7 @@ switch($position){
       $TabStyle = "#tab_background_color_picker{
 			top: 50%;
 			right: 0;
-			height: auto;
-			margin-right: 4px;".
+			height: auto;".
 			$TabFixed.
 			$TabBackground."
 			padding: 5px 4px 5px 10px;
@@ -184,8 +173,7 @@ switch($position){
       $TabStyle = "#tab_background_color_picker{
 			bottom: 0;
 			right: 0;
-			height: auto;
-			margin-right: 4px;".
+			height: auto;".
 			$TabFixed.
 			$TabBackground."
 			padding: 5px 4px 5px 10px;
@@ -200,9 +188,11 @@ switch($position){
    <?= $TabStyle; ?>
 </style>
 <div id="tab_background_color_picker">
-   <?php foreach ($languages as $key => $value) : ?>
-   	<div class="tab_flag">
-	<img src="<?= plugins_url("css/blank.gif", __FILE__); ?>" style="margin-right:5px;" class="flag_32x32 flag-<?= strtolower(substr($value, -2));?>" alt="<?= $value; ?>" />
-	</div>
-   <?php endforeach; ?> 
+	<?php foreach ($languages as $key => $value) : ?>
+		<div class="tab_flag">
+			<?php $tagHtml = ' <img src="'. plugins_url("css/blank.gif", __FILE__). '" style="margin-right:5px;" class="flag_32x32 flag-'. strtolower(substr($value, -2)) .'" alt="'. $value .'" /> ';
+?>
+			<?= uls_get_link(null, $value, $tagHtml) ?>
+		</div>
+	<?php endforeach; ?> 
 </div>
