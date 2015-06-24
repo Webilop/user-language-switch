@@ -40,9 +40,7 @@ class ULS_Options{
 		'ULS_Options::validate_settings');
 
 		//get options
-		$options = get_option('uls_settings');
-
-		$url_parameters = isset($_GET['tab'])? 'updated=true&tab='.$_GET['tab'] : 'updated=true';
+		$options = get_option('uls_settings'); 
 
 		//create about section 
 		add_settings_section('uls_create_section_tabs',
@@ -50,14 +48,15 @@ class ULS_Options{
 		'ULS_Options::ilc_admin_tabs',
 		'uls-settings-page');
 
-		//create section for registration
-		add_settings_section('uls_general_settings_section',
-		__('General Settings','user-language-switch'),
-		'ULS_Options::create_general_settings_section',
-		'uls-settings-page');
 
 		// add configuration about the setting depent of the tab
-		if( isset($_GET['tab']) && $_GET['tab'] == 'homepage' ) { 
+		if( isset($_GET['tab']) && $_GET['tab'] == 'homepage' || !isset($_GET['tab'])  ) { 
+
+			//create section for registration
+			add_settings_section('uls_general_settings_section',
+			__('General Settings','user-language-switch'),
+			'ULS_Options::create_general_settings_section',
+			'uls-settings-page');
 
 			$options['input_name'] = 'activate_tab_language_switch';
 			add_settings_field($options['input_name'],
@@ -127,6 +126,13 @@ class ULS_Options{
 			$options);
 		}
 		else if( isset($_GET['tab']) && $_GET['tab'] == 'menulanguage' ) { 
+
+			//create section for registration
+			add_settings_section('uls_general_settings_section',
+			__('Menu Language Settings','user-language-switch'),
+			'ULS_Options::create_general_settings_section',
+			'uls-settings-page');
+
 			// create menu table configuration
 			add_settings_section('table_menu_language',
 			__('','user-language-switch'),
@@ -227,12 +233,12 @@ class ULS_Options{
    }
 
    static function create_select_input($options){
-      $default_value = (isset($options[$options['input_name']])) ? $options[$options['input_name']] : self::$default_options[$options['input_name']];
-      ?>
+      $default_value = (isset($options[$options['input_name']])) ? $options[$options['input_name']] : self::$default_options[$options['input_name']]; ?>
+
       <select name="<?php echo $options['input_name']; ?>">
-	 <?php foreach($options['select_options'] as $key => $value): ?>
-	    <option value="<?= $key ?>" <?php selected($key,$default_value); ?> ><?= $value ?></option>
-	 <?php endforeach; ?>
+				 <?php foreach($options['select_options'] as $key => $value): ?>
+						<option value="<?= $key ?>" <?php selected($key,$default_value); ?> ><?= $value ?></option>
+				 <?php endforeach; ?>
       </select> 
       <?php
    }
@@ -241,7 +247,7 @@ class ULS_Options{
 			$languages = uls_get_available_languages(); // get the all languages available in the wp
 			$themeLocation  = get_registered_nav_menus(); // get the all theme location
 			$options = get_option('uls_settings'); // get information from DB
-			$options = $options['position_menu_language']; // get the information that actually is in the DB 
+			$options = isset($options['position_menu_language']) ? $options['position_menu_language'] : false; // get the information that actually is in the DB 
 		?> 
 							<table id="menu-locations-table" class="widefat fixed">
 										<thead>
@@ -264,7 +270,7 @@ class ULS_Options{
 																								<option value="0">— Select a Menu —</option> 
 																				<?php 
 																							foreach ($menus as $menu ): // iterative menues, add cols ?>
-																								<option value="<?= $menu->slug; ?>"  <?php selected($menu->slug,$options[$theme][$language_code]); ?> ><?= $menu ->name; ?></option> 
+																								<option value="<?= $menu->slug; ?>"  <?php selected($menu->slug, ($options) ? $options[$theme][$language_code] : '' );  ?> ><?= $menu ->name; ?></option> 
 																				<?php endforeach; ?>
 																			</select>
 																		</td><!-- .menu-location-menus -->
@@ -330,7 +336,7 @@ class ULS_Options{
 		// get the current tab or default tab
 		$current = isset($_GET['tab']) ? $_GET['tab'] : 'homepage'; 
 		// add the tabs that you want to use in the plugin 
-		$tabs = array( 'homepage' => 'Home Settings', 'menulanguage' => 'Menu Languages');
+		$tabs = array( 'homepage' => 'General', 'menulanguage' => 'Menu Languages');
     echo '<div id="icon-themes" class="icon32"><br></div>';
     echo '<h2 class="nav-tab-wrapper">';
 		// configurate the url with your personal_url and add the class for the activate tab
@@ -348,7 +354,8 @@ class ULS_Options{
       if ( !current_user_can( 'read' ) )  {
          wp_die( __( 'You do not have sufficient permissions to access this page.', 'user-language-switch' ) );
       }
-      $options = get_option('uls_settings');
+
+      $options = array_merge(ULS_Options::$default_options, get_option('uls_settings'));
       $default_backend_language = get_user_meta(get_current_user_id(), $options['backend_language_field_name'], true);
 
       if(empty($default_backend_language))
@@ -358,7 +365,7 @@ class ULS_Options{
       if(empty($default_frontend_language))
          $default_frontend_language = $options['default_frontend_language'];
 
-      $activate_tab_language_switch = get_user_meta(get_current_user_id(), $options['activate_tab_language_switch_field_name'], true);
+      $activate_tab_language_switch = get_user_meta(get_current_user_id(), $options['activate_tab_language_switch'], true);
       if(empty($activate_tab_language_switch))
          $activate_tab_language_switch = $options['activate_tab_language_switch'];
    ?>

@@ -114,7 +114,7 @@ function uls_get_user_saved_language($only_lang = false, $type = null){
   }
 
   //if the user is logged in
-   if( is_user_logged_in()){
+   if( is_user_logged_in() ){
     //if the user can modify the language
       if($options["user_{$type}_configuration"])
          $language = get_user_meta(get_current_user_id(), "uls_{$type}_language", true);
