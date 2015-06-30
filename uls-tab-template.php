@@ -3,6 +3,12 @@ $languages = uls_get_available_languages();
 $options = get_option('uls_settings');
 $position = $options['tab_position_language_switch']; 
 
+global $wp_query;
+if (is_archive())
+	$postId = null;
+else
+	$postId = $wp_query->post->ID;
+
 
 $TabStyle = "";
 $TabBackground = "background-color: ".$options['tab_color_picker_language_switch'].";"; 
@@ -192,7 +198,7 @@ switch($position){
 		<div class="tab_flag">
 			<?php $tagHtml = ' <img src="'. plugins_url("css/blank.gif", __FILE__). '" style="margin-right:5px;" class="flag_32x32 flag-'. strtolower(substr($value, -2)) .'" alt="'. $value .'" /> ';
 ?>
-			<?= uls_get_link(null, $value, $tagHtml) ?>
+			<?= uls_get_link($postId, $value, $tagHtml) ?>
 		</div>
 	<?php endforeach; ?> 
 </div>
