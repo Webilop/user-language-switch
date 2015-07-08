@@ -820,12 +820,20 @@ function uls_save_association( $post_id ) {
 
   $languages = uls_get_available_languages();
   $selected_language = isset($_POST['uls_language']) ? $_POST['uls_language'] : null;
-  if(!empty($selected_language))
-    foreach ($languages as $lang){
+
+  if(!empty($selected_language)) {
+    foreach ($languages as $lang) {
       $related_post = isset($_POST['uls_translation_'.strtolower($lang)]) ? $_POST['uls_translation_'.strtolower($lang)] : null;
-      if( !empty( $related_post ) )
-        update_post_meta ( $related_post, 'uls_translation_'.strtolower($selected_language), $parent_id );
+      if( !empty( $related_post ) ) {
+				// add traduction to the page that was selected like a translation
+				update_post_meta ( $related_post, 'uls_translation_'.strtolower($selected_language), $parent_id );
+				// add language to the page that was selected like a tranlation. If the page doesn't has associated a languages
+				$related_post_get_language = get_post_meta( $related_post, 'uls_language', true );
+				if ( empty ( $related_post_get_language) )
+					update_post_meta ( $related_post, 'uls_language', $lang );
+			}
     }
+	}
 }
 add_action( 'save_post', 'uls_save_association' );
 
