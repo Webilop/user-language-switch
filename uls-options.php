@@ -33,173 +33,171 @@ class ULS_Options{
    /**
     * Register setting fields.
     */
-	static function init_settings(){
-		//register settings
-		register_setting('uls_settings',
-		'uls_settings',
-		'ULS_Options::validate_settings');
+  static function init_settings() {
+    //register settings
+    register_setting('uls_settings',
+      'uls_settings',
+      'ULS_Options::validate_settings');
 
-		//get options
-		$options = get_option('uls_settings'); 
+    //get options
+    $options = get_option('uls_settings'); 
 
-		//create about section 
-		add_settings_section('uls_create_section_tabs',
-		__('','user-language-switch'),
-		'ULS_Options::ilc_admin_tabs',
-		'uls-settings-page');
+    //create about section 
+    add_settings_section('uls_create_section_tabs',
+      __('','user-language-switch'),
+      'ULS_Options::ilc_admin_tabs',
+      'uls-settings-page');
 
 
-		// add configuration about the setting depent of the tab
-		if( isset($_GET['tab']) && $_GET['tab'] == 'homepage' || !isset($_GET['tab'])  ) { 
+    // add configuration about the setting depent of the tab
+    if( isset($_GET['tab']) && $_GET['tab'] == 'homepage' || !isset($_GET['tab'])  ) { 
+      //create section for registration
+      add_settings_section('uls_general_settings_section',
+        __('General Settings','user-language-switch'),
+        'ULS_Options::create_general_settings_section',
+        'uls-settings-page');
 
-			//create section for registration
-			add_settings_section('uls_general_settings_section',
-			__('General Settings','user-language-switch'),
-			'ULS_Options::create_general_settings_section',
-			'uls-settings-page');
+      $options['input_name'] = 'activate_tab_language_switch';
+      add_settings_field($options['input_name'],
+        __('Activate Tab','user-language-switch'),
+        'ULS_Options::create_checkbox_input',
+        'uls-settings-page',
+        'uls_general_settings_section',
+        $options); 
 
-			$options['input_name'] = 'activate_tab_language_switch';
-			add_settings_field($options['input_name'],
-			__('Activate Tab','user-language-switch'),
-			'ULS_Options::create_checkbox_input',
-			'uls-settings-page',
-			'uls_general_settings_section',
-			$options); 
+      $options['input_name'] = 'fixed_position_language_switch';
+      add_settings_field($options['input_name'],
+        __('Tab Fixed Pisition ','user-language-switch'),
+        'ULS_Options::create_checkbox_input',
+        'uls-settings-page',
+        'uls_general_settings_section',
+        $options); 
 
-			$options['input_name'] = 'fixed_position_language_switch';
-			add_settings_field($options['input_name'],
-			__('Tab Fixed Pisition ','user-language-switch'),
-			'ULS_Options::create_checkbox_input',
-			'uls-settings-page',
-			'uls_general_settings_section',
-			$options); 
+      $options['input_name'] = 'tab_position_language_switch'; 
+      $options['select_options'] = array( 'TL' => 'Top-Left','TC' => 'Top-Center','TR' => 'Top-Right',
+                                          'BL' => 'Bottom-Left','BC' => 'Bottom-Center','BR' => 'Bottom-Right',
+                                          'LT' => 'Left-Top','LM' => 'Left-Middle','LB' => 'Left-Bottom', 
+                                          'RT' => 'Ringht-Top','RM' => 'Ringht-Middle','RB' => 'Ringht-Bottom', ); 
+      add_settings_field($options['input_name'],
+        __('Tab Position','user-language-switch'),
+        'ULS_Options::create_select_input',
+        'uls-settings-page',
+        'uls_general_settings_section',
+        $options); 
 
-			$options['input_name'] = 'tab_position_language_switch'; 
-			$options['select_options'] = array('TL' => 'Top-Left','TC' => 'Top-Center','TR' => 'Top-Right',
-			'BL' => 'Bottom-Left','BC' => 'Bottom-Center','BR' => 'Bottom-Right',
-			'LT' => 'Left-Top','LM' => 'Left-Middle','LB' => 'Left-Bottom', 
-			'RT' => 'Ringht-Top','RM' => 'Ringht-Middle','RB' => 'Ringht-Bottom', ); 
-			add_settings_field($options['input_name'],
-			__('Tab Position','user-language-switch'),
-			'ULS_Options::create_select_input',
-			'uls-settings-page',
-			'uls_general_settings_section',
-			$options); 
+      $options['input_name'] = 'tab_color_picker_language_switch'; 
+      add_settings_field($options['input_name'],
+        __('Tab Backgorund Color','user-language-switch'),
+        'ULS_Options::create_text_input',
+        'uls-settings-page',
+        'uls_general_settings_section',
+        $options); 
 
-			$options['input_name'] = 'tab_color_picker_language_switch'; 
-			add_settings_field($options['input_name'],
-			__('Tab Backgorund Color','user-language-switch'),
-			'ULS_Options::create_text_input',
-			'uls-settings-page',
-			'uls_general_settings_section',
-			$options); 
+      $options['input_name'] = 'default_frontend_language';
+      add_settings_field($options['input_name'],
+        __('Default language','user-language-switch'),
+        'ULS_Options::create_language_selector_input',
+        'uls-settings-page',
+        'uls_general_settings_section',
+        $options); 
 
-			$options['input_name'] = 'default_frontend_language';
-			add_settings_field($options['input_name'],
-			__('Default language','user-language-switch'),
-			'ULS_Options::create_language_selector_input',
-			'uls-settings-page',
-			'uls_general_settings_section',
-			$options); 
+      $options['input_name'] = 'default_backend_language';
+      add_settings_field($options['input_name'],
+        __('Default language for admin side','user-language-switch'),
+        'ULS_Options::create_language_selector_input',
+        'uls-settings-page',
+        'uls_general_settings_section',
+        $options);
 
-			$options['input_name'] = 'default_backend_language';
-			add_settings_field($options['input_name'],
-			__('Default language for admin side','user-language-switch'),
-			'ULS_Options::create_language_selector_input',
-			'uls-settings-page',
-			'uls_general_settings_section',
-			$options);
+      $options['input_name'] = 'user_frontend_configuration';
+      add_settings_field($options['input_name'],
+        __('Allow registered users to change the language that user looks the website','user-language-switch'),
+        'ULS_Options::create_checkbox_input',
+        'uls-settings-page',
+        'uls_general_settings_section',$options);
 
-			$options['input_name'] = 'user_frontend_configuration';
-			add_settings_field($options['input_name'],
-			__('Allow registered users to change the language that user looks the website','user-language-switch'),
-			'ULS_Options::create_checkbox_input',
-			'uls-settings-page',
-			'uls_general_settings_section',$options);
+      $options['input_name'] = 'user_backend_configuration';
+      add_settings_field($options['input_name'],
+        __('Allow registered users to change the language that user looks the back-end side','user-language-switch'),
+        'ULS_Options::create_checkbox_input',
+        'uls-settings-page',
+        'uls_general_settings_section',
+        $options);
+    }
+    else if( isset($_GET['tab']) && $_GET['tab'] == 'menulanguage' ) { 
+      //create section for registration
+      add_settings_section('uls_general_settings_section',
+        __('Menu Language Settings','user-language-switch'),
+        'ULS_Options::create_general_settings_section',
+        'uls-settings-page');
 
-			$options['input_name'] = 'user_backend_configuration';
-			add_settings_field($options['input_name'],
-			__('Allow registered users to change the language that user looks the back-end side','user-language-switch'),
-			'ULS_Options::create_checkbox_input',
-			'uls-settings-page',
-			'uls_general_settings_section',
-			$options);
-		}
-		else if( isset($_GET['tab']) && $_GET['tab'] == 'menulanguage' ) { 
+      // create menu table configuration
+      add_settings_section('table_menu_language',
+        __('','user-language-switch'),
+        'ULS_Options::create_table_menu_language',
+        'uls-settings-page',
+        'uls_general_settings_section',
+        $options);
+    }
+    //create section for collaboration
+    add_settings_section('uls_collaboration_section',
+      __('Collaborate','user-language-switch'),
+      'ULS_Options::create_collaboration_section',
+      'uls-settings-page');
 
-			//create section for registration
-			add_settings_section('uls_general_settings_section',
-			__('Menu Language Settings','user-language-switch'),
-			'ULS_Options::create_general_settings_section',
-			'uls-settings-page');
+    //create about section 
+    add_settings_section('uls_about_section',
+      __('About','user-language-switch'),
+      'ULS_Options::create_about_section',
+      'uls-settings-page');
+  }
 
-			// create menu table configuration
-			add_settings_section('table_menu_language',
-			__('','user-language-switch'),
-			'ULS_Options::create_table_menu_language',
-			'uls-settings-page',
-			'uls_general_settings_section',
-			$options);
-		}
-		//create section for collaboration
-		add_settings_section('uls_collaboration_section',
-		__('Collaborate','user-language-switch'),
-		'ULS_Options::create_collaboration_section',
-		'uls-settings-page');
+  /**
+  * Validate setting input fields. 
+  */
+  static function validate_settings($input){
 
-		//create about section 
-		add_settings_section('uls_about_section',
-		__('About','user-language-switch'),
-		'ULS_Options::create_about_section',
-		'uls-settings-page');
-	}
+    $options = get_option('uls_settings');
 
-	/**
-	* Validate setting input fields. 
-	*/
-	static function validate_settings($input){
+    if( isset($_POST['menulanguage']) ) { 
+      $options['position_menu_language'] = $_POST['uls_position_menu_language'];
+    }else{ 
+      //create default options
+      $ulsPostionMenuLanguage = $options['position_menu_language'];
+      $options = self::$default_options;
 
-		$options = get_option('uls_settings');
+      foreach($options as $k => $v)
+        if(isset($_POST[$k]) && !empty($_POST[$k]) && '' != trim($_POST[$k]))
+          $options[$k] = trim($_POST[$k]);
 
-		if( isset($_POST['menulanguage']) ) { 
-			$options['position_menu_language'] = $_POST['uls_position_menu_language'];
-		} else{ 
-				//create default options
-			  $ulsPostionMenuLanguage = $options['position_menu_language'];
-				$options = self::$default_options;
+      //get values of checkboxes
+      $options['user_backend_configuration'] = isset($_POST['user_backend_configuration']);
+      $options['user_frontend_configuration'] = isset($_POST['user_frontend_configuration']);
+      $options['activate_tab_language_switch'] = isset($_POST['activate_tab_language_switch']); 
+      $options['fixed_position_language_switch'] = isset($_POST['fixed_position_language_switch']); 
+      $options['position_menu_language'] = $ulsPostionMenuLanguage;
+    } 
+    return $options;
+  }
 
-				foreach($options as $k => $v)
-					if(isset($_POST[$k]) && !empty($_POST[$k]) && '' != trim($_POST[$k]))
-						$options[$k] = trim($_POST[$k]);
+  /**
+  * Add entries in menu sidebar in back end.
+  */
+  static function register_menu(){
+    add_options_page( __('User Language Switch','user-language-switch'),
+      __('User Language Switch','user-language-switch'),
+      'manage_options', 'uls-settings-page',
+      'ULS_Options::create_settings_page' ); 
 
-				//get values of checkboxes
-				$options['user_backend_configuration'] = isset($_POST['user_backend_configuration']);
-				$options['user_frontend_configuration'] = isset($_POST['user_frontend_configuration']);
-				$options['activate_tab_language_switch'] = isset($_POST['activate_tab_language_switch']); 
-				$options['fixed_position_language_switch'] = isset($_POST['fixed_position_language_switch']); 
-				$options['position_menu_language'] = $ulsPostionMenuLanguage;
-		} 
-		return $options;
-	}
-
-	/**
-	* Add entries in menu sidebar in back end.
-	*/
-	static function register_menu(){
-		add_options_page( __('User Language Switch','user-language-switch'),
-			__('User Language Switch','user-language-switch'),
-			'manage_options', 'uls-settings-page',
-			'ULS_Options::create_settings_page' ); 
-
-		//if users can configurate their languages
-		$options = get_option('uls_settings');
-		if($options['user_backend_configuration'] || $options['user_frontend_configuration'])
-			add_menu_page( __('User Language Preferences','user-language-switch'),
-			__('User Language','user-language-switch'),
-			'read',
-			'uls-user-language-page',
-			'ULS_Options::create_user_language_page' );
-	}
+    //if users can configurate their languages
+    $options = get_option('uls_settings');
+    if($options['user_backend_configuration'] || $options['user_frontend_configuration'])
+      add_menu_page( __('User Language Preferences','user-language-switch'),
+        __('User Language','user-language-switch'),
+        'read',
+        'uls-user-language-page',
+        'ULS_Options::create_user_language_page' );
+  }
 
    /**
     * Create the HTML of an input select field to choose a language.
@@ -236,52 +234,52 @@ class ULS_Options{
       $default_value = (isset($options[$options['input_name']])) ? $options[$options['input_name']] : self::$default_options[$options['input_name']]; ?>
 
       <select name="<?php echo $options['input_name']; ?>">
-				 <?php foreach($options['select_options'] as $key => $value): ?>
-						<option value="<?= $key ?>" <?php selected($key,$default_value); ?> ><?= $value ?></option>
-				 <?php endforeach; ?>
+         <?php foreach($options['select_options'] as $key => $value): ?>
+            <option value="<?= $key ?>" <?php selected($key,$default_value); ?> ><?= $value ?></option>
+         <?php endforeach; ?>
       </select> 
       <?php
    }
 
-		static function create_table_menu_language($option) {
-			$languages = uls_get_available_languages(); // get the all languages available in the wp
-			$themeLocation  = get_registered_nav_menus(); // get the all theme location
-			$options = get_option('uls_settings'); // get information from DB
-			$options = isset($options['position_menu_language']) ? $options['position_menu_language'] : false; // get the information that actually is in the DB 
-		?> 
-							<table id="menu-locations-table" class="widefat fixed">
-										<thead>
-												<tr>
-														<th class="manage-column column-locations" scope="col">Theme Location</th>
-															<?php foreach ($languages as $language_name => $language_code) : // add all header, language available ?>
-																<th class="manage-column column-locations" scope="col"><?= $language_name ?></th>
-															<?php endforeach; ?>
-												</tr>
-										</thead>
-										<tbody class="menu-locations">
-													<?php 
-														$menus = get_terms( 'nav_menu', array( 'hide_empty' => true ) ); // get menues
-														foreach ($themeLocation as $theme => $location) : // iterative theme locations, add rows  ?>
-															<tr id="menu-locations-row">
-																	<td class="menu-location-title"><strong><?=$location?></strong></td>
-																	<?php foreach ($languages as $language_name => $language_code ):  // iterative languages available in the wp?>
-																		<td class="menu-location-menus">
-																			<select id="" class="" name="uls_position_menu_language[<?= $theme; ?>][<?= $language_code; ?>]" >
-																								<option value="0">— Select a Menu —</option> 
-																				<?php 
-																							foreach ($menus as $menu ): // iterative menues, add cols ?>
-																								<option value="<?= $menu->slug; ?>"  <?php selected($menu->slug, ($options) ? $options[$theme][$language_code] : '' );  ?> ><?= $menu ->name; ?></option> 
-																				<?php endforeach; ?>
-																			</select>
-																		</td><!-- .menu-location-menus -->
-																	<?php endforeach; ?>
-															</tr><!-- #menu-locations-row -->
-													<?php endforeach; ?>
-										</tbody>
-							</table>
-							<input type="hidden" name="menulanguage" value="menulanguage" >
-				<?php
-					 }
+    static function create_table_menu_language($option) {
+      $languages = uls_get_available_languages(); // get the all languages available in the wp
+      $themeLocation  = get_registered_nav_menus(); // get the all theme location
+      $options = get_option('uls_settings'); // get information from DB
+      $options = isset($options['position_menu_language']) ? $options['position_menu_language'] : false; // get the information that actually is in the DB 
+    ?> 
+            <table id="menu-locations-table" class="widefat fixed">
+                  <thead>
+                      <tr>
+                          <th class="manage-column column-locations" scope="col">Theme Location</th>
+                          <?php foreach ($languages as $language_name => $language_code) : // add all header, language available ?>
+                              <th class="manage-column column-locations" scope="col"><?= $language_name ?></th>
+                          <?php endforeach; ?>
+                      </tr>
+                  </thead>
+                  <tbody class="menu-locations">
+                      <?php 
+                        $menus = get_terms( 'nav_menu', array( 'hide_empty' => true ) ); // get menues
+                        foreach ($themeLocation as $theme => $location) : // iterative theme locations, add rows  ?>
+                          <tr id="menu-locations-row">
+                              <td class="menu-location-title"><strong><?=$location?></strong></td>
+                              <?php foreach ($languages as $language_name => $language_code ):  // iterative languages available in the wp?>
+                                <td class="menu-location-menus">
+                                  <select id="" class="" name="uls_position_menu_language[<?= $theme; ?>][<?= $language_code; ?>]" >
+                                            <option value="0">— Select a Menu —</option> 
+                                    <?php 
+                                          foreach ($menus as $menu ): // iterative menues, add cols ?>
+                                            <option value="<?= $menu->slug; ?>"  <?php selected($menu->slug, ($options) ? $options[$theme][$language_code] : '' );  ?> ><?= $menu ->name; ?></option> 
+                                    <?php endforeach; ?>
+                                  </select>
+                                </td><!-- .menu-location-menus -->
+                              <?php endforeach; ?>
+                          </tr><!-- #menu-locations-row -->
+                      <?php endforeach; ?>
+                  </tbody>
+            </table>
+            <input type="hidden" name="menulanguage" value="menulanguage" >
+        <?php
+           }
 
    /**
     * Create register form displayed on back end.
@@ -332,20 +330,20 @@ class ULS_Options{
    <?php
    }
 
-	 static function ilc_admin_tabs() { 
-		// get the current tab or default tab
-		$current = isset($_GET['tab']) ? $_GET['tab'] : 'homepage'; 
-		// add the tabs that you want to use in the plugin 
-		$tabs = array( 'homepage' => 'General', 'menulanguage' => 'Menu Languages');
+   static function ilc_admin_tabs() { 
+    // get the current tab or default tab
+    $current = isset($_GET['tab']) ? $_GET['tab'] : 'homepage'; 
+    // add the tabs that you want to use in the plugin 
+    $tabs = array( 'homepage' => 'General', 'menulanguage' => 'Menu Languages');
     echo '<div id="icon-themes" class="icon32"><br></div>';
     echo '<h2 class="nav-tab-wrapper">';
-		// configurate the url with your personal_url and add the class for the activate tab
+    // configurate the url with your personal_url and add the class for the activate tab
     foreach( $tabs as $tab => $name ){
         $class = ( $tab == $current ) ? ' nav-tab-active' : '';
         echo "<a class='nav-tab$class' href='?page=uls-settings-page&tab=$tab'>$name</a>"; 
     }
     echo '</h2>';
-	 }
+   }
 
    /**
     * Create the HTML page to manage user language preferences.
@@ -453,38 +451,38 @@ class ULS_Options{
       return $links; 
    }
 
-	 static function select_correct_menu_language($items, $args) {
-		 
+   static function select_correct_menu_language($items, $args) {
+     
 
-		$options = get_option('uls_settings');
-		$menu_name = $args->menu;
-		$position_menu_language = $options['position_menu_language']; 
+    $options = get_option('uls_settings');
+    $menu_name = $args->menu;
+    $position_menu_language = $options['position_menu_language']; 
 
-		// if the mena arrive ask which traduction should be show up
-		if (!empty($args->menu)) {
-			foreach ( $position_menu_language as $location => $array_translation ) {
-				 $key = array_search ( $args->menu , $array_translation);
-					 if ($key) { 
-						 $menu_name = $array_translation[uls_get_user_language()];
-						 if ($menu_name == $args->menu)
-							 return $items;
-						 else
-							 return wp_nav_menu( array( 'menu' => $menu_name, 'items_wrap' => '%3$s' , 'container' => false, 'echo' => 0) );
-					 }
-			 } 
-		} 
+    // if the mena arrive ask which traduction should be show up
+    if (!empty($args->menu)) {
+      foreach ( $position_menu_language as $location => $array_translation ) {
+         $key = array_search ( $args->menu , $array_translation);
+           if ($key) { 
+             $menu_name = $array_translation[uls_get_user_language()];
+             if ($menu_name == $args->menu)
+               return $items;
+             else
+               return wp_nav_menu( array( 'menu' => $menu_name, 'items_wrap' => '%3$s' , 'container' => false, 'echo' => 0) );
+           }
+       } 
+    } 
 
-		// if the theme_location arrive ask whitch traduction should be show up
-		if (!empty($args->theme_location)) {
-			$menu_location = $position_menu_language[$args->theme_location];
-			$key_menu_name = isset($menu_location[uls_get_user_language()]) ? array_search($menu_location[uls_get_user_language()], $menu_location) : '' ;
-			if ( $key_menu_name != uls_get_user_language()) 
-			 return $items;
-			else
-			 return wp_nav_menu( array( 'menu' => $menu_location[uls_get_user_language()], 'items_wrap' => '%3$s' , 'container' => false, 'echo' => 0) );
-		}
-		return $items;
-	 }
+    // if the theme_location arrive ask whitch traduction should be show up
+    if (!empty($args->theme_location)) {
+      $menu_location = $position_menu_language[$args->theme_location];
+      $key_menu_name = isset($menu_location[uls_get_user_language()]) ? array_search($menu_location[uls_get_user_language()], $menu_location) : '' ;
+      if ( $key_menu_name != uls_get_user_language()) 
+       return $items;
+      else
+       return wp_nav_menu( array( 'menu' => $menu_location[uls_get_user_language()], 'items_wrap' => '%3$s' , 'container' => false, 'echo' => 0) );
+    }
+    return $items;
+   }
 
 }
 

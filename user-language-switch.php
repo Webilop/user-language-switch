@@ -825,15 +825,15 @@ function uls_save_association( $post_id ) {
     foreach ($languages as $lang) {
       $related_post = isset($_POST['uls_translation_'.strtolower($lang)]) ? $_POST['uls_translation_'.strtolower($lang)] : null;
       if( !empty( $related_post ) ) {
-				// add traduction to the page that was selected like a translation
-				update_post_meta ( $related_post, 'uls_translation_'.strtolower($selected_language), $parent_id );
-				// add language to the page that was selected like a tranlation. If the page doesn't has associated a languages
-				$related_post_get_language = get_post_meta( $related_post, 'uls_language', true );
-				if ( empty ( $related_post_get_language) )
-					update_post_meta ( $related_post, 'uls_language', $lang );
-			}
+        // add traduction to the page that was selected like a translation
+        update_post_meta ( $related_post, 'uls_translation_'.strtolower($selected_language), $parent_id );
+        // add language to the page that was selected like a tranlation. If the page doesn't has associated a languages
+        $related_post_get_language = get_post_meta( $related_post, 'uls_language', true );
+        if ( empty ( $related_post_get_language) )
+          update_post_meta ( $related_post, 'uls_language', $lang );
+      }
     }
-	}
+  }
 }
 add_action( 'save_post', 'uls_save_association' );
 
@@ -896,24 +896,24 @@ function webilop_show_posts_columns($name) {
     switch ($name) {
         case 'language':
             $views = strtolower(get_post_meta($post->ID, 'uls_language', true));
-	    echo '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.substr($views, -2).'" alt="'.$views.'" />';
-	    break;
+      echo '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.substr($views, -2).'" alt="'.$views.'" />';
+      break;
         case 'translation':
             $views = get_post_meta($post->ID);
-	    foreach($views as $key => $value) 
-	       if(strpos($key,'uls_translation_') !== false) 
-		  $string[substr($key, -5)] =  $value[0]; 
+      foreach($views as $key => $value) 
+         if(strpos($key,'uls_translation_') !== false) 
+      $string[substr($key, -5)] =  $value[0]; 
 
             $views = get_post_meta($post->ID, 'uls_language', true);
-	    if($string != ""){
-	       unset($string[strtolower($views)]);
-	       foreach ($string as $key => $value)
-		  echo '<a href="'.get_edit_post_link($value).'">'.
-			   '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.substr($key, -2).'" alt="'.$views.'" />'.
-		       '</a>';
-	    }else
-	       echo $string; 
-	    break;
+      if($string != ""){
+         unset($string[strtolower($views)]);
+         foreach ($string as $key => $value)
+      echo '<a href="'.get_edit_post_link($value).'">'.
+         '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.substr($key, -2).'" alt="'.$views.'" />'.
+           '</a>';
+      }else
+         echo $string; 
+      break;
     }
 }
 add_filter('manage_pages_columns', 'webilop_add_pages_columns');
@@ -932,25 +932,25 @@ function webilop_show_pages_columns($name) {
     switch ($name) {
         case 'language':
             $views = strtolower(get_post_meta($post->ID, 'uls_language', true));
-	    echo '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.substr($views, -2).'" alt="'.$views.'" />';
-	    break;
+      echo '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.substr($views, -2).'" alt="'.$views.'" />';
+      break;
         case 'translation':
             $views = get_post_meta($post->ID);
-	    foreach($views as $key => $value) 
-	       if(strpos($key,'uls_translation_') === 0) { 
-		  $string[substr($key, -5)] =  $value[0]; 
-	       }
+      foreach($views as $key => $value) 
+         if(strpos($key,'uls_translation_') === 0) { 
+      $string[substr($key, -5)] =  $value[0]; 
+         }
 
             $views = get_post_meta($post->ID, 'uls_language', true);
-	    if($string != ""){
-	       unset($string[strtolower($views)]);
-	       foreach ($string as $key => $value)
-		  echo '<a href="'.get_edit_post_link($value).'">'.
-			   '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.substr($key, -2).'" alt="'.$views.'" />'.
-		       '</a>';
-	    }else
-	       echo $string; 
-	    break;
+      if($string != ""){
+         unset($string[strtolower($views)]);
+         foreach ($string as $key => $value)
+      echo '<a href="'.get_edit_post_link($value).'">'.
+         '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.substr($key, -2).'" alt="'.$views.'" />'.
+           '</a>';
+      }else
+         echo $string; 
+      break;
     }
 } 
 

@@ -359,11 +359,8 @@ function uls_get_url_map_translation($url, $language = null){
 
 add_action('wp_footer', 'tap_user_language_switch');
 function tap_user_language_switch() {
-   $options = get_option('uls_settings');
-   if($options['activate_tab_language_switch'])
-      include_once('uls-tab-template.php');
-}
-
-
-
+  $options = get_option('uls_settings');
+  if($options['activate_tab_language_switch'])
+    include_once('uls-tab-template.php');
+} 
 ?>
