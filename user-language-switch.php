@@ -821,26 +821,27 @@ function uls_save_association( $post_id ) {
   $languages = uls_get_available_languages();
   $selected_language = isset($_POST['uls_language']) ? $_POST['uls_language'] : null;
 
-  if (!empty($selected_language)) {
-    // get array post metas because we need the uls_language and uls_translation
-    $this_post_metas = get_post_meta( $parent_id );
-    $this_uls_translation = 'uls_translation_'.strtolower($this_post_metas['uls_language'][0]);
-    // if the language of this page change so change the all pages that have this like a traduction
-    if ($selected_language != $this_uls_translation) {
-      // get post that have this traduction
-      $args =  array('post_type' => get_post_type($parent_id),
-                     'meta_key' => $this_uls_translation,
-                     'meta_value' => $parent_id,
-                     'meta_compare' => '=');
-      $query = new WP_Query($args); 
+  // get array post metas because we need the uls_language and uls_translation
+  $this_post_metas = get_post_meta( $parent_id );
+  $this_uls_translation = 'uls_translation_'.strtolower($this_post_metas['uls_language'][0]);
+  // if the language of this page change so change the all pages that have this like a traduction
+  if ($selected_language != $this_uls_translation) {
+    // get post that have this traduction
+    $args =  array('post_type' => get_post_type($parent_id),
+                   'meta_key' => $this_uls_translation,
+                   'meta_value' => $parent_id,
+                   'meta_compare' => '=');
+    $query = new WP_Query($args); 
 
-      // if the query return the post that have assocciate the translation this page,
-      // delete the old post_meta uls_translation_#_#
-      if ( !empty($query->posts) ) {
-        // we need only the IDs of the post query
-        foreach ($query->posts as $key) {
-          // delete the old post_meta uls_translation_#_#
-          delete_post_meta ($key->ID, $this_uls_translation);
+    // if the query return the post that have assocciate the translation this page,
+    // delete the old post_meta uls_translation_#_#
+    if ( !empty($query->posts) ) {
+      // we need only the IDs of the post query
+      foreach ($query->posts as $key) {
+        // delete the old post_meta uls_translation_#_#
+        delete_post_meta ($key->ID, $this_uls_translation);
+        // if selected_language is not empty so add the new traduction
+        if (!empty($selected_language)) {
           // get the new post meta if this exits does update the uls_translation 
           $page_post_meta = get_post_meta ($key->ID, 'uls_translation_'.strtolower($selected_language), true);
           // ask if the new post_meta uls_translation_#_# exits
@@ -849,19 +850,25 @@ function uls_save_association( $post_id ) {
         }
       }
     }
+  }
+  if (!empty($selected_language)) {
     // if the language change so change the traduction    
     foreach ($languages as $lang) {
       $related_post = isset($_POST['uls_translation_'.strtolower($lang)]) ? $_POST['uls_translation_'.strtolower($lang)] : null;
       if( !empty( $related_post ) ) {
         // add traduction to the page that was selected like a translation
-        update_post_meta ( $related_post, 'uls_translation_'.strtolower($selected_language), $parent_id );
+        $related_post_meta_translation = get_post_meta( $related_post, 'uls_translation_'.strtolower($selected_language), true );
+        if ( empty ( $related_post_meta_translation ) ) 
+          update_post_meta ( $related_post, 'uls_translation_'.strtolower($selected_language), $parent_id );
         // add language to the page that was selected like a tranlation. If the page doesn't has associated a languages
         $related_post_get_language = get_post_meta( $related_post, 'uls_language', true );
-        if ( empty ( $related_post_get_language) )
+        if ( empty ( $related_post_get_language) ) 
           update_post_meta ( $related_post, 'uls_language', $lang );
+        
       }
     }
-  } 
+  }
+
 }
 add_action( 'save_post', 'uls_save_association' );
 
