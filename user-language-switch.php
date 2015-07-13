@@ -990,4 +990,21 @@ function webilop_show_pages_columns($name) {
     }
 } 
 
+function uls_list_language_archive( $query ) { 
+  // Display only 1 post for the original blog archive
+  //wp_list_pages($args)
+  $args =  array('post_type' => 'post',
+                 'meta_key' => 'uls_language',
+                 'meta_value' => uls_get_user_language(false),
+                 'meta_compare' => '=');
+
+  if (is_archive() || is_post_type_archive()) {
+    $query->set( 'meta_key', 'uls_language' );
+    $query->set( 'meta_value', uls_get_user_language(false) );
+    $query->set( 'meta_compare', '=' );
+  } 
+  return ; 
+}
+add_action( 'pre_get_posts', 'uls_list_language_archive', 1 );
+
 ?>
