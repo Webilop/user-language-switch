@@ -139,6 +139,21 @@ class ULS_Options{
         'uls_general_settings_section',
         $options);
     }
+    else if( isset($_GET['tab']) && $_GET['tab'] == 'available_languages' ) { 
+      //create section for registration
+      add_settings_section('uls_general_settings_section',
+        __('Menu Language Settings','user-language-switch'),
+        'ULS_Options::create_general_settings_section',
+        'uls-settings-page');
+
+      // create table configuration
+      add_settings_section('table_menu_language',
+        __('','user-language-switch'),
+        'ULS_Options::create_table_available_language',
+        'uls-settings-page',
+        'uls_general_settings_section',
+        $options); 
+    }
     //create section for collaboration
     add_settings_section('uls_collaboration_section',
       __('Collaborate','user-language-switch'),
@@ -159,11 +174,19 @@ class ULS_Options{
 
     $options = get_option('uls_settings');
 
+    // if this tab send by post
     if( isset($_POST['menulanguage']) ) { 
       $options['position_menu_language'] = $_POST['uls_position_menu_language'];
+    }
+    else if ( isset($_POST['available_languages']) ) {
+      $options['available_language'] = $_POST['uls_available_language'];
     }else{ 
       //create default options
       $ulsPostionMenuLanguage = $options['position_menu_language'];
+      // if the user does not save any language the default value is that the all languages are available
+      // if the user does not want to show the languages he has tow options
+      // 1 - desactive the flags tab  or 2 - desactive the plugin
+      $ulsAvailableLanguage = isset($options['available_language']) ? $options['available_language'] : uls_get_available_languages(false);
       $options = self::$default_options;
 
       foreach($options as $k => $v)
@@ -176,6 +199,7 @@ class ULS_Options{
       $options['activate_tab_language_switch'] = isset($_POST['activate_tab_language_switch']); 
       $options['fixed_position_language_switch'] = isset($_POST['fixed_position_language_switch']); 
       $options['position_menu_language'] = $ulsPostionMenuLanguage;
+      $options['available_language'] = $ulsAvailableLanguage;
     } 
     return $options;
   }
@@ -281,6 +305,35 @@ class ULS_Options{
         <?php
            }
 
+  public function create_table_available_language($options) {
+    $languages = uls_get_available_languages(false); // get the all languages available in the wp
+    $options = get_option('uls_settings'); // get information from DB
+    $available_language = isset($options['available_language']) ? $options['available_language'] : uls_get_available_languages(false); // get the information that actually is in the DB 
+  ?>
+    <table id="menu-locations-table" class="">
+      <thead>
+        <tr>
+          <th>Enable / Disable </th>
+          <th>Language</th>
+        </tr>
+      </thead> 
+      <tbody>
+        <?foreach ($languages as $lang_name => $lang_code): ?>
+          <tr>
+            <?php $checked = isset($available_language[$lang_name]) ? 'checked' : ''; ?> 
+            <td>
+              <input type="checkbox" name="uls_available_language[<?=$lang_name?>]" value="<?=$lang_code?>" <?=$checked?> />
+            </td>
+            <td>
+                <img src="<?= plugins_url("css/blank.gif", __FILE__) ?>" style="margin-right:5px;" class="flag_16x11 flag-<?= strtolower(substr($lang_code, -2))?>" alt="<?= $lang_name ?>" />
+            </td> 
+          </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table> 
+    <input type="hidden" name="available_languages" value="available_languages" >
+  <?php
+  } 
    /**
     * Create register form displayed on back end.
     */
@@ -334,7 +387,7 @@ class ULS_Options{
     // get the current tab or default tab
     $current = isset($_GET['tab']) ? $_GET['tab'] : 'homepage'; 
     // add the tabs that you want to use in the plugin 
-    $tabs = array( 'homepage' => 'General', 'menulanguage' => 'Menu Languages');
+    $tabs = array( 'homepage' => 'General', 'menulanguage' => 'Menu Languages', 'available_languages' => 'Available Languages');
     echo '<div id="icon-themes" class="icon32"><br></div>';
     echo '<h2 class="nav-tab-wrapper">';
     // configurate the url with your personal_url and add the class for the activate tab

@@ -654,7 +654,13 @@ function uls_language_selector_input($id, $name, $default_value = '', $class = '
  *
  * @return array associative array with the available languages in the system. The keys are the language names and the values are the language codes.
  */
-function uls_get_available_languages(){
+function uls_get_available_languages( $availabe_Languages = true ){
+  if ($availabe_Languages) {
+    $options = get_option('uls_settings'); // get information from DB
+    // if the user does not have available the languages so the plugin avilable all languages
+    $available_language = isset($options['available_language']) ? $options['available_language'] : uls_get_available_languages(false); 
+    return $available_language;
+  }
    $theme_root = get_template_directory();
    $lang_array = get_available_languages( $theme_root.'/languages/' );
    $wp_lang = get_available_languages(WP_CONTENT_DIR.'/languages/');
@@ -670,6 +676,7 @@ function uls_get_available_languages(){
        $final_array[$lang] = $lang;
    endforeach;
    return $final_array;
+
 }
 
 /**
@@ -998,7 +1005,7 @@ function uls_list_language_archive( $query ) {
                  'meta_value' => uls_get_user_language(false),
                  'meta_compare' => '=');
 
-  if (is_archive() || is_post_type_archive()) {
+  if (is_archive() || $query->is_post_type_archive()) {
     $query->set( 'meta_key', 'uls_language' );
     $query->set( 'meta_value', uls_get_user_language(false) );
     $query->set( 'meta_compare', '=' );
