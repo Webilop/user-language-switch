@@ -363,4 +363,17 @@ function tap_user_language_switch() {
   if($options['activate_tab_language_switch'])
     include_once('uls-tab-template.php');
 } 
+
+
+function uls_traduction_automatic_menu($object)
+{      
+  foreach ($object as $key ) {
+    $post_id = get_post_meta($key->object_id, 'uls_translation_'.strtolower(uls_get_user_language()), true); 
+    if ( !empty($post_id) ) {
+      $key->title = get_post($post_id)->post_title;
+    }
+  } 
+  return $object;
+}
+add_filter( 'wp_nav_menu_objects', 'uls_traduction_automatic_menu');
 ?>
