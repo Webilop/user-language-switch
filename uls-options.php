@@ -14,6 +14,7 @@ class ULS_Options{
       'tab_color_picker_language_switch' => 'rgba(255, 255, 255, 0)', 
       'tab_position_language_switch' => 'RM',
       'fixed_position_language_switch' => true, 
+      'enable_translation_sidebars_language_switch' => true, 
    );
 
    /**
@@ -68,6 +69,14 @@ class ULS_Options{
       $options['input_name'] = 'fixed_position_language_switch';
       add_settings_field($options['input_name'],
         __('Tab Fixed Pisition ','user-language-switch'),
+        'ULS_Options::create_checkbox_input',
+        'uls-settings-page',
+        'uls_general_settings_section',
+        $options); 
+
+      $options['input_name'] = 'enable_translation_sidebars_language_switch';
+      add_settings_field($options['input_name'],
+        __('Enable translations for sidebars','user-language-switch'),
         'ULS_Options::create_checkbox_input',
         'uls-settings-page',
         'uls_general_settings_section',
@@ -198,6 +207,7 @@ class ULS_Options{
       $options['user_frontend_configuration'] = isset($_POST['user_frontend_configuration']);
       $options['activate_tab_language_switch'] = isset($_POST['activate_tab_language_switch']); 
       $options['fixed_position_language_switch'] = isset($_POST['fixed_position_language_switch']); 
+      $options['enable_translation_sidebars_language_switch'] = isset($_POST['enable_translation_sidebars_language_switch']); 
       $options['position_menu_language'] = $ulsPostionMenuLanguage;
       $options['available_language'] = $ulsAvailableLanguage;
     } 

@@ -364,7 +364,7 @@ function tap_user_language_switch() {
     include_once('uls-tab-template.php');
 } 
 
-
+// this function is for automatic traduction menues
 function uls_traduction_automatic_menu($object)
 {      
   foreach ($object as $key ) {
@@ -376,4 +376,63 @@ function uls_traduction_automatic_menu($object)
   return $object;
 }
 add_filter( 'wp_nav_menu_objects', 'uls_traduction_automatic_menu');
+
+
+// this functin action is for register sidebar if the checkbox in backend is enable
+function uls_register_sidebar_laguages() {
+  global $wp_registered_sidebars; 
+
+  $languages = uls_get_available_languages(); // get the all languages available in the wp
+  $options = get_option('uls_settings'); 
+
+  // delete  language that is actually in the side, from available languages 
+  $lang_code = uls_get_site_language(); 
+  foreach ( $languages as $lang_name) 
+    if ( ($lang_name = array_search($lang_code, $languages)) !== false )
+        unset($languages[$lang_name]);
+  
+  // create the N_sidebar X available_languages, but fir ask if the enable checkbox is true 
+  if ( $options['enable_translation_sidebars_language_switch'] ) {
+    if ( function_exists('register_sidebar') ) {
+      $temporal_sidebars = $wp_registered_sidebars;
+      foreach ( $temporal_sidebars as $sidebar => $items) {
+        foreach ( $languages as $lang_name => $lang_code ) { 
+          register_sidebar(array(
+            'name' =>  $items['name'] .' / '. $lang_name,
+            'id' => "uls_".$items['id'].'_'.$lang_code,
+            'description' => 'This sidebar is to use with the widgets in language '.$lang_name,
+            'before_widget' => $items['before_widget'],
+            'after_widget' => $items['after_widget'],
+            'before_title' => $items['before_title'],
+            'after_title' => $items['after_title'],
+          ));
+        }
+      } 
+    }
+  } 
+} 
+  if (is_admin())
+    add_action( 'widgets_init', 'uls_register_sidebar_laguages');
+  else
+    add_action( 'widgets_init', 'uls_register_sidebar_laguages', 100 );
+
+function uls_organize_widgets_sidebars($sidebars_widgets) {
+  unset($sidebars_widgets['cshero-blog-sidebar_es_ES']);
+  if (!is_admin()) {
+    $lang_code = '_'.uls_get_user_language();
+    //$lang_code = '_es_ES';
+    $uls_code = 'uls_';
+    //echo "<pre>"; print_r($lang_code); echo "</pre>"; 
+    foreach ($sidebars_widgets as $sidebar => $widgets) { 
+      if ( substr($sidebar,0,3) != $uls_code ) {
+        if ( isset($sidebars_widgets[$uls_code.$sidebar.$lang_code]) ) {
+          $uls_widgets =  $sidebars_widgets[$uls_code.$sidebar.$lang_code]; 
+          $sidebars_widgets[$sidebar] = $uls_widgets; 
+        }
+      }
+    }
+  }
+ return $sidebars_widgets;
+}
+add_filter ( 'sidebars_widgets', 'uls_organize_widgets_sidebars', 10, 1);
 ?>
