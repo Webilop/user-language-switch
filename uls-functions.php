@@ -419,15 +419,19 @@ else
 
 function uls_organize_widgets_sidebars($sidebars_widgets) {
   //unset($sidebars_widgets['cshero-blog-sidebar_es_ES']);
+  $options = get_option('uls_settings'); 
+
   if (!is_admin()) {
-    $lang_code = '_'.uls_get_user_language();
-    //$lang_code = '_es_ES';
-    $uls_code = 'uls_';
-    foreach ($sidebars_widgets as $sidebar => $widgets) { 
-      if ( substr($sidebar,0,3) != $uls_code ) {
-        if ( isset($sidebars_widgets[$uls_code.$sidebar.$lang_code]) ) {
-          $uls_widgets =  $sidebars_widgets[$uls_code.$sidebar.$lang_code]; 
-          $sidebars_widgets[$sidebar] = $uls_widgets; 
+    if ( $options['enable_translation_sidebars_language_switch'] ) {
+      $lang_code = '_'.uls_get_user_language();
+      //$lang_code = '_es_ES';
+      $uls_code = 'uls_';
+      foreach ($sidebars_widgets as $sidebar => $widgets) { 
+        if ( substr($sidebar,0,3) != $uls_code ) {
+          if ( isset($sidebars_widgets[$uls_code.$sidebar.$lang_code]) ) {
+            $uls_widgets =  $sidebars_widgets[$uls_code.$sidebar.$lang_code]; 
+            $sidebars_widgets[$sidebar] = $uls_widgets; 
+          }
         }
       }
     }
