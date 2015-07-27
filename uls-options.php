@@ -325,7 +325,7 @@ class ULS_Options{
         <?php
            }
 
-  public function create_table_available_language($options) {
+  static function create_table_available_language($options) {
     $languages = uls_get_available_languages(false); // get the all languages available in the wp
     $options = get_option('uls_settings'); // get information from DB
     $available_language = isset($options['available_language']) ? $options['available_language'] : uls_get_available_languages(false); // get the information that actually is in the DB 
