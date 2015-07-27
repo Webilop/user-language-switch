@@ -411,18 +411,18 @@ function uls_register_sidebar_laguages() {
     }
   } 
 } 
-  if (is_admin())
-    add_action( 'widgets_init', 'uls_register_sidebar_laguages');
-  else
-    add_action( 'widgets_init', 'uls_register_sidebar_laguages', 100 );
+
+if (is_admin())
+  add_action( 'widgets_init', 'uls_register_sidebar_laguages');
+else
+  add_action( 'widgets_init', 'uls_register_sidebar_laguages', 100 );
 
 function uls_organize_widgets_sidebars($sidebars_widgets) {
-  unset($sidebars_widgets['cshero-blog-sidebar_es_ES']);
+  //unset($sidebars_widgets['cshero-blog-sidebar_es_ES']);
   if (!is_admin()) {
     $lang_code = '_'.uls_get_user_language();
     //$lang_code = '_es_ES';
     $uls_code = 'uls_';
-    //echo "<pre>"; print_r($lang_code); echo "</pre>"; 
     foreach ($sidebars_widgets as $sidebar => $widgets) { 
       if ( substr($sidebar,0,3) != $uls_code ) {
         if ( isset($sidebars_widgets[$uls_code.$sidebar.$lang_code]) ) {
@@ -432,6 +432,8 @@ function uls_organize_widgets_sidebars($sidebars_widgets) {
       }
     }
   }
+  //echo "<pre>"; print_r($sidebars_widgets); echo "</pre>"; 
+  //exit;
  return $sidebars_widgets;
 }
 add_filter ( 'sidebars_widgets', 'uls_organize_widgets_sidebars', 10, 1);
