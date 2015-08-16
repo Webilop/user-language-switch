@@ -318,7 +318,7 @@ class ULS_Options{
         </tr>
       </thead> 
       <tbody>
-        <?foreach ($languages as $lang_name => $lang_code): ?>
+        <?php foreach ($languages as $lang_name => $lang_code): ?>
           <tr>
             <?php $checked = isset($available_language[$lang_name]) ? 'checked' : ''; ?> 
             <td>
