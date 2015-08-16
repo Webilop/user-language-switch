@@ -995,23 +995,90 @@ function webilop_show_pages_columns($name) {
          echo $string; 
       break;
     }
-} 
-
-function uls_list_language_archive( $query ) { 
-  // Display only 1 post for the original blog archive
-  //wp_list_pages($args)
-  $args =  array('post_type' => 'post',
-                 'meta_key' => 'uls_language',
-                 'meta_value' => uls_get_user_language(false),
-                 'meta_compare' => '=');
-
-  if (is_archive() || $query->is_post_type_archive()) {
-    $query->set( 'meta_key', 'uls_language' );
-    $query->set( 'meta_value', uls_get_user_language(false) );
-    $query->set( 'meta_compare', '=' );
-  } 
-  return ; 
 }
-add_action( 'pre_get_posts', 'uls_list_language_archive', 1 );
+
+/**
+ * Add queries to filter posts by languages. If a post doesn't have language.
+ *
+ * @param $query object WordPress query object where language query will be added.
+ */
+function uls_add_language_meta_query(&$query){
+  //get language displayed
+  $language_displayed = uls_get_user_language(false);
+  
+  //get the default language of the website
+  $default_website_language = uls_get_site_language();
+  
+  //if the language displayed is the same to the default language, then it includes posts without language
+  $language_query = null;
+  if($language_displayed == $default_website_language){
+    //build query for languages
+    $language_query = array(
+      'relation' => 'OR',
+      array(
+        'key' => 'uls_language',
+        'value' => 'bug #23268',
+        'compare' => 'NOT EXISTS'
+      ),
+      array(
+        'key' => 'uls_language',
+        'value' => $language_displayed,
+        'compare' => '='
+      )
+    );
+  }
+  //filter posts by language displayed
+  else{
+    $language_query = array(
+      array(
+        'key' => 'uls_language',
+        'value' => $language_displayed,
+        'compare' => '='
+      ),
+    );
+  }
+  
+  //get current meta query
+  $meta_query = $query->get('meta_query');
+  
+  //add language query to the meta query
+  if(empty($meta_query))
+    $meta_query = $language_query;
+  else
+    $meta_query = array(
+      'relation' => 'AND',
+      $language_query,
+      $meta_query
+    );
+  
+  //set the new meta query
+  $query->set('meta_query', $meta_query);
+}
+
+/**
+ * Filter posts in archives by language.
+ *
+ * @param $query object WordPress query object used to create the archive of posts.
+ */
+function uls_filter_archive_by_language($query){ 
+  //check if it in the admin dashboard
+  if(is_admin())
+    return;
+
+  //this flag indicates if we should filter posts by language
+  $modify_query = false;
+  
+  //if it is displaying the home page and the home page is the list of posts
+  $modify_query = 'posts' == get_option( 'show_on_front' ) && is_front_page();
+  
+  //if it is an archive
+  $modify_query = $modify_query || is_archive() || $query->is_post_type_archive();
+
+  //filter posts by language loaded in the page
+  if($modify_query){
+    uls_add_language_meta_query($query);
+  }
+}
+add_action('pre_get_posts', 'uls_filter_archive_by_language', 1);
 
 ?>
