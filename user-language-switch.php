@@ -25,9 +25,6 @@ License: GPL2
 */
 ?>
 <?php
-/*function _db($var){
-   echo "<pre>"; print_r($var); echo "</pre>";
-}*/
 
 define( 'ULS_PLUGIN_URL', plugin_dir_url(__FILE__) );
 define( 'ULS_PLUGIN_PATH', plugin_dir_path(__FILE__) );
@@ -114,15 +111,15 @@ function uls_get_user_saved_language($only_lang = false, $type = null){
   }
 
   //if the user is logged in
-   if( is_user_logged_in() ){
+  if( is_user_logged_in() ){
     //if the user can modify the language
       if($options["user_{$type}_configuration"])
-         $language = get_user_meta(get_current_user_id(), "uls_{$type}_language", true);
-
-      //set the default language if the user doesn't have a preference
-      if(empty($language))
-         $language = $options["default_{$type}_language"];
-   }
+        $language = get_user_meta(get_current_user_id(), "uls_{$type}_language", true);
+  }
+   
+  //set the default language if the user doesn't have a preference
+  if(empty($language))
+    $language = $options["default_{$type}_language"];
 
   //remove the location
   if(false != $language && $only_lang){
@@ -220,22 +217,22 @@ function uls_get_user_language_from_browser(){
  * @return string language code. If there isn't a language in the URL or user hasn't set it, then default language is returned.
  */
 function uls_get_user_language($only_lang = false){
-   //get language from URL
-   $language = uls_get_user_language_from_url($only_lang);
+  //get language from URL
+  $language = uls_get_user_language_from_url($only_lang);
 
-   //get the language from user preferences
-   if( empty($language) ){
-      $language = uls_get_user_saved_language();
+  //get the language from user preferences
+  if( empty($language) ){
+    $language = uls_get_user_saved_language();
   }
 
-   //remove location
-   if(!empty($language) && $only_lang){
-      $pos = strpos($language, '_');
+  //remove location
+  if(!empty($language) && $only_lang){
+    $pos = strpos($language, '_');
       if(false !== $pos)
-         return substr($language, 0, $pos);
-   }
+        return substr($language, 0, $pos);
+  }
 
-   return $language;
+  return $language;
 }
 
 /**
@@ -712,7 +709,7 @@ add_action( 'init', 'uls_initialize_meta_boxes', 9999 );
  * @return void
  */
 function uls_initialize_meta_boxes() {
-    if ( ! class_exists( 'cmb_Meta_Box' ) )
+    if( ! class_exists( 'cmb_Meta_Box' ) )
         require_once(plugin_dir_path( __FILE__ ) . 'init.php');
 }
 
@@ -1004,7 +1001,7 @@ function webilop_show_pages_columns($name) {
  */
 function uls_add_language_meta_query(&$query){
   //get language displayed
-  $language_displayed = uls_get_user_language(false);
+  $language_displayed = uls_get_user_language();
   
   //get the default language of the website
   $default_website_language = uls_get_site_language();
@@ -1050,7 +1047,7 @@ function uls_add_language_meta_query(&$query){
       $language_query,
       $meta_query
     );
-  
+
   //set the new meta query
   $query->set('meta_query', $meta_query);
 }
@@ -1073,7 +1070,10 @@ function uls_filter_archive_by_language($query){
   
   //if it is an archive
   $modify_query = $modify_query || is_archive() || $query->is_post_type_archive();
-
+  
+  //if this is not a query for a menu(menus are handled by the plugin too)
+  $modify_query = $modify_query && 'nav_menu_item' != $query->get('post_type');
+  
   //filter posts by language loaded in the page
   if($modify_query){
     uls_add_language_meta_query($query);
