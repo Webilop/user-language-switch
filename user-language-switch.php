@@ -616,12 +616,13 @@ function uls_get_url_translated($url, $language, $type = 'prefix', $remove_defau
  * @param $name string name of the HTML element.
  * @param $default_value string value of the default selected option.
  * @param $class string CSS classes for the HTML element.
+ * @param $available_language boolean "true" to return only the available lagunage "false" return all language in the wp.
  *
  * @return string HTML code of the language selector input.
  */
-function uls_language_selector_input($id, $name, $default_value = '', $class = ''){
+function uls_language_selector_input($id, $name, $default_value = '', $class = '', $availabe_Languages = true){
    //get available languages
-   $available_languages = uls_get_available_languages();
+   $available_languages = uls_get_available_languages($availabe_Languages);
 
    //get language names
    require 'uls-languages.php';
