@@ -620,9 +620,9 @@ function uls_get_url_translated($url, $language, $type = 'prefix', $remove_defau
  *
  * @return string HTML code of the language selector input.
  */
-function uls_language_selector_input($id, $name, $default_value = '', $class = '', $availabe_Languages = true){
+function uls_language_selector_input($id, $name, $default_value = '', $class = '', $available_languages = true){
    //get available languages
-   $available_languages = uls_get_available_languages($availabe_Languages);
+   $available_languages = uls_get_available_languages($available_languages);
 
    //get language names
    require 'uls-languages.php';
@@ -655,8 +655,8 @@ function uls_language_selector_input($id, $name, $default_value = '', $class = '
  *
  * @return array associative array with the available languages in the system. The keys are the language names and the values are the language codes.
  */
-function uls_get_available_languages( $availabe_Languages = true ){
-  if ($availabe_Languages) {
+function uls_get_available_languages( $available_languages = true ){
+  if ($available_languages) {
     $options = get_option('uls_settings'); // get information from DB
     // if the user does not have available the languages so the plugin avilable all languages
     $available_language = isset($options['available_language']) ? $options['available_language'] : uls_get_available_languages(false); 

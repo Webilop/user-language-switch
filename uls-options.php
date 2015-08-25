@@ -233,7 +233,7 @@ class ULS_Options{
       $default_value = (isset($options[$options['input_name']])) ? $options[$options['input_name']] : self::$default_options[$options['input_name']];
       $available_language = (isset($options['available_language'])) ? $options['available_language'] : true;
       $class = '';
-      // $id, $name, $default_value = '', $class = '', $availabe_Languages = true 
+      // $id, $name, $default_value = '', $class = '', $available_languages = true 
       echo uls_language_selector_input($options['input_name'], $options['input_name'], $default_value, $class, $available_language);   
    }
 
@@ -458,10 +458,10 @@ class ULS_Options{
                   <th scope="row"><?php _e('Language for the back-end side','user-language-switch'); ?></th>
                   <td>
                   <?php
-                        // $id, $name, $default_value = '', $class = '', $availabe_Languages = true 
+                        // $id, $name, $default_value = '', $class = '', $available_languages = true 
                         $class = '';
-                        $availabe_Languages = false;
-                        echo uls_language_selector_input($options['backend_language_field_name'], $options['backend_language_field_name'], $default_backend_language, $class, $availabe_Languages);
+                        $available_languages = false;
+                        echo uls_language_selector_input($options['backend_language_field_name'], $options['backend_language_field_name'], $default_backend_language, $class, $available_languages);
                    ?>
                   </td>
                </tr>
