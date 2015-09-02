@@ -400,7 +400,7 @@ function uls_register_sidebar_laguages() {
           register_sidebar(array(
             'name' =>  $items['name'] .' / '. $lang_name,
             'id' => "uls_".$items['id'].'_'.$lang_code,
-            'description' => 'This sidebar is to use with the widgets in language '.$lang_name,
+            'description' => __($items['description']. ' / '.$lang_name, 'user-language-switch'),
             'before_widget' => $items['before_widget'],
             'after_widget' => $items['after_widget'],
             'before_title' => $items['before_title'],
