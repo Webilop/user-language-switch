@@ -189,10 +189,11 @@ switch($position) {
       break;
 }
 ?>
-
-<style type="text/css">
-   <?= $TabStyle; ?>
-</style>
+<div>
+  <style scoped>
+     <?= $TabStyle; ?>
+  </style>
+</div>
 <div id="tab_background_color_picker">
   <?php foreach ($languages as $key => $value) : ?>
     <div class="tab_flag">
