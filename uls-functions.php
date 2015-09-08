@@ -602,11 +602,7 @@ function uls_register_sidebar_laguages() {
     }
   } 
 } 
-
-if (is_admin())
-  add_action( 'widgets_init', 'uls_register_sidebar_laguages');
-else
-  add_action( 'widgets_init', 'uls_register_sidebar_laguages', 100 );
+add_action( 'widgets_init', 'uls_register_sidebar_laguages', 100 );
 
 function uls_organize_widgets_sidebars($sidebars_widgets) {
   //unset($sidebars_widgets['cshero-blog-sidebar_es_ES']);
