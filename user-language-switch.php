@@ -1081,4 +1081,16 @@ function uls_filter_archive_by_language($query){
 }
 add_action('pre_get_posts', 'uls_filter_archive_by_language', 1);
 
+
+add_action('wp_head','head_reference_translation');
+function head_reference_translation() {
+  $languages = uls_get_available_languages();
+
+  $language = uls_get_site_language();
+  $url_site = get_site_url().'/'.$language;
+  $code = substr($language, 0, 2);
+
+  echo '<link rel="alternate" hreflang="'.$code.'" href="'.$url_site.'" />';
+}
+
 ?>
