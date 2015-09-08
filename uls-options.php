@@ -94,6 +94,7 @@ class ULS_Options{
         $options); 
 
       $options['input_name'] = 'default_frontend_language';
+      $options['available_language'] = true;
       add_settings_field($options['input_name'],
         __('Default language','user-language-switch'),
         'ULS_Options::create_language_selector_input',
@@ -102,6 +103,7 @@ class ULS_Options{
         $options); 
 
       $options['input_name'] = 'default_backend_language';
+      $options['available_language'] = false;
       add_settings_field($options['input_name'],
         __('Default language for admin side','user-language-switch'),
         'ULS_Options::create_language_selector_input',
@@ -227,9 +229,12 @@ class ULS_Options{
     * Create the HTML of an input select field to choose a language.
     * @param $options array plugin options saved.
     */
-   static function create_language_selector_input($options){
+   static function create_language_selector_input($options) {
       $default_value = (isset($options[$options['input_name']])) ? $options[$options['input_name']] : self::$default_options[$options['input_name']];
-      echo uls_language_selector_input($options['input_name'],$options['input_name'],$default_value);
+      $available_language = (isset($options['available_language'])) ? $options['available_language'] : true;
+      $class = '';
+      // $id, $name, $default_value = '', $class = '', $available_languages = true 
+      echo uls_language_selector_input($options['input_name'], $options['input_name'], $default_value, $class, $available_language);   
    }
 
    /**
@@ -452,7 +457,12 @@ class ULS_Options{
                <tr valign="top">
                   <th scope="row"><?php _e('Language for the back-end side','user-language-switch'); ?></th>
                   <td>
-                     <?php echo uls_language_selector_input($options['backend_language_field_name'],$options['backend_language_field_name'],$default_backend_language); ?>
+                  <?php
+                        // $id, $name, $default_value = '', $class = '', $available_languages = true 
+                        $class = '';
+                        $available_languages = false;
+                        echo uls_language_selector_input($options['backend_language_field_name'], $options['backend_language_field_name'], $default_backend_language, $class, $available_languages);
+                   ?>
                   </td>
                </tr>
                <?php endif; ?>
