@@ -583,7 +583,7 @@ function uls_register_sidebar_laguages() {
         unset($languages[$lang_name]);
   
   // create the N_sidebar X available_languages, but fir ask if the enable checkbox is true 
-  if ( $options['enable_translation_sidebars_language_switch'] ) {
+  if ( !isset($options['enable_translation_sidebars_language_switch']) || $options['enable_translation_sidebars_language_switch'] ) {
     if ( function_exists('register_sidebar') ) {
       $temporal_sidebars = $wp_registered_sidebars;
       foreach ( $temporal_sidebars as $sidebar => $items) {
@@ -609,7 +609,7 @@ function uls_organize_widgets_sidebars($sidebars_widgets) {
   $options = get_option('uls_settings'); 
 
   if (!is_admin()) {
-    if ( $options['enable_translation_sidebars_language_switch'] ) {
+    if ( !isset($options['enable_translation_sidebars_language_switch']) || $options['enable_translation_sidebars_language_switch'] ) {
       $lang_code = '_'.uls_get_user_language();
       //$lang_code = '_es_ES';
       $uls_code = 'uls_';
