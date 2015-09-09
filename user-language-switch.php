@@ -1097,10 +1097,33 @@ function head_reference_translation() {
   $code_value = array_search($curren_code, $languages);
   unset($languages[$code_value]); 
 
-  foreach ($languages as $language => $code) {
-    $permalink = uls_get_permalink($post_id, $code);
-    echo '<link rel="alternate" hreflang="'.substr($code, 0, 2).'" href="'.$permalink.'" />';
-  } 
+  // build url to the home 
+  if ($post_id == null) {
+    if (is_home()) {
+      $url = get_home_url();
+      // use all available languages and get the url translation 
+      foreach ($languages as $language => $code) {
+        $translation_url = uls_get_url_translated($url, $code);
+        echo '<link rel="alternate" hreflang="'.substr($code, 0, 2).'" href="'.$translation_url.'" />';
+      }
+    } // archive uls-functions uls_get_link
+    // build url to the post
+  }else{
+    // change the filter
+    global $uls_permalink_convertion;
+    $uls_permalink_convertion = false;
 
+    // use all available languages and get the url translation 
+    foreach ($languages as $language => $code) {
+      // get the post_id translation if the current page has translation 
+      $translation_id = uls_get_post_translation_id($post_id, $code);
+      if ( !empty($translation_id) ) {
+        $translation_url = uls_get_url_translated(get_permalink($translation_id), $code);
+        echo '<link rel="alternate" hreflang="'.substr($code, 0, 2).'" href="'.$translation_url.'" />';
+      } 
+    } 
+    // leave the global car like it was before
+    $uls_permalink_convertion = true; 
+  } 
 }
 ?>
