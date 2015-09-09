@@ -1082,15 +1082,25 @@ function uls_filter_archive_by_language($query){
 add_action('pre_get_posts', 'uls_filter_archive_by_language', 1);
 
 
+
 add_action('wp_head','head_reference_translation');
 function head_reference_translation() {
+
+  //get the id of the current page
+  $url =(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"]=="on") ? "https://" : "http://";
+  $url .= $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+  $post_id = url_to_postid($url);
+
   $languages = uls_get_available_languages();
+  $curren_code = uls_get_user_language();
+  // delete the current language site
+  $code_value = array_search($curren_code, $languages);
+  unset($languages[$code_value]); 
 
-  $language = uls_get_site_language();
-  $url_site = get_site_url().'/'.$language;
-  $code = substr($language, 0, 2);
+  foreach ($languages as $language => $code) {
+    $permalink = uls_get_permalink($post_id, $code);
+    echo '<link rel="alternate" hreflang="'.substr($code, 0, 2).'" href="'.$permalink.'" />';
+  } 
 
-  echo '<link rel="alternate" hreflang="'.$code.'" href="'.$url_site.'" />';
 }
-
 ?>
