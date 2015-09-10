@@ -14,6 +14,8 @@ class ULS_Options{
       'tab_color_picker_language_switch' => 'rgba(255, 255, 255, 0)', 
       'tab_position_language_switch' => 'RM',
       'fixed_position_language_switch' => true, 
+      'enable_translation_sidebars_language_switch' => true, 
+      'use_browser_language_to_redirect_visitors' => true, 
    );
 
    /**
@@ -68,6 +70,22 @@ class ULS_Options{
       $options['input_name'] = 'fixed_position_language_switch';
       add_settings_field($options['input_name'],
         __('Tab Fixed Pisition ','user-language-switch'),
+        'ULS_Options::create_checkbox_input',
+        'uls-settings-page',
+        'uls_general_settings_section',
+        $options); 
+
+      $options['input_name'] = 'enable_translation_sidebars_language_switch';
+      add_settings_field($options['input_name'],
+        __('Enable translations for sidebars','user-language-switch'),
+        'ULS_Options::create_checkbox_input',
+        'uls-settings-page',
+        'uls_general_settings_section',
+        $options); 
+
+      $options['input_name'] = 'use_browser_language_to_redirect_visitors';
+      add_settings_field($options['input_name'],
+        __('Use browser language to redirect visitors','user-language-switch'),
         'ULS_Options::create_checkbox_input',
         'uls-settings-page',
         'uls_general_settings_section',
@@ -200,6 +218,8 @@ class ULS_Options{
       $options['user_frontend_configuration'] = isset($_POST['user_frontend_configuration']);
       $options['activate_tab_language_switch'] = isset($_POST['activate_tab_language_switch']); 
       $options['fixed_position_language_switch'] = isset($_POST['fixed_position_language_switch']); 
+      $options['enable_translation_sidebars_language_switch'] = isset($_POST['enable_translation_sidebars_language_switch']); 
+      $options['use_browser_language_to_redirect_visitors'] = isset($_POST['use_browser_language_to_redirect_visitors']); 
       $options['position_menu_language'] = $ulsPostionMenuLanguage;
       $options['available_language'] = $ulsAvailableLanguage;
     } 
@@ -310,7 +330,7 @@ class ULS_Options{
         <?php
            }
 
-  public function create_table_available_language($options) {
+  static function create_table_available_language($options) {
     $languages = uls_get_available_languages(false); // get the all languages available in the wp
     $options = get_option('uls_settings'); // get information from DB
     $available_language = isset($options['available_language']) ? $options['available_language'] : uls_get_available_languages(false); // get the information that actually is in the DB 

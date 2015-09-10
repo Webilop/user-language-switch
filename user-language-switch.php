@@ -253,7 +253,12 @@ function uls_get_site_language($side = 'frontend'){
  *
  * @return mixed it returns false if the redirection is not possible, due to some of the restriction mentioned above. Otherwise, it just redirects the user.
  */
-function uls_redirect_by_browser_language(){
+function uls_redirect_by_browser_language(){ 
+  $options = uls_get_options();
+  if ( !isset($options['use_browser_language_to_redirect_visitors']) || !$options['use_browser_language_to_redirect_visitors'] )
+    return false;
+
+
   $type = 'frontend';
   $url =(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"]=="on") ? "https://" : "http://";
   $url .= $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
