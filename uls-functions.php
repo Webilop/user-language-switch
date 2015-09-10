@@ -51,6 +51,10 @@ function uls_get_permalink($post_id, $language = null){
  * @return string the HTML link of the translation link of a post.
  */
 function uls_get_link($post_id = null, $language = null, $label = null, $class='uls-link' ){
+
+  // instance the atribute
+  $translation_url = "#";
+
   if ($post_id == null) {
     if (is_home()) {
       $url = get_home_url();
