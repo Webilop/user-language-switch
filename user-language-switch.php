@@ -924,7 +924,7 @@ function uls_add_scripts() {
     wp_localize_script( 'add-bx-js', 'the_ajax_script', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
     wp_enqueue_style( 'webilop-flags_32x32-style', plugins_url('css/flags/flags_32x32.css', __FILE__) );
 } 
-add_action( 'wp_print_scripts', 'uls_add_scripts' );
+add_action( 'wp_enqueue_scripts', 'uls_add_scripts' );
 
 
 add_filter('manage_posts_columns', 'webilop_add_posts_columns');

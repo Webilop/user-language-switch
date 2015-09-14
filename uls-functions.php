@@ -368,6 +368,197 @@ function tap_user_language_switch() {
     include_once('uls-tab-template.php');
 } 
 
+// this function is for create the styles conditions
+add_action( 'wp_enqueue_scripts', 'uls_tab_background_color_picker' );
+function uls_tab_background_color_picker() {
+
+  $options = get_option('uls_settings');
+  $position = $options['tab_position_language_switch']; 
+
+  $TabStyle = "";
+  $TabBackground = "background-color: ".$options['tab_color_picker_language_switch'].";"; 
+  $TabFixed = ($options['fixed_position_language_switch']) ? "position: fixed;" : "position: absolute;";
+  $bodyRelative = ($options['fixed_position_language_switch']) ? "" : "position: relative;";
+  switch($position) {
+    case 'TL':
+      $TabStyle = "#tab_background_color_picker{
+          top: 0;
+          left: 0;
+          width: auto; ".
+          $TabFixed.
+          $TabBackground."
+          padding: 5px 5px 5px 10px;
+          border-radius: 0 0 15px 15px;
+          z-index: 10000000000;
+        }
+      .tab_flag {
+        display: inline;
+      }";
+    break;
+    case 'TC':
+      $TabStyle = "#tab_background_color_picker{
+          top: 0;
+          left: 50%;
+          width: auto;".
+          $TabFixed.
+          $TabBackground."
+          padding: 5px 5px 5px 10px;
+          border-radius: 0 0 15px 15px;
+          z-index: 10000000000;
+        }
+        .tab_flag {
+          display: inline;
+        }";
+    break;
+    case 'TR':
+      $TabStyle = "#tab_background_color_picker{
+          top: 0;
+          right: 0;
+          width: auto;".
+          $TabFixed.
+          $TabBackground."
+          padding: 5px 5px 5px 10px;
+          border-radius: 0 0 15px 15px;
+          z-index: 10000000000;
+        }
+        .tab_flag {
+          display: inline;
+        }";
+    break;
+    case 'BL':
+      $TabStyle = "#tab_background_color_picker{
+        bottom: 0;
+        left: 0;
+        width: auto;".
+        $TabFixed.
+        $TabBackground."
+        padding: 5px 5px 5px 10px;
+        border-radius: 15px 15px 0 0;
+        z-index: 10000000000;
+      }
+      .tab_flag {
+        display: inline;
+      }
+      body {
+        $bodyRelative
+      }"; 
+    break;
+    case 'BC':
+      $TabStyle = "#tab_background_color_picker{
+        bottom: 0;
+        left: 50%;
+        width: auto;".
+        $TabFixed.
+        $TabBackground."
+        padding: 5px 5px 5px 10px;
+        border-radius: 15px 15px 0 0;
+        z-index: 10000000000;
+      }
+      .tab_flag {
+        display: inline;
+      }
+      body {
+        $bodyRelative
+      }";
+    break;
+    case 'BR':
+      $TabStyle = "#tab_background_color_picker{
+        bottom: 0;
+        right: 0;
+        width: auto;".
+        $TabFixed.
+        $TabBackground."
+        padding: 5px 5px 5px 10px;
+        border-radius: 15px 15px 0 0;
+        z-index: 10000000000;
+      }
+      .tab_flag {
+        display: inline;
+      }
+      body {
+        $bodyRelative
+      }";
+    break;
+    case 'LT':
+      $TabStyle = "#tab_background_color_picker{
+        top: 0;
+        left: 0;
+        height: auto;".
+        $TabFixed.
+        $TabBackground."
+        padding: 5px 5px 5px 10px;
+        border-radius: 0 15px 15px 0;
+        z-index: 10000000000;
+      }";
+    break;
+    case 'LM':
+      $TabStyle = "#tab_background_color_picker{
+        top: 50%;
+        left: 0;
+        height: auto;".
+        $TabFixed.
+        $TabBackground."
+        padding: 5px 5px 5px 10px;
+        border-radius: 0 15px 15px 0;
+        z-index: 10000000000;
+      }";
+    break;
+    case 'LB':
+      $TabStyle = "#tab_background_color_picker{
+        bottom: 0;
+        left: 0;
+        height: auto;".
+        $TabFixed.
+        $TabBackground."
+        padding: 5px 5px 5px 10px;
+        border-radius: 0 15px 15px 0;
+        z-index: 10000000000;
+      }";
+    break;
+    case 'RT':
+      $TabStyle = "#tab_background_color_picker{
+        top: 0;
+        right: 0;
+        height: auto;".
+        $TabFixed.
+        $TabBackground."
+        padding: 5px 4px 5px 10px;
+        border-radius: 15px 0 0 15px;
+        z-index: 10000000000;
+      }";
+    break;
+    case 'RM':
+      $TabStyle = "#tab_background_color_picker{
+        top: 50%;
+        right: 0;
+        height: auto;".
+        $TabFixed.
+        $TabBackground."
+        padding: 5px 4px 5px 10px;
+        border-radius: 15px 0 0 15px;
+        z-index: 10000000000;
+      }";
+    break;
+    case 'RB':
+    $TabStyle = "#tab_background_color_picker{
+      bottom: 0;
+      right: 0;
+      height: auto;".
+      $TabFixed.
+      $TabBackground."
+      padding: 5px 4px 5px 10px;
+      border-radius: 15px 0 0 15px;
+      z-index: 10000000000;
+    }";
+    break;
+  }
+?>
+  <style type="text/css"> 
+    <?= $TabStyle; ?>
+  </style> 
+<?php
+}
+
 // this function is for automatic traduction menues
 function uls_traduction_automatic_menu($object)
 {      
@@ -384,7 +575,7 @@ add_filter( 'wp_nav_menu_objects', 'uls_traduction_automatic_menu');
 
 // this functin action is for register sidebar if the checkbox in backend is enable
 function uls_register_sidebar_laguages() {
-  global $wp_registered_sidebars; 
+  global $wp_registered_sidebars;
 
   $languages = uls_get_available_languages(); // get the all languages available in the wp
   $options = get_option('uls_settings'); 
@@ -396,15 +587,15 @@ function uls_register_sidebar_laguages() {
         unset($languages[$lang_name]);
   
   // create the N_sidebar X available_languages, but fir ask if the enable checkbox is true 
-  if ( $options['enable_translation_sidebars_language_switch'] ) {
+  if ( !isset($options['enable_translation_sidebars_language_switch']) || $options['enable_translation_sidebars_language_switch'] ) {
     if ( function_exists('register_sidebar') ) {
       $temporal_sidebars = $wp_registered_sidebars;
       foreach ( $temporal_sidebars as $sidebar => $items) {
         foreach ( $languages as $lang_name => $lang_code ) { 
           register_sidebar(array(
             'name' =>  $items['name'] .' / '. $lang_name,
-            'id' => "uls_".$items['id'].'_'.$lang_code,
-            'description' => 'This sidebar is to use with the widgets in language '.$lang_name,
+            'id' => strtolower("uls_".$items['id'].'_'.$lang_code),
+            'description' => __($items['description']. ' / '.$lang_name, 'user-language-switch'),
             'before_widget' => $items['before_widget'],
             'after_widget' => $items['after_widget'],
             'before_title' => $items['before_title'],
@@ -413,30 +604,29 @@ function uls_register_sidebar_laguages() {
         }
       } 
     }
-  } 
+  }  
 } 
-  if (is_admin())
-    add_action( 'widgets_init', 'uls_register_sidebar_laguages');
-  else
-    add_action( 'widgets_init', 'uls_register_sidebar_laguages', 100 );
+add_action( 'widgets_init', 'uls_register_sidebar_laguages', 999 );
 
 function uls_organize_widgets_sidebars($sidebars_widgets) {
-  unset($sidebars_widgets['cshero-blog-sidebar_es_ES']);
+  $options = get_option('uls_settings'); 
+
   if (!is_admin()) {
-    $lang_code = '_'.uls_get_user_language();
-    //$lang_code = '_es_ES';
-    $uls_code = 'uls_';
-    //echo "<pre>"; print_r($lang_code); echo "</pre>"; 
-    foreach ($sidebars_widgets as $sidebar => $widgets) { 
-      if ( substr($sidebar,0,3) != $uls_code ) {
-        if ( isset($sidebars_widgets[$uls_code.$sidebar.$lang_code]) ) {
-          $uls_widgets =  $sidebars_widgets[$uls_code.$sidebar.$lang_code]; 
-          $sidebars_widgets[$sidebar] = $uls_widgets; 
+    if ( !isset($options['enable_translation_sidebars_language_switch']) || $options['enable_translation_sidebars_language_switch'] ) {
+      $lang_code = strtolower('_'.uls_get_user_language());
+      $uls_code = 'uls_';
+      foreach ($sidebars_widgets as $sidebar => $widgets) { 
+        if ( substr($sidebar,0,3) != $uls_code ) {
+          if ( !empty($sidebars_widgets[$uls_code.$sidebar.$lang_code]) ) {
+            $uls_widgets =  $sidebars_widgets[$uls_code.$sidebar.$lang_code]; 
+            $sidebars_widgets[$sidebar] = $uls_widgets; 
+          }
         }
       }
     }
   }
- return $sidebars_widgets;
+
+  return $sidebars_widgets;
 }
 add_filter ( 'sidebars_widgets', 'uls_organize_widgets_sidebars', 10, 1);
 ?>
