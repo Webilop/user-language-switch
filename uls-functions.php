@@ -605,7 +605,6 @@ function uls_register_sidebar_laguages() {
 add_action( 'widgets_init', 'uls_register_sidebar_laguages', 999 );
 
 function uls_organize_widgets_sidebars($sidebars_widgets) {
-  //unset($sidebars_widgets['cshero-blog-sidebar_es_ES']);
   $options = get_option('uls_settings'); 
 
   if (!is_admin()) {
@@ -614,7 +613,7 @@ function uls_organize_widgets_sidebars($sidebars_widgets) {
       $uls_code = 'uls_';
       foreach ($sidebars_widgets as $sidebar => $widgets) { 
         if ( substr($sidebar,0,3) != $uls_code ) {
-          if ( isset($sidebars_widgets[$uls_code.$sidebar.$lang_code]) ) {
+          if ( !empty($sidebars_widgets[$uls_code.$sidebar.$lang_code]) ) {
             $uls_widgets =  $sidebars_widgets[$uls_code.$sidebar.$lang_code]; 
             $sidebars_widgets[$sidebar] = $uls_widgets; 
           }
