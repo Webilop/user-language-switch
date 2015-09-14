@@ -571,7 +571,7 @@ add_filter( 'wp_nav_menu_objects', 'uls_traduction_automatic_menu');
 
 // this functin action is for register sidebar if the checkbox in backend is enable
 function uls_register_sidebar_laguages() {
-  global $wp_registered_sidebars; 
+  global $wp_registered_sidebars;
 
   $languages = uls_get_available_languages(); // get the all languages available in the wp
   $options = get_option('uls_settings'); 
@@ -590,7 +590,7 @@ function uls_register_sidebar_laguages() {
         foreach ( $languages as $lang_name => $lang_code ) { 
           register_sidebar(array(
             'name' =>  $items['name'] .' / '. $lang_name,
-            'id' => "uls_".$items['id'].'_'.$lang_code,
+            'id' => strtolower("uls_".$items['id'].'_'.$lang_code),
             'description' => __($items['description']. ' / '.$lang_name, 'user-language-switch'),
             'before_widget' => $items['before_widget'],
             'after_widget' => $items['after_widget'],
@@ -600,9 +600,9 @@ function uls_register_sidebar_laguages() {
         }
       } 
     }
-  } 
+  }  
 } 
-add_action( 'widgets_init', 'uls_register_sidebar_laguages', 100 );
+add_action( 'widgets_init', 'uls_register_sidebar_laguages', 999 );
 
 function uls_organize_widgets_sidebars($sidebars_widgets) {
   //unset($sidebars_widgets['cshero-blog-sidebar_es_ES']);
@@ -610,8 +610,7 @@ function uls_organize_widgets_sidebars($sidebars_widgets) {
 
   if (!is_admin()) {
     if ( !isset($options['enable_translation_sidebars_language_switch']) || $options['enable_translation_sidebars_language_switch'] ) {
-      $lang_code = '_'.uls_get_user_language();
-      //$lang_code = '_es_ES';
+      $lang_code = strtolower('_'.uls_get_user_language());
       $uls_code = 'uls_';
       foreach ($sidebars_widgets as $sidebar => $widgets) { 
         if ( substr($sidebar,0,3) != $uls_code ) {
@@ -623,9 +622,8 @@ function uls_organize_widgets_sidebars($sidebars_widgets) {
       }
     }
   }
-  //echo "<pre>"; print_r($sidebars_widgets); echo "</pre>"; 
-  //exit;
- return $sidebars_widgets;
+
+  return $sidebars_widgets;
 }
 add_filter ( 'sidebars_widgets', 'uls_organize_widgets_sidebars', 10, 1);
 ?>
