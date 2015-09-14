@@ -536,7 +536,7 @@ function uls_link_filter($post_url, $post = null){
 /**
  * This function add the language flag in the url.
  */
-function uls_get_url_translated($url, $language, $type = 'prefix', $remove_default_language = true){
+function uls_get_url_translated($url, $language, $type = 'prefix', $remove_default_language = true){ 
 
    //if URL will omit default language
    if($remove_default_language){
@@ -584,9 +584,12 @@ function uls_get_url_translated($url, $language, $type = 'prefix', $remove_defau
          else{
             //split path to detect if it contains a language flag already
             if(empty($blog_parts['path'])){
+               $parts['path'] = isset($parts['path']) ? $parts['path'] : '/';
                $path_parts = explode('/', $parts['path']);
-               $available_languages = uls_get_available_languages();
-               if(!empty($path_parts) && in_array($path_parts[1], $available_languages)){
+               $available_languages = uls_get_available_languages(); 
+
+
+               if( in_array($path_parts[1], $available_languages) ){
                   unset($path_parts[1]);
                   $parts['path'] = implode('/', $path_parts);
                }
@@ -833,7 +836,7 @@ function uls_save_association( $post_id ) {
 
   // get array post metas because we need the uls_language and uls_translation
   $this_post_metas = get_post_meta( $parent_id );
-  $this_uls_translation = 'uls_translation_'.strtolower($this_post_metas['uls_language'][0]);
+  $this_uls_translation = !empty($this_post_metas) ?  isset($this_post_metas['uls_language']) ? 'uls_translation_'.strtolower($this_post_metas['uls_language'][0]) : '' : '';
   // if the language of this page change so change the all pages that have this like a traduction
   if ($selected_language != $this_uls_translation) {
     // get post that have this traduction
