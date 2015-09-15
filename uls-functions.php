@@ -362,10 +362,22 @@ function uls_get_url_map_translation($url, $language = null){
 }
 
 add_action('wp_footer', 'tap_user_language_switch');
+// uls-tab-user-language-switch include the template to show flags
 function tap_user_language_switch() {
   $options = get_option('uls_settings');
-  if($options['activate_tab_language_switch'])
+
+  if($options['activate_tab_language_switch']){
+
+    $languages = uls_get_available_languages();
+    $position = $options['tab_position_language_switch']; 
+
+    if ( is_home() || is_archive() || is_search() || is_category() || is_tag() || is_author() || is_date() )
+      $postId = null;
+    else
+      $postId = get_post()->ID;
+
     include_once('uls-tab-template.php');
+  }
 } 
 
 // this function is for create the styles conditions
