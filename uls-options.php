@@ -16,7 +16,6 @@ class ULS_Options{
       'fixed_position_language_switch' => true, 
       'enable_translation_sidebars_language_switch' => true, 
       'use_browser_language_to_redirect_visitors' => true, 
-      'language_filter_enable_disable_postype' => '', 
    );
 
    /**
@@ -389,8 +388,11 @@ class ULS_Options{
   static function create_table_language_filter($options) {
     $options = get_option('uls_settings'); // get information from DB
     $languages_filter = isset($options['languages_filter_disable']) ? $options['languages_filter_disable'] : ''; // get the information that actually is in the DB 
-    $args = array( '_builtin' => false);
-    $post_types = get_post_types();
+
+    $args = array( '_builtin' => false);// values for do the query 
+    $post_types = get_post_types($args); // get all custom post types
+    $post_types['post'] = 'post'; // add default post type
+    $post_types['page'] = 'page'; // add default post type
     echo "<pre>"; print_r($post_types); echo "</pre>";
   ?>
     <table id="menu-locations-table" class="">
