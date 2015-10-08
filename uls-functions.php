@@ -369,7 +369,7 @@ add_action('wp_footer', 'tap_user_language_switch');
 function tap_user_language_switch() {
   $options = get_option('uls_settings');
 
-  if($options['activate_tab_language_switch']){
+  if( isset($options['activate_tab_language_switch']) && $options['activate_tab_language_switch']){
 
     $languages = uls_get_available_languages();
     $position = $options['tab_position_language_switch']; 

@@ -396,7 +396,6 @@ class ULS_Options{
     $post_types = get_post_types($args); // get all custom post types
     $post_types['post'] = 'post'; // add default post type
     $post_types['page'] = 'page'; // add default post type
-    echo "<pre>"; print_r($post_types); echo "</pre>";
   ?>
     <table id="menu-locations-table" class="">
       <thead>
