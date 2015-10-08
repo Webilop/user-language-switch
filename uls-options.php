@@ -16,6 +16,7 @@ class ULS_Options{
       'fixed_position_language_switch' => true, 
       'enable_translation_sidebars_language_switch' => true, 
       'use_browser_language_to_redirect_visitors' => true, 
+      'language_filter_enable_disable_postype' => '', 
    );
 
    /**
@@ -162,17 +163,32 @@ class ULS_Options{
     else if( isset($_GET['tab']) && $_GET['tab'] == 'available_languages' ) { 
       //create section for registration
       add_settings_section('uls_general_settings_section',
-        __('Menu Language Settings','user-language-switch'),
+        __('Enable and Disable Language','user-language-switch'),
         'ULS_Options::create_general_settings_section',
         'uls-settings-page');
 
       // create table configuration
-      add_settings_section('table_menu_language',
+      add_settings_section('table_available_language',
         __('','user-language-switch'),
         'ULS_Options::create_table_available_language',
         'uls-settings-page',
         'uls_general_settings_section',
         $options); 
+    }
+    else if( isset($_GET['tab']) && $_GET['tab'] == 'languages_filter_disable' ) { 
+      //create section for registration language_filter_enable_disable_postype
+      add_settings_section('uls_general_settings_section',
+        __('Language Filter Enable Disable Post Type','user-language-switch'),
+        'ULS_Options::create_general_settings_section',
+        'uls-settings-page');
+
+      // create menu table configuration
+      add_settings_section('table_language_filter',
+        __('','user-language-switch'),
+        'ULS_Options::create_table_language_filter',
+        'uls-settings-page',
+        'uls_general_settings_section',
+        $options);
     }
     //create section for collaboration
     add_settings_section('uls_collaboration_section',
@@ -200,6 +216,9 @@ class ULS_Options{
     }
     else if ( isset($_POST['available_languages']) ) {
       $options['available_language'] = $_POST['uls_available_language'];
+    }
+    else if ( isset($_POST['languages_filter_disable']) ) {
+      $options['languages_filter_disable'] = $_POST['uls_language_filter'];
     }else{ 
       //create default options
       $ulsPostionMenuLanguage = $options['position_menu_language'];
@@ -207,6 +226,9 @@ class ULS_Options{
       // if the user does not want to show the languages he has tow options
       // 1 - desactive the flags tab  or 2 - desactive the plugin
       $ulsAvailableLanguage = isset($options['available_language']) ? $options['available_language'] : uls_get_available_languages(false);
+      // disable all post type filter
+      $ulsLanguageFilter = isset($options['languages_filter_disable']) ? $options['languages_filter_disable'] : '';
+
       $options = self::$default_options;
 
       foreach($options as $k => $v)
@@ -222,6 +244,7 @@ class ULS_Options{
       $options['use_browser_language_to_redirect_visitors'] = isset($_POST['use_browser_language_to_redirect_visitors']); 
       $options['position_menu_language'] = $ulsPostionMenuLanguage;
       $options['available_language'] = $ulsAvailableLanguage;
+      $options['languages_filter_disable'] = $ulsLanguageFilter;
     } 
     return $options;
   }
@@ -359,6 +382,41 @@ class ULS_Options{
     <input type="hidden" name="available_languages" value="available_languages" >
   <?php
   } 
+
+   /*
+    * create table language filter this is for enable and disable post_type
+     */
+  static function create_table_language_filter($options) {
+    $options = get_option('uls_settings'); // get information from DB
+    $languages_filter = isset($options['languages_filter_disable']) ? $options['languages_filter_disable'] : ''; // get the information that actually is in the DB 
+    $args = array( '_builtin' => false);
+    $post_types = get_post_types();
+    echo "<pre>"; print_r($post_types); echo "</pre>";
+  ?>
+    <table id="menu-locations-table" class="">
+      <thead>
+        <tr>
+          <th>Enable / Disable </th>
+          <th>Post types</th>
+        </tr>
+      </thead> 
+      <tbody>
+        <?php foreach ($post_types as $post_type => $name): ?>
+          <tr>
+            <?php $checked = isset($languages_filter[$post_type]) ? 'checked' : ''; ?> 
+            <td>
+              <input type="checkbox" name="uls_language_filter[<?=$post_type?>]" value="<?=$name?>" <?=$checked?> />
+            </td>
+            <td>
+              <label for="<?=$post_type?>_label"><?=$name?></label>
+            </td> 
+          </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table> 
+    <input type="hidden" name="languages_filter_disable" value="languages_filter_disable" >
+  <?php
+  } 
    /**
     * Create register form displayed on back end.
     */
@@ -412,7 +470,11 @@ class ULS_Options{
     // get the current tab or default tab
     $current = isset($_GET['tab']) ? $_GET['tab'] : 'homepage'; 
     // add the tabs that you want to use in the plugin 
-    $tabs = array( 'homepage' => 'General', 'menulanguage' => 'Menu Languages', 'available_languages' => 'Available Languages');
+    $tabs = array('homepage' => 'General',
+                  'menulanguage' => 'Menu Languages', 
+                  'available_languages' => 'Available Languages',
+                  'languages_filter_disable' => 'Language Filter' );
+
     echo '<div id="icon-themes" class="icon32"><br></div>';
     echo '<h2 class="nav-tab-wrapper">';
     // configurate the url with your personal_url and add the class for the activate tab
