@@ -1148,8 +1148,10 @@ function uls_filter_archive_by_language($query){
   // if the information in languages_filter_disable are true apply filter 
   $settings = get_option('uls_settings');
   $array_query = isset($query->query['post_type']) ? $query->query['post_type'] : ''; 
-  if ( isset($settings['languages_filter_disable']) && !isset($settings['languages_filter_disable'][$array_query]) )
+  if ( isset($settings['languages_filter_enable']) && !isset($settings['languages_filter_enable'][$array_query]) )
     return; 
+  echo "<pre>"; print_r($settings); echo "</pre>";
+  exit;
 
   //this flag indicates if we should filter posts by language
   $modify_query = !$query->is_page() && !$query->is_single() && !$query->is_preview();

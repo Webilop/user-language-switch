@@ -650,22 +650,5 @@ function uls_organize_widgets_sidebars($sidebars_widgets) {
 
   return $sidebars_widgets;
 }
-add_filter ( 'sidebars_widgets', 'uls_organize_widgets_sidebars', 10, 1);
-
-
-// function execute when plugin is update or install save the default information
-function uls_save_default_information() {
-
-    $uls_settings = get_option('uls_settings');
-
-    if ( !isset($uls_settings['languages_filter_disable']) ) {
-        echo "<pre>"; print_r($uls_settings['languages_filter_disable']); echo "</pre>";
-        $uls_settings['languages_filter_disable'] =  array('post' => 'post', 'page' => 'page');
-        update_option( 'uls_settings', $uls_settings );
-    }
-    echo "<pre>"; print_r($uls_settings['languages_filter_disable']); echo "</pre>";
-    exit;
-
-}
-register_activation_hook( __FILE__, 'uls_save_default_information' );
+add_filter ( 'sidebars_widgets', 'uls_organize_widgets_sidebars', 10, 1); 
 ?>
