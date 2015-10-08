@@ -1,5 +1,5 @@
 <?php
- /**
+/**
  * This file containg general functions to use in themes or other plugins.
  */
 
@@ -28,6 +28,17 @@ function uls_get_options(){
 }
 
 /**
+ * This function returns the URL used in the browser.
+ *
+ * @return string URL in the browser.
+ */
+function uls_get_browser_url(){
+  $url =(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"]=="on") ? "https://" : "http://";
+  $url .= $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+  return $url;
+}
+
+/**
  * Return the permalink of the translation link of a post.
  *
  * @param $post_id integer id of post.
@@ -51,7 +62,6 @@ function uls_get_permalink($post_id, $language = null){
  * @return string the HTML link of the translation link of a post.
  */
 function uls_get_link($post_id = null, $language = null, $label = null, $class='uls-link' ){
-
   // instance the atribute
   $translation_url = "#";
 
@@ -60,10 +70,9 @@ function uls_get_link($post_id = null, $language = null, $label = null, $class='
       $url = get_home_url();
       $translation_url = uls_get_url_translated($url, $language);
     }
-    else if (is_archive()) {
-      $url = get_post_type_archive_link( get_post_type() );
+    else if (is_archive() || is_search() || is_author() || is_category() || is_tag() || is_date()) {
+      $url = uls_get_browser_url();
       $translation_url = uls_get_url_translated($url, $language);
-      $title = post_type_archive_title("",false);
     }
   }
   else {
@@ -71,19 +80,17 @@ function uls_get_link($post_id = null, $language = null, $label = null, $class='
     if(empty($translation_id))
       $translation_id = $post_id;
 
-    //set conversion of permalinks to false
+    //set conversion of permalinks to true
     global $uls_permalink_convertion;
-    $uls_permalink_convertion = false;
+    $uls_permalink_convertion = true;
 
     $translation_url = uls_get_url_translated(get_permalink($translation_id), $language);
 
-    //set conversion of permalinks to true again
-    $uls_permalink_convertion = true;
+    //reset conversion of permalinks
+    $uls_permalink_convertion = false;
 
     $title = get_the_title($translation_id);
   }
-
-  // echo $translation_url;
 
   if(null == $label)
     return '<a class="' . $class . '" href="' . $translation_url . '" >' . $title . '</a>';
@@ -127,10 +134,8 @@ function uls_link_shortcode($atts){
  */
 function uls_language_link_switch($url = null, $url_type = 'prefix', $type = 'links', $only_lang_name = true, $class = null){
   //if URL is null, then it uses the current URL
-  if(null == $url){
-    $url =(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"]=="on") ? "https://" : "http://";
-    $url .= $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-  }
+  if(null == $url)
+    $url = uls_get_browser_url();
 
   //get the available languages
   $available_languages = uls_get_available_languages();
@@ -142,9 +147,9 @@ function uls_language_link_switch($url = null, $url_type = 'prefix', $type = 'li
   if('' == $current_language)
     $current_language = uls_get_site_language();
 
-  //set conversion of permalinks to false
+  //set conversion of permalinks to true
   global $uls_permalink_convertion;
-  $uls_permalink_convertion = false;
+  $uls_permalink_convertion = true;
   ob_start();
   ?>
   <div class="<?php echo $class; ?>">
@@ -201,8 +206,8 @@ function uls_language_link_switch($url = null, $url_type = 'prefix', $type = 'li
    $res = ob_get_contents();
    ob_end_clean();
 
-   //set conversion of permalinks to true again
-   $uls_permalink_convertion = true;
+   //reset conversion of permalinks
+   $uls_permalink_convertion = false;
 
    return $res;
 }
@@ -220,10 +225,8 @@ function uls_language_selector_shortcode($atts){
   ), $atts ) );
 
   //if URL is null, then it uses the current URL
-  if(null == $url){
-    $url =(isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"]=="on") ? "https://" : "http://";
-    $url .= $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
-  }
+  if(null == $url)
+    $url = uls_get_browser_url();
 
   if("false" == $only_language)
     $only_language = false;
@@ -572,18 +575,19 @@ function uls_tab_background_color_picker() {
 }
 
 // this function is for automatic traduction menues
-function uls_traduction_automatic_menu($object)
+/*function uls_traduction_automatic_menu($object)
 {      
   foreach ($object as $key ) {
-    $post_id = get_post_meta($key->object_id, 'uls_translation_'.strtolower(uls_get_user_language()), true); 
+    $post_id = get_post_meta($key->object_id, 'uls_translation_'.strtolower(uls_get_user_language()), true);
     if ( !empty($post_id) ) {
       $key->title = get_post($post_id)->post_title;
+      $key->url = uls_get_url_translated($key->url);
+      var_dump('yeah!');
     }
-  } 
+  }
   return $object;
 }
-add_filter( 'wp_nav_menu_objects', 'uls_traduction_automatic_menu');
-
+//add_filter( 'wp_nav_menu_objects', 'uls_traduction_automatic_menu');*/
 
 // this functin action is for register sidebar if the checkbox in backend is enable
 function uls_register_sidebar_laguages() {
