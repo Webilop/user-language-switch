@@ -388,12 +388,18 @@ add_action( 'wp_enqueue_scripts', 'uls_tab_background_color_picker' );
 function uls_tab_background_color_picker() {
 
   $options = get_option('uls_settings');
-  $position = $options['tab_position_language_switch']; 
+  $position = isset($options['tab_position_language_switch']) ? $options['tab_position_language_switch'] : 'RM'; 
 
-  $TabStyle = "";
-  $TabBackground = "background-color: ".$options['tab_color_picker_language_switch'].";"; 
-  $TabFixed = ($options['fixed_position_language_switch']) ? "position: fixed;" : "position: absolute;";
-  $bodyRelative = ($options['fixed_position_language_switch']) ? "" : "position: relative;";
+  // value for tabStyle
+  $TabStyle = ""; 
+  // default or not tab background color
+  $TabBackground = isset($options['tab_color_picker_language_switch']) ? $options['tab_color_picker_language_switch'] : 'rgba(255, 255, 255, 0);';
+  $TabBackground = "background-color: ".$TabBackground.";"; 
+  // default or not tab fixed or  absoluted
+  $TabFixed = isset($options['fixed_position_language_switch']) ? "position: fixed;" : "position: absolute;";
+  $bodyRelative = isset($options['fixed_position_language_switch']) ? "" : "position: relative;";
+
+  // select the style for the position flags
   switch($position) {
     case 'TL':
       $TabStyle = "#tab_background_color_picker{
@@ -653,9 +659,12 @@ function uls_save_default_information() {
     $uls_settings = get_option('uls_settings');
 
     if ( !isset($uls_settings['languages_filter_disable']) ) {
+        echo "<pre>"; print_r($uls_settings['languages_filter_disable']); echo "</pre>";
         $uls_settings['languages_filter_disable'] =  array('post' => 'post', 'page' => 'page');
         update_option( 'uls_settings', $uls_settings );
     }
+    echo "<pre>"; print_r($uls_settings['languages_filter_disable']); echo "</pre>";
+    exit;
 
 }
 register_activation_hook( __FILE__, 'uls_save_default_information' );

@@ -598,12 +598,11 @@ class ULS_Options{
       return $links; 
    }
 
-   static function select_correct_menu_language($items, $args) {
-     
+   static function select_correct_menu_language($items, $args) { 
 
     $options = get_option('uls_settings');
     $menu_name = $args->menu;
-    $position_menu_language = $options['position_menu_language']; 
+    $position_menu_language = isset($options['position_menu_language']) ? $options['position_menu_language'] : array(); 
 
     // if the mena arrive ask which traduction should be show up
     if (!empty($args->menu)) {

@@ -92,7 +92,7 @@ function uls_get_user_language_from_url($only_lang = false){
   if(is_null($language)){
     //get the langauge from the URL
     $url = str_replace(get_bloginfo('url'), '', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-    if($url[0] == '/') $url = substr($url, 1);
+    if( isset($url[0]) && $url[0] == '/') $url = substr($url, 1);
     $parts = explode('/', $url);
     if(count($parts) > 0)
       $language = $parts[0];
@@ -1148,10 +1148,6 @@ function uls_filter_archive_by_language($query){
   // if the information in languages_filter_disable are true apply filter 
   $settings = get_option('uls_settings');
   $array_query = isset($query->query['post_type']) ? $query->query['post_type'] : ''; 
-
-echo "<pre>"; print_r($settings['languages_filter_disable']); echo "</pre>";
-echo "<pre>"; print_r($array_query); echo "</pre>";
-
   if ( isset($settings['languages_filter_disable']) && !isset($settings['languages_filter_disable'][$array_query]) )
     return; 
 
