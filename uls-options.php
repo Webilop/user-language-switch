@@ -54,11 +54,12 @@ class ULS_Options{
 
     // add configuration about the setting depent of the tab
     if( isset($_GET['tab']) && $_GET['tab'] == 'homepage' || !isset($_GET['tab'])  ) { 
+
       //create section for registration
       add_settings_section('uls_general_settings_section',
         __('General Settings','user-language-switch'),
         'ULS_Options::create_general_settings_section',
-        'uls-settings-page');
+        'uls-settings-page'); 
 
       $options['input_name'] = 'activate_tab_language_switch';
       add_settings_field($options['input_name'],
@@ -146,10 +147,11 @@ class ULS_Options{
         $options);
     }
     else if( isset($_GET['tab']) && $_GET['tab'] == 'menulanguage' ) { 
-      //create section for registration
-      add_settings_section('uls_general_settings_section',
-        __('Menu Language Settings','user-language-switch'),
-        'ULS_Options::create_general_settings_section',
+      //create section for tabs description  
+      $options['input_name'] = 'uls_tabs_menu_language';
+      add_settings_section($options['input_name'],
+        __('Information','user-language-switch'),
+        'ULS_Options::create_tabs_information_section',
         'uls-settings-page');
 
       // create menu table configuration
@@ -157,14 +159,14 @@ class ULS_Options{
         __('','user-language-switch'),
         'ULS_Options::create_table_menu_language',
         'uls-settings-page',
-        'uls_general_settings_section',
+        'uls_tabs_menu_language',
         $options);
     }
     else if( isset($_GET['tab']) && $_GET['tab'] == 'available_languages' ) { 
       //create section for registration
-      add_settings_section('uls_general_settings_section',
-        __('Enable and Disable Language','user-language-switch'),
-        'ULS_Options::create_general_settings_section',
+      add_settings_section('uls_tabs_available_language',
+        __('Information','user-language-switch'),
+        'ULS_Options::create_tabs_information_section',
         'uls-settings-page');
 
       // create table configuration
@@ -172,23 +174,24 @@ class ULS_Options{
         __('','user-language-switch'),
         'ULS_Options::create_table_available_language',
         'uls-settings-page',
-        'uls_general_settings_section',
+        'uls_tabs_available_language',
         $options); 
     }
     else if( isset($_GET['tab']) && $_GET['tab'] == 'languages_filter_enable' ) { 
-      $options['input_name'] = 'languages_filter_enable';
-      //create section for registration language_filter_enable_disable_postype
+      //create section for tabs description  
+      $options['input_name'] = 'uls_tabs_language_filter';
       add_settings_section($options['input_name'],
-        __('Language Filter Enable Disable Post Type','user-language-switch'),
-        'ULS_Options::create_general_settings_section',
+        __('Information','user-language-switch'),
+        'ULS_Options::create_tabs_information_section',
         'uls-settings-page');
 
       // create menu table configuration
+      $options['input_name'] = 'languages_filter_enable';
       add_settings_section('table_language_filter',
         __('','user-language-switch'),
         'ULS_Options::create_table_language_filter',
         'uls-settings-page',
-        'uls_general_settings_section',
+        'uls_tabs_language_filter',
         $options);
     }
     //create section for collaboration
@@ -425,9 +428,9 @@ class ULS_Options{
     * Create register form displayed on back end.
     */
    static function create_general_settings_section(){
-      ?>
-      <p><?php _e('You can install more languages in your site following the instructions in ','user-language-switch'); ?><a href="http://codex.wordpress.org/WordPress_in_Your_Language" target="_blank"><?php _e('WordPress in Your Language','user-language-switch'); ?></a>.</p>
-      <?php
+    ?>
+      <p>Configure settings for the language tab that contains flags to change between languages in your website, set default languages for your website and enable menu custom translations to create different menus for each language.</p>
+    <?php
    }
    
    /**
@@ -436,6 +439,26 @@ class ULS_Options{
    static function create_collaboration_section(){
       ?>
       <div class="section-inside"><p><?php _e('You can collaborate with the development of this plugin, please send us any suggestion or bug notification to '); ?><a href="mailto:support@webilop.com">support@webilop.com</a></p></div>
+      <?php
+   }
+
+   /**
+    * Create the section tabs information.
+    */
+   static function create_tabs_information_section($options){
+     switch($options['id']){
+       case 'uls_tabs_menu_language':
+         $description = " Assign menus as translations to other menus, first you need to create your menus in Appearance - Menus. If you don't assign a translation for a menu, then pages in the menu are translated individually if they have translations assigned.";
+         break;
+       case 'uls_tabs_available_language':
+         $description = 'You can install more languages in your site following the instructions in <a href="http://codex.wordpress.org/WordPress_in_Your_Language" target="_blank">WordPress in Your Language</a>.';
+         break;
+       case 'uls_tabs_language_filter':
+         $description = "Select with post types should be filtered automatically by language. If a post, page or custom post doesn't match the language you are looking in the website, then it is not displayed. If a post, page or custom post doesn't have language, then it is matched with the default language of the website.";
+         break;
+     }
+      ?>
+      <div><p><?php _e($description,'user-language-switch'); ?></p></div>
       <?php
    }
 
