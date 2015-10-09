@@ -1176,4 +1176,20 @@ function uls_filter_archive_by_language($query){
 }
 add_action('pre_get_posts', 'uls_filter_archive_by_language', 1);
 
+function uls_rewrite_id_front_page($query) {
+  //gets the global query var object
+  global $wp_query;
+  
+  if ($query->is_home() && $query->is_main_query() ) {
+    //gets the front page id set in options
+    $front_page_id = get_option('page_on_front');
+    $post_meta = get_post_meta($front_page_id, 'uls_translation_'.strtolower(uls_get_user_language()) );
+
+    if (empty($post_meta) ) {
+      $query->set('post_type', 'page');
+      $query->set('page_id', $front_page_id);
+    } 
+  }
+}
+add_action('pre_get_posts', 'uls_rewrite_id_front_page', 1);
 ?>
