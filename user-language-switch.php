@@ -90,12 +90,19 @@ function uls_get_user_language_from_url($only_lang = false){
       $language = $lang;
   }
   if(is_null($language)){
+    //activate flag to avoid translations and get the real URL of the blog
+    global $uls_permalink_convertion;
+    $uls_permalink_convertion = true;
+  
     //get the langauge from the URL
     $url = str_replace(get_bloginfo('url'), '', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
     if($url[0] == '/') $url = substr($url, 1);
     $parts = explode('/', $url);
     if(count($parts) > 0)
       $language = $parts[0];
+      
+    //reset the flag
+    $uls_permalink_convertion = true;
   }
 
   return uls_valid_language($language) ? $language : false;
@@ -393,7 +400,7 @@ function uls_redirect_by_page_language(){
  */
 function uls_language_loading($lang){
    global $uls_locale;
-   //if this method is already called, then it remove action to avoid recursion
+   //if this method is already called, then it remove the action to avoid recursion
    if($uls_locale)
     remove_filter('locale', 'uls_language_loading');
    else
@@ -591,6 +598,10 @@ function uls_get_url_translated($url, $language, $type = 'prefix', $remove_defau
    if(empty($url))
       return null;
 
+   //activate flag to avoid translations and get the real URL of the blog
+   global $uls_permalink_convertion;
+   $uls_permalink_convertion = true;
+
    //if URL will omit default language
    if($remove_default_language){
       //if language is the same for the user
@@ -609,7 +620,7 @@ function uls_get_url_translated($url, $language, $type = 'prefix', $remove_defau
             if(!empty($language))
                $parts['query'] = 'lang=' . $language;
             $url = $parts['scheme'] . '://' . $parts['host'] . (empty($parts['port']) ? '' : ':' . $parts['port']) . (empty($parts['path']) ? '' : $parts['path']) . (empty($parts['query']) ? '' : '?' . $parts['query']) . (empty($parts['fragment']) ? '' : '#' . $parts['fragment']);
-            return $url;
+            break;
          }
          $query_parts = explode('&', $parts['query']);
          $new_query_parts = array();
@@ -641,7 +652,6 @@ function uls_get_url_translated($url, $language, $type = 'prefix', $remove_defau
                $parts['path'] = isset($parts['path']) ? $parts['path'] : '/';
                $path_parts = explode('/', $parts['path']);
                $available_languages = uls_get_available_languages(); 
-
 
                if( in_array($path_parts[1], $available_languages) ){
                   unset($path_parts[1]);
@@ -676,6 +686,9 @@ function uls_get_url_translated($url, $language, $type = 'prefix', $remove_defau
          
          break;
    }
+   //reset flag
+   $uls_permalink_convertion = false;
+   
    return $url;
 }
 

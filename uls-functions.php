@@ -54,7 +54,7 @@ function uls_get_permalink($post_id, $language = null){
 /**
  * Return the HTML link of the translation of a post.
  *
- * @param $post_id integer id of post.
+ * @param $post_id integer id of post. If it is null, then it converts the current URL with the language specified.
  * @param $language string language of translation. If it is null or invalid, current language loaded in the page is used.
  * @param $label string inner text of the link.
  * @param $class string text to include as class parameter in the link
