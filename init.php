@@ -1,12 +1,12 @@
 <?php
 /*
-Script Name: 	Custom Metaboxes and Fields
-Contributors: 	Andrew Norcross (@norcross / andrewnorcross.com)
+Script Name:  Custom Metaboxes and Fields
+Contributors:   Andrew Norcross (@norcross / andrewnorcross.com)
         Jared Atchison (@jaredatch / jaredatchison.com)
         Bill Erickson (@billerickson / billerickson.net)
         Justin Sternberg (@jtsternberg / dsgnwrks.pro)
-Description: 	This will create metaboxes with custom fields that will blow your mind.
-Version: 		0.9.2
+Description:  This will create metaboxes with custom fields that will blow your mind.
+Version:    0.9.2
 */
 
 /**
@@ -612,56 +612,8 @@ function cmb_force_send( $args ) {
     ';
   }
 
-    return $args;
+  return $args;
 
-}
-
-add_action( 'wp_ajax_cmb_oembed_handler', 'cmb_oembed_ajax_results' );
-/**
- * Handles our oEmbed ajax request
- */
-function cmb_oembed_ajax_results() {
-
-  // verify our nonce
-  if ( ! ( isset( $_REQUEST['cmb_ajax_nonce'], $_REQUEST['oembed_url'] ) && wp_verify_nonce( $_REQUEST['cmb_ajax_nonce'], 'ajax_nonce' ) ) )
-    die();
-
-  // sanitize our search string
-  $oembed_string = sanitize_text_field( $_REQUEST['oembed_url'] );
-
-  if ( empty( $oembed_string ) ) {
-    $return = '<p class="ui-state-error-text">'. __( 'Please Try Again', 'cmb' ) .'</p>';
-    $found = 'not found';
-  } else {
-
-    global $wp_embed;
-
-    $oembed_url = esc_url( $oembed_string );
-    // Post ID is needed to check for embeds
-    if ( isset( $_REQUEST['post_id'] ) )
-      $GLOBALS['post'] = get_post( $_REQUEST['post_id'] );
-    // ping WordPress for an embed
-    $check_embed = $wp_embed->run_shortcode( '[embed]'. $oembed_url .'[/embed]' );
-    // fallback that WordPress creates when no oEmbed was found
-    $fallback = $wp_embed->maybe_make_link( $oembed_url );
-
-    if ( $check_embed && $check_embed != $fallback ) {
-      // Embed data
-      $return = '<div class="embed_status">'. $check_embed .'<a href="#" class="cmb_remove_file_button" rel="'. $_REQUEST['field_id'] .'">'. __( 'Remove Embed', 'cmb' ) .'</a></div>';
-      // set our response id
-      $found = 'found';
-
-    } else {
-      // error info when no oEmbeds were found
-      $return = '<p class="ui-state-error-text">'.sprintf( __( 'No oEmbed Results Found for %s. View more info at', 'cmb' ), $fallback ) .' <a href="http://codex.wordpress.org/Embeds" target="_blank">codex.wordpress.org/Embeds</a>.</p>';
-      // set our response id
-      $found = 'not found';
-    }
-  }
-
-  // send back our encoded data
-  echo json_encode( array( 'result' => $return, 'id' => $found ) );
-  die();
 }
 
 // End. That's it, folks! //

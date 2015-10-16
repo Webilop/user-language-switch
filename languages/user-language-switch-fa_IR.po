@@ -62,7 +62,7 @@ msgid "Default language for website"
 msgstr "زبان پیش پندار برای تارنما"
 
 #: uls-options.php:51
-msgid "User meta field to store the website language language"
+msgid "User meta field to store the website language"
 msgstr "متا فیلد کاربر برای انباره زبان تارنما"
 
 #: uls-options.php:54

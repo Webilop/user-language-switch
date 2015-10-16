@@ -61,7 +61,7 @@ msgid "Default language for website"
 msgstr "Default jezik za website"
 
 #: uls-options.php:51
-msgid "User meta field to store the website language language"
+msgid "User meta field to store the website language"
 msgstr "Korisnik metapolje za skladištanje website jezika"
 
 #: uls-options.php:54

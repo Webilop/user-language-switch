@@ -3,12 +3,12 @@ Contributors: webilop
 Tags: language, localization, language switcher, content translation, multilanguage site, content localization
 Requires at least: 3.0.1
 Tested up to: 4.2
-Stable tag: 1.4
+Stable tag: 1.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 == Description ==
-User Language Switch allows each backend user to set the language displayed in the back-end and front-end of the site. ULS also allows to associate the original version and the translation of pages, posts and custom post types through custom fields in an easy and friendly way. 
+User Language Switch allows each backend user to set the language displayed in the back-end and front-end of the site. ULS also allows to associate the original version and the translation of pages, posts and custom post types through custom fields in an easy and friendly way.
 You can easily create the language links by adding the [uls-language-selector] shortcode.
 The available languages are taken from the current theme and the wordpress installation.
 
@@ -18,6 +18,7 @@ The available languages are taken from the current theme and the wordpress insta
 * Spanish
 * Persian - Special thanks to Khalil Delavaran(khalil.delavaran[at]gmail.com) for this contribution.
 * Serbo-Croatian - Special thanks to Borisa Djuraskovic(borisad@webhostinghub.com) from Web Hosting Hub(http://www.webhostinghub.com) for this contribution.
+* French - Special thanks to Jaillet, Christophe (C.JAILLET[at]meci.fr) for this contribution.
 
 = Documentation =
 
@@ -30,10 +31,10 @@ This section describes how to install the plugin and get it working.
 
 1. Upload the `user-language-switch` folder to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Once you have activated the plugin, select the option 'User language' in your wordpress menu and select the default langauges for the backend and the frontend.
+3. Once you have activated the plugin, select the option 'User language' in your wordpress menu and select the default languages for the backend and the frontend.
 4. Go to your post/page and select the post language, and the translated versions of the plugin using the custom fields under the 'Language' box.
 5. In order to create the language links, you can:
-a) add the [uls-language-selector] shortcode or 
+a) add the [uls-language-selector] shortcode or
 b) add the following php code to the template or theme file where you want the language links to appear: echo uls_language_link_switch();
 
 
@@ -41,7 +42,7 @@ b) add the following php code to the template or theme file where you want the l
 
 = I only see English among the user language switch options =
 
-If the only available option you see in the user language optons is English, it is because you don't have any other language available in your wordpress installation nor in your theme.
+If the only available option you see in the user language options is English, it is because you don't have any other language available in your wordpress installation nor in your theme.
 Make sure you create a 'languages' folder in your theme folder containing the .mo and .po files that correspond to the languages you will use in your blog.
 
 
@@ -61,6 +62,10 @@ Make sure you create a 'languages' folder in your theme folder containing the .m
 * Serbo-Croatian language added. Special thanks to Borisa Djuraskovic(borisad@webhostinghub.com) from Web Hosting Hub(http://www.webhostinghub.com) for this contribution.
 = 1.4 =
 * Fix of bug in redirections between translated pages and prefixes to avoid repeated pages with the same content.
-* Fix of bug creating the links of the laguage switch. Some linkes used to not be created properly.
+* Fix of bug creating the links of the language switch. Some links used to not be created properly.
 * Fix of bug in the selection of translations for a post. All the available translations used to not be loaded.
-* Addition of Estonian language(et) as abreviation for et_EE.
+* Addition of Estonian language(et) as abbreviation for et_EE.
+= 1.4.1 =
+* Fix of bugs in localization of the plugin.
+* Fix of typos in comments in code of the plugin.
+* Thanks to Jaillet, Christophe for feedback provided.

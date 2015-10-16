@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: User Language Switch
-Description: Allow visitors to see your website in different languages. You can link translations of pages and posts easily from back-end side. Your visitors can choose from languages that you have configured for your website.
-Version: 1.3
+Description: Allows backend users to set the language displayed in the back-end and front-end of your site. It also allows to translate pages and posts.
+Version: 1.4.1
 Author: webilop
 Author URI: www.webilop.com
 License: GPL2
@@ -51,7 +51,7 @@ function uls_init_plugin(){
   //init flag of permalink convertion to true. When this flag is false, then don't try to get translations when is generating permalinks
   global $uls_permalink_convertion;
   $uls_permalink_convertion = true;
-  
+
   //init flat for uls link filter function. When this flag is true is because it is running a process to generate a link with translations, then it abort any try to get a translation over a translation, in this way it doesn't do an infinite loop.
   global $uls_link_filter_flag;
   $uls_link_filter_flag = true;
@@ -62,9 +62,9 @@ function uls_init_plugin(){
   //if the current page language is not the same of the user or site language, then add the language flag to the URL
   uls_redirect_by_page_language();
 
-  //if the URL contains the language and it is the same of the site langauge or to the user language saved, then remove the language from the URL
+  //if the URL contains the language and it is the same of the site language or the user langauge saved, then remove the language from the URL.
   uls_redirect_by_languange_redundancy();
-  
+
   //reset flags
   $uls_permalink_convertion = false;
   $uls_link_filter_flag = false;
@@ -93,14 +93,14 @@ function uls_get_user_language_from_url($only_lang = false){
     //activate flag to avoid translations and get the real URL of the blog
     global $uls_permalink_convertion;
     $uls_permalink_convertion = true;
-  
+
     //get the langauge from the URL
     $url = str_replace(get_bloginfo('url'), '', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
     if( isset($url[0]) && $url[0] == '/') $url = substr($url, 1);
     $parts = explode('/', $url);
     if(count($parts) > 0)
       $language = $parts[0];
-      
+
     //reset the flag
     $uls_permalink_convertion = true;
   }
@@ -110,10 +110,10 @@ function uls_get_user_language_from_url($only_lang = false){
 
 
 /**
- * This function retrives the user language saved in the admin side.
+ * This function retrieves the user language selected in the admin side.
  *
  * @param $only_lang boolean if it is true, then it returns the 2 letters of the language. It is the language code without location.
- * @param $type string (backend|frontend) specifiy which language it should return, if it is backend, then it retrieves the language saved to see the back-end side, otherwise it retrieves the language for the front-end side.
+ * @param $type string (backend|frontend) specify which language it will return.
  *
  * @return mixed it returns a string containing a language code. If user don't have permissions to change languages or user hasn't configured a language, then the default language of the website is returned. If user isn't logged in, then the default language of the website is returned.
  */
@@ -135,7 +135,7 @@ function uls_get_user_saved_language($only_lang = false, $type = null){
     if($options["user_{$type}_configuration"])
       $language = get_user_meta(get_current_user_id(), "uls_{$type}_language", true);
   }
-   
+
   //set the default language if the user doesn't have a preference
   if(empty($language))
     $language = $options["default_{$type}_language"];
@@ -151,7 +151,7 @@ function uls_get_user_saved_language($only_lang = false, $type = null){
 }
 
 /**
- * This function gets the user language from the browser configuration. It reads the headers sent by the browser about language preferences.
+ * This function retrieves the user language from the browser. It reads the headers sent by the browser about language preferences.
  *
  * @return mixed it returns a string containing a language code or false if there isn't any language detected.
  */
@@ -192,7 +192,7 @@ function uls_get_user_language_from_browser(){
         //search the language in the installed languages using the language and location
         foreach($validLanguages as $vLang){
           if(strtolower($vLang) == $v['code']){
-            //replace the prefered language
+            //replace the preferred language
             if($v['q'] > $max){
               $max = $v['q'];
               $maxLang = $vLang;
@@ -208,7 +208,7 @@ function uls_get_user_language_from_browser(){
         //search only for the language
         foreach($validLanguages as $vLang){
           if(substr($vLang, 0, 2) == substr($v['l'], 0, 2)){
-            //replace the prefered language
+            //replace the preferred language
             if($v['q'] > $max){
               $max = $v['q'];
               $maxLang = $vLang;
@@ -267,7 +267,7 @@ function uls_get_site_language($side = 'frontend'){
  *
  * @return mixed it returns false if the redirection is not possible, due to some of the restriction mentioned above. Otherwise, it just redirects the user.
  */
-function uls_redirect_by_browser_language(){ 
+function uls_redirect_by_browser_language(){
   $options = uls_get_options();
   if ( !isset($options['use_browser_language_to_redirect_visitors']) || !$options['use_browser_language_to_redirect_visitors'] )
     return false;
@@ -312,7 +312,7 @@ function uls_redirect_by_browser_language(){
 }
 
 /**
- * If the URL contains the language and it is the same of the site langauge or the user langauge saved, then remove the language from the URL using a redirection to the page without language.
+ * if the URL contains the language and it is the same of the site language or the user langauge saved, then remove the language from the URL using a redirection to the page.
  */
 function uls_redirect_by_languange_redundancy(){
   //if user is in an admin area, then don't redirect
@@ -332,7 +332,7 @@ function uls_redirect_by_languange_redundancy(){
     //get the id of the current page
     $url = uls_get_browser_url();
 
-    //get the URL withou the code language
+    //get the URL without the code language
     $redirectUrl = uls_get_url_translated($url, $siteLanguage);
 
     if($redirectUrl != $url){
@@ -352,7 +352,7 @@ function uls_redirect_by_page_language(){
   //get the id of the current page
   $url = uls_get_browser_url();
   $id = url_to_postid($url);
-  
+
   //if the page has an id
   if(0 < $id){
     //get the language of the page
@@ -366,7 +366,7 @@ function uls_redirect_by_page_language(){
       $siteLanguage = uls_get_user_saved_language();
       if(empty($siteLanguage))
         $siteLanguage = uls_get_site_language();
-    
+
       //if the language(saved and default) of the site is different to the language of the page and there is no prefix in the site.
       if($siteLanguage != $postLanguage && empty($urlLanguage)){
         //redirect to the current page with the correct prefix
@@ -422,7 +422,7 @@ function uls_language_loading($lang){
 add_filter('locale', 'uls_language_loading');
 
 /**
- * It returns the complete code language for a language abbreviation. The complete code language is the code of language and the code of country (i.e: en_US, es_ES).
+ * It returns the configured or default code language for a language abbreviation. The code language is the pair of language and country (i.e: en_US, es_ES)-
  *
  * @param $language code language.
  *
@@ -487,7 +487,7 @@ $uls_link_filters = array(
   'user_trailingslashit',
   'post_link',
   'page_link',
-  
+
   /*'post_type_link',
   'year_link',
   'month_link',
@@ -519,26 +519,26 @@ function uls_link_filter($post_url, $post = null){
 
    //if user is in backend
    if( is_admin() ) return $post_url;
-   
+
    //init flag to avoid infinite recursion
    $uls_link_filter_flag = true;
-   
+
    //get language from URL
    $url_language = uls_get_user_language_from_url();
 
    //get the general options
    $options = uls_get_options();
-   
+
    //check if page donesn't require a post to do translation, it only uses URL
    if(null == $post || (is_object($post) && empty($post->ID))){
       $post_url = uls_get_url_translated($post_url, $url_language, $options["url_type"]);
-      
+
       //clean flag to control infinite recursion
       $uls_link_filter_flag = false;
-   
+
       return $post_url;
    }
-   
+
    //check if the URL is an special URL of WordPress and doesn't require changes
    /*$query_string_start = strpos($post_url, '?');
    if(false !== $query_string_start){
@@ -584,17 +584,17 @@ function uls_link_filter($post_url, $post = null){
            $post_url = uls_get_url_translated(get_permalink($translation_id), $url_language);
      }
    }
-   
+
    //clean flag to control infinite recursion
    $uls_link_filter_flag = false;
-  
+
    return $post_url;
 }
 
 /**
  * This function add the language flag in the url.
  */
-function uls_get_url_translated($url, $language, $type = 'prefix', $remove_default_language = true){ 
+function uls_get_url_translated($url, $language, $type = 'prefix', $remove_default_language = true){
    if(empty($url))
       return null;
 
@@ -651,7 +651,7 @@ function uls_get_url_translated($url, $language, $type = 'prefix', $remove_defau
             if(empty($blog_parts['path'])){
                $parts['path'] = isset($parts['path']) ? $parts['path'] : '/';
                $path_parts = explode('/', $parts['path']);
-               $available_languages = uls_get_available_languages(); 
+               $available_languages = uls_get_available_languages();
 
                if( in_array($path_parts[1], $available_languages) ){
                   unset($path_parts[1]);
@@ -683,12 +683,12 @@ function uls_get_url_translated($url, $language, $type = 'prefix', $remove_defau
              . (empty($parts['query']) ? '' : '?' . $parts['query'])
              . (empty($parts['fragment']) ? '' : '#' . $parts['fragment']);
          }
-         
+
          break;
    }
    //reset flag
    $uls_permalink_convertion = false;
-   
+
    return $url;
 }
 
@@ -733,7 +733,7 @@ function uls_language_selector_input($id, $name, $default_value = '', $class = '
 
 
 /**
- * Get the available lanuages on the system.
+ * Get the available languages on the system.
  *
  * @return array associative array with the available languages in the system. The keys are the language names and the values are the language codes.
  */
@@ -741,7 +741,7 @@ function uls_get_available_languages( $available_languages = true ){
   if ($available_languages) {
     $options = get_option('uls_settings'); // get information from DB
     // if the user does not have available the languages so the plugin avilable all languages
-    $available_language = isset($options['available_language']) ? $options['available_language'] : uls_get_available_languages(false); 
+    $available_language = isset($options['available_language']) ? $options['available_language'] : uls_get_available_languages(false);
     return $available_language;
   }
    $theme_root = get_template_directory();
@@ -906,7 +906,7 @@ function uls_save_association( $post_id ) {
   //verify post is a revision
   $parent_id = wp_is_post_revision( $post_id );
   if($parent_id === false)
-   $parent_id = $post_id; 
+   $parent_id = $post_id;
 
   $languages = uls_get_available_languages();
   $selected_language = isset($_POST['uls_language']) ? $_POST['uls_language'] : null;
@@ -921,7 +921,7 @@ function uls_save_association( $post_id ) {
                    'meta_key' => $this_uls_translation,
                    'meta_value' => $parent_id,
                    'meta_compare' => '=');
-    $query = new WP_Query($args); 
+    $query = new WP_Query($args);
 
     // if the query return the post that have assocciate the translation this page,
     // delete the old post_meta uls_translation_#_#
@@ -932,29 +932,29 @@ function uls_save_association( $post_id ) {
         delete_post_meta ($key->ID, $this_uls_translation);
         // if selected_language is not empty so add the new traduction
         if (!empty($selected_language)) {
-          // get the new post meta if this exits does update the uls_translation 
+          // get the new post meta if this exits does update the uls_translation
           $page_post_meta = get_post_meta ($key->ID, 'uls_translation_'.strtolower($selected_language), true);
           // ask if the new post_meta uls_translation_#_# exits
           if ( empty($page_post_meta) )
-            update_post_meta ( $key->ID, 'uls_translation_'.strtolower($selected_language), $parent_id ); 
+            update_post_meta ( $key->ID, 'uls_translation_'.strtolower($selected_language), $parent_id );
         }
       }
     }
   }
   if (!empty($selected_language)) {
-    // if the language change so change the traduction    
+    // if the language change so change the traduction
     foreach ($languages as $lang) {
       $related_post = isset($_POST['uls_translation_'.strtolower($lang)]) ? $_POST['uls_translation_'.strtolower($lang)] : null;
       if( !empty( $related_post ) ) {
         // add traduction to the page that was selected like a translation
         $related_post_meta_translation = get_post_meta( $related_post, 'uls_translation_'.strtolower($selected_language), true );
-        if ( empty ( $related_post_meta_translation ) ) 
+        if ( empty ( $related_post_meta_translation ) )
           update_post_meta ( $related_post, 'uls_translation_'.strtolower($selected_language), $parent_id );
         // add language to the page that was selected like a tranlation. If the page doesn't has associated a languages
         $related_post_get_language = get_post_meta( $related_post, 'uls_language', true );
-        if ( empty ( $related_post_get_language) ) 
+        if ( empty ( $related_post_get_language) )
           update_post_meta ( $related_post, 'uls_language', $lang );
-        
+
       }
     }
   }
@@ -1003,7 +1003,7 @@ function uls_add_scripts() {
     // make the ajaxurl var available to the above script
     wp_localize_script( 'add-bx-js', 'the_ajax_script', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
     wp_enqueue_style( 'webilop-flags_32x32-style', plugins_url('css/flags/flags_32x32.css', __FILE__) );
-} 
+}
 add_action( 'wp_enqueue_scripts', 'uls_add_scripts' );
 
 
@@ -1026,9 +1026,9 @@ function webilop_show_posts_columns($name) {
       break;
         case 'translation':
             $views = get_post_meta($post->ID);
-      foreach($views as $key => $value) 
-         if(strpos($key,'uls_translation_') !== false) 
-      $string[substr($key, -5)] =  $value[0]; 
+      foreach($views as $key => $value)
+         if(strpos($key,'uls_translation_') !== false)
+      $string[substr($key, -5)] =  $value[0];
 
             $views = get_post_meta($post->ID, 'uls_language', true);
       if($string != ""){
@@ -1038,7 +1038,7 @@ function webilop_show_posts_columns($name) {
          '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.substr($key, -2).'" alt="'.$views.'" />'.
            '</a>';
       }else
-         echo $string; 
+         echo $string;
       break;
     }
 }
@@ -1062,9 +1062,9 @@ function webilop_show_pages_columns($name) {
       break;
         case 'translation':
             $views = get_post_meta($post->ID);
-      foreach($views as $key => $value) 
-         if(strpos($key,'uls_translation_') === 0) { 
-      $string[substr($key, -5)] =  $value[0]; 
+      foreach($views as $key => $value)
+         if(strpos($key,'uls_translation_') === 0) {
+      $string[substr($key, -5)] =  $value[0];
          }
 
             $views = get_post_meta($post->ID, 'uls_language', true);
@@ -1075,7 +1075,7 @@ function webilop_show_pages_columns($name) {
          '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.substr($key, -2).'" alt="'.$views.'" />'.
            '</a>';
       }else
-         echo $string; 
+         echo $string;
       break;
     }
 }
@@ -1092,10 +1092,10 @@ function uls_add_language_meta_query(&$query){
 
   //get language displayed
   $language_displayed = uls_get_user_language();
-  
+
   //get the default language of the website
   $default_website_language = uls_get_site_language();
-  
+
   //if the language displayed is the same to the default language, then it includes posts without language
   $language_query = null;
   if($language_displayed == $default_website_language){
@@ -1124,10 +1124,10 @@ function uls_add_language_meta_query(&$query){
       ),
     );
   }
-  
+
   //get current meta query
   $meta_query = $query->get('meta_query');
-  
+
   //add language query to the meta query
   if(empty($meta_query))
     $meta_query = $language_query;
@@ -1140,7 +1140,7 @@ function uls_add_language_meta_query(&$query){
 
   //set the new meta query
   $query->set('meta_query', $meta_query);
-  
+
   //reset flag
   $uls_permalink_convertion = false;
 }
@@ -1151,7 +1151,7 @@ function uls_add_language_meta_query(&$query){
  * @param $query object WordPress query object used to create the archive of posts.
  */
 add_action('pre_get_posts', 'uls_filter_archive_by_language', 1);
-function uls_filter_archive_by_language($query){ 
+function uls_filter_archive_by_language($query){
 //var_dump("test");
 //var_dump($query);
   //check if it in the admin dashboard
@@ -1159,24 +1159,24 @@ function uls_filter_archive_by_language($query){
     return;
 
   // get values configuration uls_settings to applic filter translation to the post_types
-  // if the information in languages_filter_disable are true apply filter 
+  // if the information in languages_filter_disable are true apply filter
   $settings = get_option('uls_settings');
-  $array_query = isset($query->query['post_type']) ? $query->query['post_type'] : ''; 
+  $array_query = isset($query->query['post_type']) ? $query->query['post_type'] : '';
   if ( isset($settings['languages_filter_enable']) && !isset($settings['languages_filter_enable'][$array_query]) )
-    return; 
+    return;
 
   //this flag indicates if we should filter posts by language
   $modify_query = !$query->is_page() && !$query->is_single() && !$query->is_preview();
-  
+
   //if it is displaying the home page and the home page is the list of posts
   //$modify_query = 'posts' == get_option( 'show_on_front' ) && is_front_page();
-  
+
   //if it is an archive
   //$modify_query = $modify_query || $query->is_archive() || $query->is_post_type_archive();
-  
+
   //if this is not a query for a menu(menus are handled by the plugin too)
   $modify_query = $modify_query && 'nav_menu_item' != $query->get('post_type');
-  
+
   //filter posts by language loaded in the page
   if($modify_query){
     uls_add_language_meta_query($query);
@@ -1187,7 +1187,7 @@ add_action('pre_get_posts', 'uls_rewrite_id_front_page', 1);
 function uls_rewrite_id_front_page($query) {
   //gets the global query var object
   global $wp_query;
-  
+
   if ($query->is_home() && $query->is_main_query() ) {
     //gets the front page id set in options
     $front_page_id = get_option('page_on_front');
@@ -1196,7 +1196,7 @@ function uls_rewrite_id_front_page($query) {
     if (empty($post_meta) ) {
       $query->set('post_type', 'page');
       $query->set('page_id', $front_page_id);
-    } 
+    }
   }
 }
 
@@ -1213,44 +1213,44 @@ function head_reference_translation() {
   $curren_code = uls_get_user_language(); // get current language
   // delete the current language site
   $code_value = array_search($curren_code, $languages);
-  unset($languages[$code_value]); 
+  unset($languages[$code_value]);
 
   // build the url to be tranlation
-  $url = ''; 
+  $url = '';
   // get url from where it's using
-  if ( is_home() ) 
-    $url = get_home_url(); // get home url  
-  else if ( is_archive() || is_search() || is_author() || is_category() || is_tag() || is_date() ) 
+  if ( is_home() )
+    $url = get_home_url(); // get home url
+  else if ( is_archive() || is_search() || is_author() || is_category() || is_tag() || is_date() )
     $url = uls_get_browser_url(); // get browser url
 
   // if exits the url so, translate this
-  if (!empty($url) ) { 
-    // use all available languages and get the url translation 
+  if (!empty($url) ) {
+    // use all available languages and get the url translation
     foreach ($languages as $language => $code) {
       $translation_url = uls_get_url_translated($url, $code);
       echo '<link rel="alternate" hreflang="'.substr($code, 0, 2).'" href="'.$translation_url.'" />';
     }
   }
 
-  // build url to the home 
+  // build url to the home
   if ( !empty($post_id) && empty($url) ) {
 
     // change the filter
     global $uls_permalink_convertion;
     $uls_permalink_convertion = false;
 
-    // use all available languages and get the url translation 
+    // use all available languages and get the url translation
     foreach ($languages as $language => $code) {
-      // get the post_id translation if the current page has translation 
+      // get the post_id translation if the current page has translation
       $translation_id = uls_get_post_translation_id($post_id, $code);
       if ( !empty($translation_id) ) {
         $translation_url = uls_get_url_translated(get_permalink($translation_id), $code);
         echo '<link rel="alternate" hreflang="'.substr($code, 0, 2).'" href="'.$translation_url.'" />';
-      } 
-    } 
+      }
+    }
     // leave the global car like it was before
-    $uls_permalink_convertion = true; 
-  } 
+    $uls_permalink_convertion = true;
+  }
 }
 
 ?>
