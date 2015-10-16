@@ -74,6 +74,11 @@ function uls_get_link($post_id = null, $language = null, $label = null, $class='
       $url = uls_get_browser_url();
       $translation_url = uls_get_url_translated($url, $language);
     }
+    else if (is_search()) {
+      $url = get_home_url();
+      $url .= "?s=".get_search_query();
+      $translation_url = uls_get_url_translated($url, $language); 
+    }
   }
   else {
     $translation_id = uls_get_post_translation_id($post_id, $language);
