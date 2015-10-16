@@ -16,6 +16,7 @@ class ULS_Options{
       'fixed_position_language_switch' => true, 
       'enable_translation_sidebars_language_switch' => true, 
       'use_browser_language_to_redirect_visitors' => true, 
+      'languages_filter_enable' => array('post' => 'post', 'page' => 'page'),
    );
 
    /**
@@ -53,11 +54,12 @@ class ULS_Options{
 
     // add configuration about the setting depent of the tab
     if( isset($_GET['tab']) && $_GET['tab'] == 'homepage' || !isset($_GET['tab'])  ) { 
+
       //create section for registration
       add_settings_section('uls_general_settings_section',
         __('General Settings','user-language-switch'),
         'ULS_Options::create_general_settings_section',
-        'uls-settings-page');
+        'uls-settings-page'); 
 
       $options['input_name'] = 'activate_tab_language_switch';
       add_settings_field($options['input_name'],
@@ -145,10 +147,11 @@ class ULS_Options{
         $options);
     }
     else if( isset($_GET['tab']) && $_GET['tab'] == 'menulanguage' ) { 
-      //create section for registration
-      add_settings_section('uls_general_settings_section',
-        __('Menu Language Settings','user-language-switch'),
-        'ULS_Options::create_general_settings_section',
+      //create section for tabs description  
+      $options['input_name'] = 'uls_tabs_menu_language';
+      add_settings_section($options['input_name'],
+        __('Information','user-language-switch'),
+        'ULS_Options::create_tabs_information_section',
         'uls-settings-page');
 
       // create menu table configuration
@@ -156,23 +159,40 @@ class ULS_Options{
         __('','user-language-switch'),
         'ULS_Options::create_table_menu_language',
         'uls-settings-page',
-        'uls_general_settings_section',
+        'uls_tabs_menu_language',
         $options);
     }
     else if( isset($_GET['tab']) && $_GET['tab'] == 'available_languages' ) { 
       //create section for registration
-      add_settings_section('uls_general_settings_section',
-        __('Menu Language Settings','user-language-switch'),
-        'ULS_Options::create_general_settings_section',
+      add_settings_section('uls_tabs_available_language',
+        __('Information','user-language-switch'),
+        'ULS_Options::create_tabs_information_section',
         'uls-settings-page');
 
       // create table configuration
-      add_settings_section('table_menu_language',
+      add_settings_section('table_available_language',
         __('','user-language-switch'),
         'ULS_Options::create_table_available_language',
         'uls-settings-page',
-        'uls_general_settings_section',
+        'uls_tabs_available_language',
         $options); 
+    }
+    else if( isset($_GET['tab']) && $_GET['tab'] == 'languages_filter_enable' ) { 
+      //create section for tabs description  
+      $options['input_name'] = 'uls_tabs_language_filter';
+      add_settings_section($options['input_name'],
+        __('Information','user-language-switch'),
+        'ULS_Options::create_tabs_information_section',
+        'uls-settings-page');
+
+      // create menu table configuration
+      $options['input_name'] = 'languages_filter_enable';
+      add_settings_section('table_language_filter',
+        __('','user-language-switch'),
+        'ULS_Options::create_table_language_filter',
+        'uls-settings-page',
+        'uls_tabs_language_filter',
+        $options);
     }
     //create section for collaboration
     add_settings_section('uls_collaboration_section',
@@ -200,6 +220,9 @@ class ULS_Options{
     }
     else if ( isset($_POST['available_languages']) ) {
       $options['available_language'] = $_POST['uls_available_language'];
+    }
+    else if ( isset($_POST['languages_filter_enable']) ) {
+      $options['languages_filter_enable'] = $_POST['uls_language_filter'];
     }else{ 
       //create default options
       $ulsPostionMenuLanguage = $options['position_menu_language'];
@@ -207,6 +230,9 @@ class ULS_Options{
       // if the user does not want to show the languages he has tow options
       // 1 - desactive the flags tab  or 2 - desactive the plugin
       $ulsAvailableLanguage = isset($options['available_language']) ? $options['available_language'] : uls_get_available_languages(false);
+      // disable all post type filter
+      $ulsLanguageFilter = isset($options['languages_filter_enable']) ? $options['languages_filter_enable'] : self::$default_options['languages_filter_enable']; 
+
       $options = self::$default_options;
 
       foreach($options as $k => $v)
@@ -222,6 +248,7 @@ class ULS_Options{
       $options['use_browser_language_to_redirect_visitors'] = isset($_POST['use_browser_language_to_redirect_visitors']); 
       $options['position_menu_language'] = $ulsPostionMenuLanguage;
       $options['available_language'] = $ulsAvailableLanguage;
+      $options['languages_filter_enable'] = $ulsLanguageFilter;
     } 
     return $options;
   }
@@ -359,13 +386,51 @@ class ULS_Options{
     <input type="hidden" name="available_languages" value="available_languages" >
   <?php
   } 
+
+   /*
+    * create table language filter this is for enable and disable post_type
+     */
+  static function create_table_language_filter($options) {
+    $options = get_option('uls_settings'); // get information from DB
+    // get the information that actually is in the DB 
+    $languages_filter = isset($options['languages_filter_enable']) ? $options['languages_filter_enable'] : ''; 
+
+    $args = array( '_builtin' => false);// values for do the query 
+    $post_types = get_post_types($args); // get all custom post types
+    $post_types['post'] = 'post'; // add default post type
+    $post_types['page'] = 'page'; // add default post type
+  ?>
+    <table id="menu-locations-table" class="">
+      <thead>
+        <tr>
+          <th>Enable / Disable </th>
+          <th>Post types</th>
+        </tr>
+      </thead> 
+      <tbody>
+        <?php foreach ($post_types as $post_type => $name): ?>
+          <tr>
+            <?php $checked = isset($languages_filter[$post_type]) ? 'checked' : ''; ?> 
+            <td>
+              <input type="checkbox" name="uls_language_filter[<?=$post_type?>]" value="<?=$name?>" <?=$checked?> />
+            </td>
+            <td>
+              <label for="<?=$post_type?>_label"><?=$name?></label>
+            </td> 
+          </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table> 
+    <input type="hidden" name="languages_filter_enable" value="languages_filter_enable" >
+  <?php
+  } 
    /**
     * Create register form displayed on back end.
     */
    static function create_general_settings_section(){
-      ?>
-      <p><?php _e('You can install more languages in your site following the instructions in ','user-language-switch'); ?><a href="http://codex.wordpress.org/WordPress_in_Your_Language" target="_blank"><?php _e('WordPress in Your Language','user-language-switch'); ?></a>.</p>
-      <?php
+    ?>
+      <p>Configure settings for the language tab that contains flags to change between languages in your website, set default languages for your website and enable menu custom translations to create different menus for each language.</p>
+    <?php
    }
    
    /**
@@ -374,6 +439,26 @@ class ULS_Options{
    static function create_collaboration_section(){
       ?>
       <div class="section-inside"><p><?php _e('You can collaborate with the development of this plugin, please send us any suggestion or bug notification to '); ?><a href="mailto:support@webilop.com">support@webilop.com</a></p></div>
+      <?php
+   }
+
+   /**
+    * Create the section tabs information.
+    */
+   static function create_tabs_information_section($options){
+     switch($options['id']){
+       case 'uls_tabs_menu_language':
+         $description = " Assign menus as translations to other menus, first you need to create your menus in Appearance - Menus. If you don't assign a translation for a menu, then pages in the menu are translated individually if they have translations assigned.";
+         break;
+       case 'uls_tabs_available_language':
+         $description = 'You can install more languages in your site following the instructions in <a href="http://codex.wordpress.org/WordPress_in_Your_Language" target="_blank">WordPress in Your Language</a>.';
+         break;
+       case 'uls_tabs_language_filter':
+         $description = "Select with post types should be filtered automatically by language. If a post, page or custom post doesn't match the language you are looking in the website, then it is not displayed. If a post, page or custom post doesn't have language, then it is matched with the default language of the website.";
+         break;
+     }
+      ?>
+      <div><p><?php _e($description,'user-language-switch'); ?></p></div>
       <?php
    }
 
@@ -412,7 +497,11 @@ class ULS_Options{
     // get the current tab or default tab
     $current = isset($_GET['tab']) ? $_GET['tab'] : 'homepage'; 
     // add the tabs that you want to use in the plugin 
-    $tabs = array( 'homepage' => 'General', 'menulanguage' => 'Menu Languages', 'available_languages' => 'Available Languages');
+    $tabs = array('homepage' => 'General',
+                  'menulanguage' => 'Menu Languages', 
+                  'available_languages' => 'Available Languages',
+                  'languages_filter_enable' => 'Language Filter' );
+
     echo '<div id="icon-themes" class="icon32"><br></div>';
     echo '<h2 class="nav-tab-wrapper">';
     // configurate the url with your personal_url and add the class for the activate tab
@@ -534,12 +623,11 @@ class ULS_Options{
       return $links; 
    }
 
-   static function select_correct_menu_language($items, $args) {
-     
+   static function select_correct_menu_language($items, $args) { 
 
     $options = get_option('uls_settings');
     $menu_name = $args->menu;
-    $position_menu_language = $options['position_menu_language']; 
+    $position_menu_language = isset($options['position_menu_language']) ? $options['position_menu_language'] : array(); 
 
     // if the mena arrive ask which traduction should be show up
     if (!empty($args->menu)) {

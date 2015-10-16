@@ -96,7 +96,7 @@ function uls_get_user_language_from_url($only_lang = false){
   
     //get the langauge from the URL
     $url = str_replace(get_bloginfo('url'), '', 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
-    if($url[0] == '/') $url = substr($url, 1);
+    if( isset($url[0]) && $url[0] == '/') $url = substr($url, 1);
     $parts = explode('/', $url);
     if(count($parts) > 0)
       $language = $parts[0];
@@ -1156,6 +1156,13 @@ function uls_filter_archive_by_language($query){
   //check if it in the admin dashboard
   if(is_admin())
     return;
+
+  // get values configuration uls_settings to applic filter translation to the post_types
+  // if the information in languages_filter_disable are true apply filter 
+  $settings = get_option('uls_settings');
+  $array_query = isset($query->query['post_type']) ? $query->query['post_type'] : ''; 
+  if ( isset($settings['languages_filter_enable']) && !isset($settings['languages_filter_enable'][$array_query]) )
+    return; 
 
   //this flag indicates if we should filter posts by language
   $modify_query = !$query->is_page() && !$query->is_single() && !$query->is_preview();
