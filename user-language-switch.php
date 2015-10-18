@@ -1,10 +1,10 @@
 <?php
 /*
 Plugin Name: User Language Switch
-Description: Allows backend users to set the language displayed in the back-end and front-end of your site. It also allows to translate pages and posts.
-Version: 1.4.1
+Description: Set the default language for the website and also include translations of pages, posts, custom post types, menus and sidebars. Visitors and users registered can see the different translations available of the website.
+Version: 1.5
 Author: webilop
-Author URI: www.webilop.com
+Author URI: http://www.webilop.com
 License: GPL2
 */
 
