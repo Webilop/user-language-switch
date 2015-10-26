@@ -658,10 +658,11 @@ function uls_organize_widgets_sidebars($sidebars_widgets) {
 add_filter ( 'sidebars_widgets', 'uls_organize_widgets_sidebars', 10, 1);
 
 // desactivate the tab flags
-function update_db_after_update() {
+function update_db_after_update() { 
+
   $options = get_option('uls_settings');
-  $options['activate_tab_language_switch'] = false;
+  !isset( $options['activate_tab_language_switch'] ) ?  $options['activate_tab_language_switch'] = false : '' ;
   update_option('uls_settings',$options);
 }
-add_action( 'plugins_loaded', 'update_db_after_update' );
+register_activation_hook( __FILE__, 'update_db_after_update' );
 ?>
