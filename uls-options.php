@@ -47,7 +47,7 @@ class ULS_Options{
 
     //create about section
     add_settings_section('uls_create_section_tabs',
-      __('','user-language-switch'),
+      '',
       'ULS_Options::ilc_admin_tabs',
       'uls-settings-page');
 
@@ -63,7 +63,7 @@ class ULS_Options{
 
       $options['input_name'] = 'activate_tab_language_switch';
       add_settings_field($options['input_name'],
-        __('Activate Tab','user-language-switch'),
+        __('Enable flags tab','user-language-switch'),
         'ULS_Options::create_checkbox_input',
         'uls-settings-page',
         'uls_general_settings_section',
@@ -71,23 +71,7 @@ class ULS_Options{
 
       $options['input_name'] = 'fixed_position_language_switch';
       add_settings_field($options['input_name'],
-        __('Tab Fixed Pisition ','user-language-switch'),
-        'ULS_Options::create_checkbox_input',
-        'uls-settings-page',
-        'uls_general_settings_section',
-        $options);
-
-      $options['input_name'] = 'enable_translation_sidebars_language_switch';
-      add_settings_field($options['input_name'],
-        __('Enable translations for sidebars','user-language-switch'),
-        'ULS_Options::create_checkbox_input',
-        'uls-settings-page',
-        'uls_general_settings_section',
-        $options);
-
-      $options['input_name'] = 'use_browser_language_to_redirect_visitors';
-      add_settings_field($options['input_name'],
-        __('Use browser language to redirect visitors','user-language-switch'),
+        __('The tab is always visible in the browser window','user-language-switch'),
         'ULS_Options::create_checkbox_input',
         'uls-settings-page',
         'uls_general_settings_section',
@@ -130,14 +114,30 @@ class ULS_Options{
         'uls-settings-page',
         'uls_general_settings_section',
         $options);
-
+      
+      $options['input_name'] = 'use_browser_language_to_redirect_visitors';
+      add_settings_field($options['input_name'],
+        __('Use browser language to redirect visitors','user-language-switch'),
+        'ULS_Options::create_checkbox_input',
+        'uls-settings-page',
+        'uls_general_settings_section',
+        $options);
+        
+      $options['input_name'] = 'enable_translation_sidebars_language_switch';
+      add_settings_field($options['input_name'],
+        __('Enable translations for sidebars','user-language-switch'),
+        'ULS_Options::create_checkbox_input',
+        'uls-settings-page',
+        'uls_general_settings_section',
+        $options);
+        
       $options['input_name'] = 'user_frontend_configuration';
       add_settings_field($options['input_name'],
         __('Allow registered users to change the language that user looks the website','user-language-switch'),
         'ULS_Options::create_checkbox_input',
         'uls-settings-page',
         'uls_general_settings_section',$options);
-
+        
       $options['input_name'] = 'user_backend_configuration';
       add_settings_field($options['input_name'],
         __('Allow registered users to change the language that user looks the back-end side','user-language-switch'),
@@ -156,7 +156,7 @@ class ULS_Options{
 
       // create menu table configuration
       add_settings_section('table_menu_language',
-        __('','user-language-switch'),
+        '',
         'ULS_Options::create_table_menu_language',
         'uls-settings-page',
         'uls_tabs_menu_language',
@@ -171,7 +171,7 @@ class ULS_Options{
 
       // create table configuration
       add_settings_section('table_available_language',
-        __('','user-language-switch'),
+        '',
         'ULS_Options::create_table_available_language',
         'uls-settings-page',
         'uls_tabs_available_language',
@@ -188,7 +188,7 @@ class ULS_Options{
       // create menu table configuration
       $options['input_name'] = 'languages_filter_enable';
       add_settings_section('table_language_filter',
-        __('','user-language-switch'),
+        '',
         'ULS_Options::create_table_language_filter',
         'uls-settings-page',
         'uls_tabs_language_filter',
@@ -429,7 +429,7 @@ class ULS_Options{
     */
    static function create_general_settings_section(){
     ?>
-      <p>Configure settings for the language tab that contains flags to change between languages in your website, set default languages for your website and enable menu custom translations to create different menus for each language.</p>
+      <p><?php _e('Configure settings for the language tab that contains flags to change between languages in your website, set default languages for your website, create custom menu translations and activate translations of sidebars to create different sidebars for each language.', 'user-language-switch'); ?></p>
     <?php
    }
 
@@ -438,7 +438,7 @@ class ULS_Options{
     */
    static function create_collaboration_section(){
       ?>
-      <div class="section-inside"><p><?php _e('You can collaborate with the development of this plugin, please send us any suggestion or bug notification to ', 'user-language-switch'); ?><a href="mailto:support@webilop.com">support@webilop.com</a></p></div>
+      <div class="section-inside"><p><?php printf(__('You can collaborate with the development of this plugin, please submit your collaboration to %s or send us any suggestion or bug notification to %s.', 'user-language-switch'), '<a target="_blank" href="https://github.com/Webilop/user-language-switch">' . __('the respository of the plugin in Github', 'user-language-switch') . '</a>', '<a href="mailto:support@webilop.com">support@webilop.com</a>'); ?></p></div>
       <?php
    }
 
@@ -448,17 +448,17 @@ class ULS_Options{
    static function create_tabs_information_section($options){
      switch($options['id']){
        case 'uls_tabs_menu_language':
-         $description = " Assign menus as translations to other menus, first you need to create your menus in Appearance - Menus. If you don't assign a translation for a menu, then pages in the menu are translated individually if they have translations assigned.";
+         $description = __("Assign menus as translations to other menus, first you need to create your menus in Appearance - Menus. If you don't assign a translation for a menu, then pages in the menu are translated individually if they have translations assigned.", 'user-language-switch');
          break;
        case 'uls_tabs_available_language':
-         $description = 'You can install more languages in your site following the instructions in <a href="http://codex.wordpress.org/WordPress_in_Your_Language" target="_blank">WordPress in Your Language</a>.';
+         $description = __('You can install more languages in your site following the instructions in <a href="http://codex.wordpress.org/WordPress_in_Your_Language" target="_blank">WordPress in Your Language</a>.', 'user-language-switch');
          break;
        case 'uls_tabs_language_filter':
-         $description = "Select with post types should be filtered automatically by language. If a post, page or custom post doesn't match the language you are looking in the website, then it is not displayed. If a post, page or custom post doesn't have language, then it is matched with the default language of the website.";
+         $description = __("Select which post types should be filtered automatically by language. If a post, page or custom post doesn't match the language you are looking in the website, then it is not displayed. If a post, page or custom post doesn't have language, then it is matched with the default language of the website.", 'user-language-switch');
          break;
      }
       ?>
-      <div><p><?php _e($description,'user-language-switch'); ?></p></div>
+      <div><p><?php echo $description; ?></p></div>
       <?php
    }
 
@@ -468,8 +468,8 @@ class ULS_Options{
    static function create_about_section(){
     ?>
     <div class="section-inside">
-    <p><strong>User Language Switch </strong><?php _e('was developed by ', 'user-language-switch');?><a title="Webilop. web and mobile development" href="http://www.webilop.com">Webilop</a></p>
-    <p><?php _e('Webilop is a company focused on web and mobile solutions. We develop custom mobile applications, templates and plugins for CMS platforms like Wordpress. We can help you with your website, contact us at ', 'user-language-switch');?><a href="mailto:contact@webilop.com">contact@webilop.com</a></p>
+    <p><strong>User Language Switch </strong><?php _e('was developed by ', 'user-language-switch');?><a title="Webilop. web and mobile development" href="http://www.webilop.com" target="_blank">Webilop</a>.</p>
+    <p><?php _e('Webilop is a company focused on web and mobile solutions. We are experts customizing themes and building plugins in WordPress. We can help you with your website, contact us at ', 'user-language-switch');?><a href="mailto:contact@webilop.com">contact@webilop.com</a>.</p>
     </div>
     <?php
    }
@@ -497,10 +497,10 @@ class ULS_Options{
     // get the current tab or default tab
     $current = isset($_GET['tab']) ? $_GET['tab'] : 'homepage';
     // add the tabs that you want to use in the plugin
-    $tabs = array('homepage' => 'General',
-                  'menulanguage' => 'Menu Languages',
-                  'available_languages' => 'Available Languages',
-                  'languages_filter_enable' => 'Language Filter' );
+    $tabs = array('homepage' => __('General', 'user-language-switch'),
+                  'menulanguage' => __('Menu Languages', 'user-language-switch'),
+                  'available_languages' => __('Available Languages', 'user-language-switch'),
+                  'languages_filter_enable' => __('Filter Post Types', 'user-language-switch') );
 
     echo '<div id="icon-themes" class="icon32"><br></div>';
     echo '<h2 class="nav-tab-wrapper">';
@@ -581,12 +581,6 @@ class ULS_Options{
             <input type="submit" class="button-primary" value="<?php _e('Save','user-language-switch'); ?>" />
          </p>
       </form>
-          <div class="about-webilop">
-    <h3 class="hndle"><?php _e('About','user-language-switch');?></h3>
-    <div class="inside">
-    <p><strong>User Language Switch </strong><?php _e('was developed by ', 'user-language-switch');?><a title="Webilop. web and mobile development" href="http://www.webilop.com">Webilop</a></p>
-    <p><?php _e('Webilop is a company focused on web and mobile solutions. We develop custom mobile applications, templates and plugins for CMS platforms like Wordpress. We can help you with your website, contact us at ', 'user-language-switch');?><a href="mailto:contact@webilop.com">contact@webilop.com</a></p>
-   </div>
    <?php
    }
 
