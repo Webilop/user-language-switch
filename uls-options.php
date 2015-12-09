@@ -384,7 +384,7 @@ class ULS_Options{
               <input type="checkbox" name="uls_available_language[<?=$lang_name?>]" value="<?=$lang_code?>" <?=$checked?> />
             </td>
             <td>
-                <img src="<?= plugins_url("css/blank.gif", __FILE__) ?>" style="margin-right:5px;" class="flag_16x11 flag-<?= strtolower(substr($lang_code, -2))?>" alt="<?= $lang_name ?>" />
+                <img src="<?= plugins_url("css/blank.gif", __FILE__) ?>" style="margin-right:5px;" class="flag_16x11 flag-<?= strtolower(substr($lang_code, -2))?>" alt="<?= $lang_name ?>" title="<?= $lang_name ?>" />
             </td>
           </tr>
         <?php endforeach; ?>

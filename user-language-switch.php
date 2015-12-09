@@ -1020,22 +1020,22 @@ function webilop_show_posts_columns($name) {
     global $post;
     $string = "";
     switch ($name) {
-        case 'language':
-            $views = strtolower(get_post_meta($post->ID, 'uls_language', true));
-      echo '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.substr($views, -2).'" alt="'.$views.'" />';
+      case 'language':
+        $views = strtolower(get_post_meta($post->ID, 'uls_language', true));
+        echo '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.substr($views, -2).'" alt="'.$views.'" title="'.$views.'" />';
       break;
         case 'translation':
             $views = get_post_meta($post->ID);
       foreach($views as $key => $value)
          if(strpos($key,'uls_translation_') !== false)
-      $string[substr($key, -5)] =  $value[0];
+          $string[substr($key, -5)] =  $value[0];
 
             $views = get_post_meta($post->ID, 'uls_language', true);
       if($string != ""){
          unset($string[strtolower($views)]);
          foreach ($string as $key => $value)
       echo '<a href="'.get_edit_post_link($value).'">'.
-         '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.substr($key, -2).'" alt="'.$views.'" />'.
+         '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.substr($key, -2).'" alt="'.$views.'" title="'.$value.'" />'.
            '</a>';
       }else
          echo $string;
