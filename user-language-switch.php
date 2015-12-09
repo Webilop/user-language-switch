@@ -867,12 +867,18 @@ function uls_language_metaboxes( $meta_boxes ) {
       );
       array_push($fields, $field);
    }
-      $fields[] = array(
-            'name' => 'Select a language',
-            'id' => $prefix . 'language',
-            'type' => 'select',
-            'options' => $options,
-         );
+   
+    array_unshift($fields, array('name' => 'Select a language',
+                                'id' => $prefix . 'language',
+                                'type' => 'select',
+                                'options' => $options));
+//   $fields[] = array(
+//             'name' => 'Select a language',
+//             'id' => $prefix . 'language',
+//             'type' => 'select',
+//             'options' => $options,
+//          );
+
    $args=array(
      'public'   => true,
      '_builtin' => false
