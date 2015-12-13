@@ -66,11 +66,7 @@ function uls_get_link($post_id = null, $language = null, $label = null, $class='
   $translation_url = "#";
 
   if ($post_id == null) {
-    if (is_home()) {
-      $url = get_home_url();
-      $translation_url = uls_get_url_translated($url, $language);
-    }
-    else if (is_archive() || is_search() || is_author() || is_category() || is_tag() || is_date()) {
+    if (is_home() || is_front_page() || is_archive() || is_search() || is_author() || is_category() || is_tag() || is_date()) {
       $url = uls_get_browser_url();
       $translation_url = uls_get_url_translated($url, $language);
     }
