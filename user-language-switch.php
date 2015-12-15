@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: User Language Switch
-Description: Set the default language for the website and also include translations of pages, posts, custom post types, menus and sidebars. Visitors and users registered can see the different translations available of the website.
+Description: Build a multilingual and SEO friendly website for free. Link translations of content and allow visitos to browse your website in different languages.
 Version: 1.5
 Author: webilop
 Author URI: http://www.webilop.com
