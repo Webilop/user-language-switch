@@ -1,6 +1,6 @@
 <?php
-/**
- * This file containg general functions to use in themes or other plugins.
+ /**
+ * This file contains general functions to use in themes or other plugins.
  */
 
 /**
@@ -66,18 +66,14 @@ function uls_get_link($post_id = null, $language = null, $label = null, $class='
   $translation_url = "#";
 
   if ($post_id == null) {
-    if (is_home()) {
-      $url = get_home_url();
-      $translation_url = uls_get_url_translated($url, $language);
-    }
-    else if (is_archive() || is_search() || is_author() || is_category() || is_tag() || is_date()) {
+    if (is_home() || is_front_page() || is_archive() || is_search() || is_author() || is_category() || is_tag() || is_date()) {
       $url = uls_get_browser_url();
       $translation_url = uls_get_url_translated($url, $language);
     }
     else if (is_search()) {
       $url = get_home_url();
       $url .= "?s=".get_search_query();
-      $translation_url = uls_get_url_translated($url, $language); 
+      $translation_url = uls_get_url_translated($url, $language);
     }
   }
   else {
@@ -217,7 +213,7 @@ function uls_language_link_switch($url = null, $url_type = 'prefix', $type = 'li
    return $res;
 }
 /**
- * Add showrtcode to add language versions
+ * Add shortcode to add language versions
  */
 add_shortcode('uls-language-selector', 'uls_language_selector_shortcode');
 function uls_language_selector_shortcode($atts){
@@ -377,7 +373,7 @@ function tap_user_language_switch() {
   if( isset($options['activate_tab_language_switch']) && $options['activate_tab_language_switch']){
 
     $languages = uls_get_available_languages();
-    $position = $options['tab_position_language_switch']; 
+    $position = $options['tab_position_language_switch'];
 
     if ( is_home() || is_archive() || is_search() || is_category() || is_tag() || is_author() || is_date() )
       $postId = null;
@@ -386,20 +382,20 @@ function tap_user_language_switch() {
 
     include_once('uls-tab-template.php');
   }
-} 
+}
 
 // this function is for create the styles conditions
 add_action( 'wp_enqueue_scripts', 'uls_tab_background_color_picker' );
 function uls_tab_background_color_picker() {
 
   $options = get_option('uls_settings');
-  $position = isset($options['tab_position_language_switch']) ? $options['tab_position_language_switch'] : 'RM'; 
+  $position = isset($options['tab_position_language_switch']) ? $options['tab_position_language_switch'] : 'RM';
 
   // value for tabStyle
-  $TabStyle = ""; 
+  $TabStyle = "";
   // default or not tab background color
   $TabBackground = isset($options['tab_color_picker_language_switch']) ? $options['tab_color_picker_language_switch'] : 'rgba(255, 255, 255, 0);';
-  $TabBackground = "background-color: ".$TabBackground.";"; 
+  $TabBackground = "background-color: ".$TabBackground.";";
   // default or not tab fixed or  absoluted
   $TabFixed = isset($options['fixed_position_language_switch']) ? "position: fixed;" : "position: absolute;";
   $bodyRelative = isset($options['fixed_position_language_switch']) ? "" : "position: relative;";
@@ -467,7 +463,7 @@ function uls_tab_background_color_picker() {
       }
       body {
         $bodyRelative
-      }"; 
+      }";
     break;
     case 'BC':
       $TabStyle = "#tab_background_color_picker{
@@ -579,15 +575,15 @@ function uls_tab_background_color_picker() {
     break;
   }
 ?>
-  <style type="text/css"> 
+  <style type="text/css">
     <?= $TabStyle; ?>
-  </style> 
+  </style>
 <?php
 }
 
 // this function is for automatic traduction menues
 /*function uls_traduction_automatic_menu($object)
-{      
+{
   foreach ($object as $key ) {
     $post_id = get_post_meta($key->object_id, 'uls_translation_'.strtolower(uls_get_user_language()), true);
     if ( !empty($post_id) ) {
@@ -605,20 +601,20 @@ function uls_register_sidebar_laguages() {
   global $wp_registered_sidebars;
 
   $languages = uls_get_available_languages(); // get the all languages available in the wp
-  $options = get_option('uls_settings'); 
+  $options = get_option('uls_settings');
 
-  // delete  language that is actually in the side, from available languages 
-  $lang_code = uls_get_site_language(); 
-  foreach ( $languages as $lang_name) 
+  // delete  language that is actually in the side, from available languages
+  $lang_code = uls_get_site_language();
+  foreach ( $languages as $lang_name)
     if ( ($lang_name = array_search($lang_code, $languages)) !== false )
         unset($languages[$lang_name]);
-  
-  // create the N_sidebar X available_languages, but fir ask if the enable checkbox is true 
+
+  // create the N_sidebar X available_languages, but fir ask if the enable checkbox is true
   if ( !isset($options['enable_translation_sidebars_language_switch']) || $options['enable_translation_sidebars_language_switch'] ) {
     if ( function_exists('register_sidebar') ) {
       $temporal_sidebars = $wp_registered_sidebars;
       foreach ( $temporal_sidebars as $sidebar => $items) {
-        foreach ( $languages as $lang_name => $lang_code ) { 
+        foreach ( $languages as $lang_name => $lang_code ) {
           register_sidebar(array(
             'name' =>  $items['name'] .' / '. $lang_name,
             'id' => strtolower("uls_".$items['id'].'_'.$lang_code),
@@ -629,24 +625,24 @@ function uls_register_sidebar_laguages() {
             'after_title' => $items['after_title'],
           ));
         }
-      } 
+      }
     }
-  }  
-} 
+  }
+}
 add_action( 'widgets_init', 'uls_register_sidebar_laguages', 999 );
 
 function uls_organize_widgets_sidebars($sidebars_widgets) {
-  $options = get_option('uls_settings'); 
+  $options = get_option('uls_settings');
 
   if (!is_admin()) {
     if ( !isset($options['enable_translation_sidebars_language_switch']) || $options['enable_translation_sidebars_language_switch'] ) {
       $lang_code = strtolower('_'.uls_get_user_language());
       $uls_code = 'uls_';
-      foreach ($sidebars_widgets as $sidebar => $widgets) { 
+      foreach ($sidebars_widgets as $sidebar => $widgets) {
         if ( substr($sidebar,0,3) != $uls_code ) {
           if ( !empty($sidebars_widgets[$uls_code.$sidebar.$lang_code]) ) {
-            $uls_widgets =  $sidebars_widgets[$uls_code.$sidebar.$lang_code]; 
-            $sidebars_widgets[$sidebar] = $uls_widgets; 
+            $uls_widgets =  $sidebars_widgets[$uls_code.$sidebar.$lang_code];
+            $sidebars_widgets[$sidebar] = $uls_widgets;
           }
         }
       }
@@ -655,5 +651,5 @@ function uls_organize_widgets_sidebars($sidebars_widgets) {
 
   return $sidebars_widgets;
 }
-add_filter ( 'sidebars_widgets', 'uls_organize_widgets_sidebars', 10, 1); 
+add_filter ( 'sidebars_widgets', 'uls_organize_widgets_sidebars', 10, 1);
 ?>

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: User Language Switch\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-23 10:40-0500\n"
+"POT-Creation-Date: 2015-10-26 10:41-0500\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Borisa Djuraskovic <borisad@webhostinghub.com>\n"
 "Language-Team: \n"
@@ -12,137 +12,235 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-KeywordsList: __;_x;_e\n"
 "X-Poedit-Basepath: ../\n"
-"X-Generator: Poedit 1.5.7\n"
+"X-Generator: Poedit 1.6.10\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: init.php:633
-msgid "Please Try Again"
-msgstr "Pokušajte opet"
-
-#: init.php:650
-msgid "Remove Embed"
-msgstr "UKLONITE  Embed"
-
-#: init.php:656
-#, php-format
-msgid "No oEmbed Results Found for %s. View more info at"
-msgstr "Nijedan  Embed rezultat nije pronadjen za  %s.  Više info na"
-
-#: uls-functions.php:215
+#: uls-functions.php:265
 msgid "Language"
 msgstr "Jezik"
 
-#: uls-functions.php:216 uls-options.php:216
+#: uls-functions.php:266 uls-options.php:490 uls-options.php:581
 msgid "Save"
 msgstr "Sačuvaj"
 
-#: uls-functions.php:217
+#: uls-functions.php:267
 msgid "Language saved"
 msgstr "Jezik sačuvan"
 
-#: uls-functions.php:218
+#: uls-functions.php:268
 msgid "Error saving language"
 msgstr "Greška prilikom sačuvavanja jezika"
 
-#: uls-options.php:40
+#: uls-functions.php:625
+msgid " / "
+msgstr ""
+
+#: uls-options.php:60
 msgid "General Settings"
 msgstr "Opšte postavke"
 
-#: uls-options.php:42
+#: uls-options.php:66
+msgid "Enable flags tab"
+msgstr ""
+
+#: uls-options.php:74
+msgid "The tab is always visible in the browser window"
+msgstr ""
+
+#: uls-options.php:86
+msgid "Tab Position"
+msgstr ""
+
+#: uls-options.php:94
+msgid "Tab Backgorund Color"
+msgstr ""
+
+#: uls-options.php:103
+#, fuzzy
+msgid "Default language"
+msgstr "Default jezik za website"
+
+#: uls-options.php:112
 msgid "Default language for admin side"
 msgstr "Default jezik za admin stranu"
 
-#: uls-options.php:45
-msgid "User meta field to store the admin side language"
-msgstr "Korisnik meta za skladištanje admin strana jezika"
+#: uls-options.php:120
+msgid "Use browser language to redirect visitors"
+msgstr ""
 
-#: uls-options.php:48
-msgid "Default language for website"
-msgstr "Default jezik za website"
+#: uls-options.php:128
+msgid "Enable translations for sidebars"
+msgstr ""
 
-#: uls-options.php:51
-msgid "User meta field to store the website language language"
-msgstr "Korisnik metapolje za skladištanje website jezika"
+#: uls-options.php:136
+msgid ""
+"Allow registered users to change the language that user looks the website"
+msgstr ""
 
-#: uls-options.php:54
-msgid "Allow users change their admin side language"
-msgstr "Dozvoli korinicima da menjaju njihovu admin stranu jezik"
+#: uls-options.php:143
+msgid ""
+"Allow registered users to change the language that user looks the back-end "
+"side"
+msgstr ""
 
-#: uls-options.php:57
-msgid "Allow users change their website language"
-msgstr "Dozvoli korinicima da menjaju svoje wesajt jezik"
+#: uls-options.php:153 uls-options.php:168 uls-options.php:184
+msgid "Information"
+msgstr ""
 
-#: uls-options.php:60
+#: uls-options.php:199
 msgid "Collaborate"
 msgstr "Saradjujte"
 
-#: uls-options.php:85 uls-options.php:151
+#: uls-options.php:205
+msgid "About"
+msgstr "O"
+
+#: uls-options.php:260 uls-options.php:261 uls-options.php:486
 msgid "User Language Switch"
 msgstr "Promena jezika korisnika"
 
-#: uls-options.php:90 uls-options.php:178
+#: uls-options.php:268 uls-options.php:538
 msgid "User Language Preferences"
 msgstr "Preference jezika korisnika"
 
-#: uls-options.php:90
+#: uls-options.php:269
 msgid "User Language"
 msgstr "Jezik korisnika"
 
-#: uls-options.php:129
+#: uls-options.php:432
 msgid ""
-"You can install more languages in your site following the instructions in "
-msgstr "Možete instalirati više jezika na svom sajtu prateći uputstva"
+"Configure settings for the language tab that contains flags to change "
+"between languages in your website, set default languages for your website, "
+"create custom menu translations and activate translations of sidebars to "
+"create different sidebars for each language."
+msgstr ""
 
-#: uls-options.php:129
-msgid "WordPress in Your Language"
-msgstr "WordPress na vašem jeziku"
-
-#: uls-options.php:138
+#: uls-options.php:441
+#, fuzzy, php-format
 msgid ""
-"You can collaborate with the development of this plugin, please send us any "
-"suggestion or bug notification to support[at]webilop.com"
+"You can collaborate with the development of this plugin, please submit your "
+"collaboration to %s or send us any suggestion or bug notification to %s."
 msgstr ""
 "Možete da sarađuju sa razvojem ovog dodatka , molimo vas da nam pošaljete "
 "bilo kakvu sugestiju ili bug obaveštenje da support [ u ] webilop.com"
 
-#: uls-options.php:147 uls-options.php:166
-msgid "You do not have sufficient permissions to access this page."
-msgstr "Nemate dovoljno dozvola da pristupite ovoj stranici."
+#: uls-options.php:441
+msgid "the respository of the plugin in Github"
+msgstr ""
 
-#: uls-options.php:182
-msgid "Preferences saved."
-msgstr "Preference sačuvane."
+#: uls-options.php:451
+msgid ""
+"Assign menus as translations to other menus, first you need to create your "
+"menus in Appearance - Menus. If you don't assign a translation for a menu, "
+"then pages in the menu are translated individually if they have translations "
+"assigned."
+msgstr ""
 
-#: uls-options.php:186
-msgid "Error saving preferences."
-msgstr "Greške prilikom sačuvavanja preferenci"
+#: uls-options.php:454
+msgid ""
+"You can install more languages in your site following the instructions in <a "
+"href=\"http://codex.wordpress.org/WordPress_in_Your_Language\" target="
+"\"_blank\">WordPress in Your Language</a>."
+msgstr ""
 
-#: uls-options.php:199
-msgid "Displayed language in the admin side"
-msgstr "Prikazan jezik na andmin strani"
+#: uls-options.php:457
+msgid ""
+"Select which post types should be filtered automatically by language. If a "
+"post, page or custom post doesn't match the language you are looking in the "
+"website, then it is not displayed. If a post, page or custom post doesn't "
+"have language, then it is matched with the default language of the website."
+msgstr ""
 
-#: uls-options.php:207
-msgid "Displayed language in the front-end side"
-msgstr "Prikazan jezik na prednjem kraju"
-
-#: uls-options.php:220
-msgid "About"
-msgstr "O"
-
-#: uls-options.php:222
+#: uls-options.php:471
 msgid "was developed by "
 msgstr "Razvijeno od strane"
 
-#: uls-options.php:223
+#: uls-options.php:472
+#, fuzzy
 msgid ""
-"Webilop is a company focused on web and mobile solutions. We develop custom "
-"mobile applications and templates and plugins for CMSs such as Wordpress and "
-"Joomla!."
+"Webilop is a company focused on web and mobile solutions. We are experts "
+"customizing themes and building plugins in WordPress. We can help you with "
+"your website, contact us at "
 msgstr ""
 "Webilop je kompanija fokusirana na Internet i mobilnim rešenjima . Mi "
 "razvijamo obične mobilne aplikacije i šablone i dodatke za CMSs kao što su "
 "Wordpress i Joomla . !"
 
-#: uls-options.php:224
-msgid "Follow us"
-msgstr "Pratite nas"
+#: uls-options.php:482 uls-options.php:520
+msgid "You do not have sufficient permissions to access this page."
+msgstr "Nemate dovoljno dozvola da pristupite ovoj stranici."
+
+#: uls-options.php:500
+#, fuzzy
+msgid "General"
+msgstr "Opšte postavke"
+
+#: uls-options.php:501
+#, fuzzy
+msgid "Menu Languages"
+msgstr "Jezik korisnika"
+
+#: uls-options.php:502
+#, fuzzy
+msgid "Available Languages"
+msgstr "Jezik korisnika"
+
+#: uls-options.php:503
+msgid "Filter Post Types"
+msgstr ""
+
+#: uls-options.php:542
+msgid "Preferences saved."
+msgstr "Preference sačuvane."
+
+#: uls-options.php:546
+msgid "Error saving preferences."
+msgstr "Greške prilikom sačuvavanja preferenci"
+
+#: uls-options.php:559
+#, fuzzy
+msgid "Language for the website"
+msgstr "Default jezik za website"
+
+#: uls-options.php:567
+#, fuzzy
+msgid "Language for the back-end side"
+msgstr "Prikazan jezik na prednjem kraju"
+
+#, fuzzy
+#~ msgid "Language Filter"
+#~ msgstr "Jezik"
+
+#~ msgid "Please Try Again"
+#~ msgstr "Pokušajte opet"
+
+#~ msgid "Remove Embed"
+#~ msgstr "UKLONITE  Embed"
+
+#~ msgid "No oEmbed Results Found for %s. View more info at"
+#~ msgstr "Nijedan  Embed rezultat nije pronadjen za  %s.  Više info na"
+
+#~ msgid "User meta field to store the admin side language"
+#~ msgstr "Korisnik meta za skladištanje admin strana jezika"
+
+#~ msgid "User meta field to store the website language"
+#~ msgstr "Korisnik metapolje za skladištanje website jezika"
+
+#~ msgid "Allow users change their admin side language"
+#~ msgstr "Dozvoli korinicima da menjaju njihovu admin stranu jezik"
+
+#~ msgid "Allow users change their website language"
+#~ msgstr "Dozvoli korinicima da menjaju svoje wesajt jezik"
+
+#~ msgid ""
+#~ "You can install more languages in your site following the instructions in "
+#~ msgstr "Možete instalirati više jezika na svom sajtu prateći uputstva"
+
+#~ msgid "WordPress in Your Language"
+#~ msgstr "WordPress na vašem jeziku"
+
+#~ msgid "Displayed language in the admin side"
+#~ msgstr "Prikazan jezik na andmin strani"
+
+#~ msgid "Follow us"
+#~ msgstr "Pratite nas"
