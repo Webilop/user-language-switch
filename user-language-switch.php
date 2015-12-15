@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: User Language Switch
-Description: Build a multilingual and SEO friendly website for free. Link translations of content and allow visitos to browse your website in different languages.
+Description: Build a multilingual and SEO friendly website. Linking translations of content and allow visitors to browse your website in different languages.
 Version: 1.5
 Author: webilop
 Author URI: http://www.webilop.com

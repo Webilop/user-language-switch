@@ -19,17 +19,18 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 > #### Collaboration
 > [The plugin is available in Github](https://github.com/Webilop/user-language-switch). We receive patches to fix bugs, improvements and translation files.
 
-User Language Switch is a WordPress multilingual plugin that you can use to build multilingual websites. It displays flags to visitos that your users can use to browse your website in different languages. If you prefer, you can deactivate flags and user shortcodes and functions to create your own language switch.
+User Language Switch is a WordPress multilingual plugin that you can use to build multilingual websites. It displays flags to visitors that your users can use to browse your website in different languages. If you prefer, you can deactivate flags and user shortcodes and functions to create your own language switch.
 
 Admin users can set default language for your website and registered users can set language they want to see your website by default. User Language Switch allows to set language for back-end and front-end independently.
 
 When content is linked, a language prefix is added in URLs of content in secondary languages. The plugin always redirect to URLs with language prefix for content in secondary language, in this way there are no different URLs pointing to the same content and hurting your SEO. This plugin is compatible with SEO plugins like Yoast SEO.
 
-It requires [you install different languages in your website](https://codex.wordpress.org/Installing_WordPress_in_Your_Language) and provide translation of your content, **it doesn't translate content automatically**. User Language Switch requires nice permalinks and URL rewriting enable.
+It requires [you install different languages in your website](https://codex.wordpress.org/Installing_WordPress_in_Your_Language) and provide translation of your content, **it doesn't translate content automatically**. User Language Switch requires nice permalinks and URL rewriting enabled.
 
-User Language Switch was create by [Webilop team](http://webilop.com/) and it is **free**. If you need help, you can use [the plugin support forum](http://wordpress.org/support/plugin/user-language-switch) or don't hesitate into [contact us](http://webilop.com/contact-us/). We also offer services about WordPress development and customization.
+User Language Switch was created by [Webilop team](http://webilop.com/) and it is **free**. If you need help, you can use [the plugin support forum](http://wordpress.org/support/plugin/user-language-switch) or don't hesitate to [contact us](http://webilop.com/contact-us/). We also offer services about WordPress development and customization.
 
-**Features**
+= Features =
+
 * Linking translations of pages in multiple languages
 * Linking translations of blog posts in multiple languages
 * Linking translations of custom post types in multiple languages
@@ -42,10 +43,11 @@ User Language Switch was create by [Webilop team](http://webilop.com/) and it is
 * Option to select a language for back-end and another one for front-end
 * Search of pages and blog posts taking into account website language
 
-**Coming Features**
+= Coming Features =
 
-We have dreams for User Language Switch and we would like you be part of them, please tell us if which fetures you like most for the plugin:
-* **Allow me edit multiple translations in same place**: At the moment, you need to edit pages independently for each translation, what if you can edit the content of all these pages in the same place?. - [I like it!](http://www.webilop.com/user-language-switch-comming-features/?vote=translations-in-one-place)
+We have dreams for User Language Switch and we would like you be part of them, please tell us which features you like most for the plugin:
+
+* **Allow me edit multiple translations in same place**: At the moment, you need to edit pages independently for each translation, what if you can edit the content of all these pages in the same place? - [I like it!](http://www.webilop.com/user-language-switch-comming-features/?vote=translations-in-one-place)
 * **Put me in contact with human translators**: We want to create a page available for admin users where they can contact human translators and send pages and content to be translated(translators will not translate for free). - [I like it!](http://www.webilop.com/user-language-switch-comming-features/?vote=contact-translators)
 * **Reports of content translated**: Allow admin and editor users to see reports about how much content has been translated and how much is missing. - [I like it!](http://www.webilop.com/user-language-switch-comming-features/?vote=translation-reports)
 
@@ -111,9 +113,9 @@ You can submit your pull requests to the code of the plugin through the reposito
 
 == Screenshots ==
 
-1. This screenshot illustrates the User Language options available in the settings page.
+1. This screenshot illustrates User Language Switch options available in the settings page.
 2. Assign menu translations to existing menus.
-3. Enable or disable languages available for your website(it only applies to languages for the front-end).
+3. Enable or disable languages available for your website(it only applies to languages for front-end).
 4. Enable automatic filtering of posts, pages and custom post types.
 5. Select the language and translations of a post.
 
