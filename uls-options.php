@@ -270,13 +270,13 @@ class ULS_Options{
       'ULS_Options::create_settings_page' );
 
     //if users can configurate their languages
-    $options = get_option('uls_settings');
+    /*$options = get_option('uls_settings');
     if($options['user_backend_configuration'] || $options['user_frontend_configuration'])
       add_menu_page( __('User Language Preferences','user-language-switch'),
         __('User Language','user-language-switch'),
         'read',
         'uls-user-language-page',
-        'ULS_Options::create_user_language_page' );
+        'ULS_Options::create_user_language_page' );*/
   }
 
    /**
@@ -547,76 +547,53 @@ class ULS_Options{
    }
 
    /**
-    * Create the HTML page to manage user language preferences.
+    * Create the HTML options to manage user language preferences in the user profile page.
     */
-   static function create_user_language_page(){
-      if ( !current_user_can( 'read' ) )  {
-         wp_die( __( 'You do not have sufficient permissions to access this page.', 'user-language-switch' ) );
-      }
+  static function create_user_profile_language_options(){
+    $options = array_merge(ULS_Options::$default_options, get_option('uls_settings'));
+    $default_backend_language = get_user_meta(get_current_user_id(), $options['backend_language_field_name'], true);
 
-      $options = array_merge(ULS_Options::$default_options, get_option('uls_settings'));
-      $default_backend_language = get_user_meta(get_current_user_id(), $options['backend_language_field_name'], true);
+    if(empty($default_backend_language))
+        $default_backend_language = $options['default_backend_language'];
+    $default_frontend_language = get_user_meta(get_current_user_id(), $options['frontend_language_field_name'], true);
 
-      if(empty($default_backend_language))
-         $default_backend_language = $options['default_backend_language'];
-      $default_frontend_language = get_user_meta(get_current_user_id(), $options['frontend_language_field_name'], true);
+    if(empty($default_frontend_language))
+        $default_frontend_language = $options['default_frontend_language'];
 
-      if(empty($default_frontend_language))
-         $default_frontend_language = $options['default_frontend_language'];
-
-      $activate_tab_language_switch = get_user_meta(get_current_user_id(), $options['activate_tab_language_switch'], true);
-      if(empty($activate_tab_language_switch))
-         $activate_tab_language_switch = $options['activate_tab_language_switch'];
-   ?>
-   <div class="wrap">
-      <h2><?php _e('User Language Preferences','user-language-switch'); ?></h2>
-      <?php if(isset($_GET['message'])): ?>
-         <?php if('saved' == $_GET['message']): ?>
-            <div class="uls-notice updated">
-               <p><strong><?php _e('Preferences saved.', 'user-language-switch'); ?></strong></p>
-            </div>
-         <?php elseif('error' == $_GET['message']): ?>
-            <div class="uls-error error">
-               <p><strong><?php _e('Error saving preferences.', 'user-language-switch'); ?></strong></p>
-            </div>
-         <?php endif; ?>
-      <?php endif; ?>
-      <form id="uls_configuration_form" method="post" action="<?php echo admin_url('admin-ajax.php'); ?>">
-         <?php if(function_exists("wp_nonce_field")): ?>
-            <?php wp_nonce_field('uls_user_language_preferences','uls_wpnonce'); ?>
-         <?php endif; ?>
-         <input type="hidden" name="action" value="uls_user_language_preferences" />
-         <table class="form-table">
-            <tbody>
-               <?php if($options['user_frontend_configuration']): ?>
-               <tr valign="top">
-                  <th scope="row"><?php _e('Language for the website','user-language-switch'); ?></th>
-                  <td>
-                     <?php echo uls_language_selector_input($options['frontend_language_field_name'],$options['frontend_language_field_name'],$default_frontend_language); ?>
-                  </td>
-               </tr>
-               <?php endif; ?>
-               <?php if($options['user_backend_configuration']): ?>
-               <tr valign="top">
-                  <th scope="row"><?php _e('Language for the back-end side','user-language-switch'); ?></th>
-                  <td>
-                  <?php
-                        // $id, $name, $default_value = '', $class = '', $available_languages = true
-                        $class = '';
-                        $available_languages = false;
-                        echo uls_language_selector_input($options['backend_language_field_name'], $options['backend_language_field_name'], $default_backend_language, $class, $available_languages);
-                   ?>
-                  </td>
-               </tr>
-               <?php endif; ?>
-            </tbody>
-         </table>
-         <p class="submit">
-            <input type="submit" class="button-primary" value="<?php _e('Save','user-language-switch'); ?>" />
-         </p>
-      </form>
-   <?php
-   }
+    $activate_tab_language_switch = get_user_meta(get_current_user_id(), $options['activate_tab_language_switch'], true);
+    if(empty($activate_tab_language_switch))
+        $activate_tab_language_switch = $options['activate_tab_language_switch'];
+    
+    ?>
+    <h3><?php _e('User Language Preferences','user-language-switch'); ?></h3>
+    <input type="hidden" name="action" value="uls_user_language_preferences" />
+    <table class="form-table">
+      <tbody>
+          <?php if($options['user_frontend_configuration']): ?>
+          <tr valign="top">
+            <th scope="row"><?php _e('Language for the website','user-language-switch'); ?></th>
+            <td>
+                <?php echo uls_language_selector_input($options['frontend_language_field_name'],$options['frontend_language_field_name'],$default_frontend_language); ?>
+            </td>
+          </tr>
+          <?php endif; ?>
+          <?php if($options['user_backend_configuration']): ?>
+          <tr valign="top">
+            <th scope="row"><?php _e('Language for the back-end side','user-language-switch'); ?></th>
+            <td>
+            <?php
+                  // $id, $name, $default_value = '', $class = '', $available_languages = true
+                  $class = '';
+                  $available_languages = false;
+                  echo uls_language_selector_input($options['backend_language_field_name'], $options['backend_language_field_name'], $default_backend_language, $class, $available_languages);
+              ?>
+            </td>
+          </tr>
+          <?php endif; ?>
+      </tbody>
+    </table>
+    <?php
+  }
 
    /**
     * Process and save the user language preferences.
@@ -638,6 +615,15 @@ class ULS_Options{
       wp_redirect($_SERVER['HTTP_REFERER'] . "&message=saved");
       exit;
    }
+   
+  static function save_user_profile_language_preferences(){
+    //save settings for the user
+    $options = get_option('uls_settings');
+    if(!empty($_POST[$options['backend_language_field_name']]))
+        update_user_meta(get_current_user_id(), $options['backend_language_field_name'], $_POST[$options['backend_language_field_name']]);
+    if(!empty($_POST[$options['frontend_language_field_name']]))
+        update_user_meta(get_current_user_id(), $options['frontend_language_field_name'], $_POST[$options['frontend_language_field_name']]);
+  }
 
    /**
     * Create the settings link in admin plugin page.
