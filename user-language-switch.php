@@ -2,7 +2,7 @@
 /*
 Plugin Name: User Language Switch
 Description: Build a multilingual and SEO friendly website. Linking translations of content and allow visitors to browse your website in different languages.
-Version: 1.5
+Version: 1.5.2
 Author: webilop
 Author URI: http://www.webilop.com
 License: GPL2
@@ -129,8 +129,8 @@ function uls_get_user_saved_language($only_lang = false, $type = null){
       $type = 'backend';
   }
 
-  //if the user is logged in
-  if( is_user_logged_in() ){
+  // if the user is logged in AND after the user is initialized
+  if(did_action('after_setup_theme') && is_user_logged_in()) {
     //if the user can modify the language
     if($options["user_{$type}_configuration"])
       $language = get_user_meta(get_current_user_id(), "uls_{$type}_language", true);
@@ -396,7 +396,10 @@ function uls_redirect_by_page_language(){
 }
 
 /**
- * This function is attached to the WP hook "locale" and it sets the language to see the current page. The function get the language of the user, it uses the first language found in these options: URL, browser configuration, user settings, default language.
+ * This function is attached to the WP hook "locale" and it sets the language
+ * to see the current page. The function get the language of the user,
+ * it uses the first language found in these
+ * options: URL, browser configuration, user settings, default language.
  */
 function uls_language_loading($lang){
    global $uls_locale;
@@ -867,7 +870,7 @@ function uls_language_metaboxes( $meta_boxes ) {
       );
       array_push($fields, $field);
    }
-   
+
     array_unshift($fields, array('name' => 'Select a language',
                                 'id' => $prefix . 'language',
                                 'type' => 'select',
@@ -1244,7 +1247,7 @@ function head_reference_translation() {
 
 
 // desactivate the tab flags
-function update_db_after_update() { 
+function update_db_after_update() {
 
   $options = get_option('uls_settings');
   !isset( $options['activate_tab_language_switch'] ) ?  $options['activate_tab_language_switch'] = false : '' ;
