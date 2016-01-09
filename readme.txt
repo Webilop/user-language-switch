@@ -7,7 +7,7 @@ Author URI: http://www.webilop.com/
 Plugin URI: http://www.webilop.com/products/user-language-switch-wordpress-multilingual-plugin/
 Requires at least: 4.0
 Tested up to: 4.4
-Stable tag: 1.5
+Stable tag: 1.5.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -147,6 +147,8 @@ You can submit your pull requests to the code of the plugin through the reposito
 * Automatic filtering of search results according to the language displayed.
 * Addition of references to other languages available in HTML head section of post, pages and custom post types.
 * Creation of [Github repository](https://github.com/Webilop/user-language-switch) to receive collaboration easily.
+= 1.5.1 =
+* Fix of bug enabling and disabling post types for automatic filtering based on languages.
 
 == Upgrade Notice ==
 
