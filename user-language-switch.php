@@ -1167,8 +1167,10 @@ function uls_filter_archive_by_language($query){
   $settings = get_option('uls_settings');
 
   // Check post type in query, if post type is empty , Wordpress uses 'post' by default
-  $WordpressDefaultPostTypeQuery = 'post';
-  $postType = isset($query->query['post_type']) ? $query->query['post_type'] : $WordpressDefaultPostTypeQuery;
+  $postType = 'post';
+  if(property_exists($query, 'query') && array_key_exists('post_type', $query->query)) {
+    $postType = $query->query['post_type'];
+  }
 
   if(array_key_exists('languages_filter_enable', $settings) &&
      !isset($settings['languages_filter_enable'][$postType])) {
