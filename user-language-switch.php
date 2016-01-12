@@ -2,7 +2,7 @@
 /*
 Plugin Name: User Language Switch
 Description: Build a multilingual and SEO friendly website. Linking translations of content and allow visitors to browse your website in different languages.
-Version: 1.5
+Version: 1.5.1
 Author: webilop
 Author URI: http://www.webilop.com
 License: GPL2
@@ -867,7 +867,7 @@ function uls_language_metaboxes( $meta_boxes ) {
       );
       array_push($fields, $field);
    }
-   
+
     array_unshift($fields, array('name' => 'Select a language',
                                 'id' => $prefix . 'language',
                                 'type' => 'select',
@@ -1158,8 +1158,6 @@ function uls_add_language_meta_query(&$query){
  */
 add_action('pre_get_posts', 'uls_filter_archive_by_language', 1);
 function uls_filter_archive_by_language($query){
-//var_dump("test");
-//var_dump($query);
   //check if it in the admin dashboard
   if(is_admin())
     return;
@@ -1167,9 +1165,15 @@ function uls_filter_archive_by_language($query){
   // get values configuration uls_settings to applic filter translation to the post_types
   // if the information in languages_filter_disable are true apply filter
   $settings = get_option('uls_settings');
-  $array_query = isset($query->query['post_type']) ? $query->query['post_type'] : '';
-  if ( isset($settings['languages_filter_enable']) && !isset($settings['languages_filter_enable'][$array_query]) )
+
+  // Check post type in query, if post type is empty , Wordpress uses 'post' by default
+  $WordpressDefaultPostTypeQuery = 'post';
+  $postType = isset($query->query['post_type']) ? $query->query['post_type'] : $WordpressDefaultPostTypeQuery;
+
+  if(array_key_exists('languages_filter_enable', $settings) &&
+     !isset($settings['languages_filter_enable'][$postType])) {
     return;
+  }
 
   //this flag indicates if we should filter posts by language
   $modify_query = !$query->is_page() && !$query->is_single() && !$query->is_preview();
@@ -1244,7 +1248,7 @@ function head_reference_translation() {
 
 
 // desactivate the tab flags
-function update_db_after_update() { 
+function update_db_after_update() {
 
   $options = get_option('uls_settings');
   !isset( $options['activate_tab_language_switch'] ) ?  $options['activate_tab_language_switch'] = false : '' ;
