@@ -115,7 +115,7 @@ class ULS_Options{
         'uls-settings-page',
         'uls_general_settings_section',
         $options);
-      
+
       $options['input_name'] = 'use_browser_language_to_redirect_visitors';
       add_settings_field($options['input_name'],
         __('Use browser language to redirect visitors','user-language-switch'),
@@ -123,7 +123,7 @@ class ULS_Options{
         'uls-settings-page',
         'uls_general_settings_section',
         $options);
-        
+
       $options['input_name'] = 'enable_translation_sidebars_language_switch';
       add_settings_field($options['input_name'],
         __('Enable translations for sidebars','user-language-switch'),
@@ -131,14 +131,14 @@ class ULS_Options{
         'uls-settings-page',
         'uls_general_settings_section',
         $options);
-        
+
       $options['input_name'] = 'user_frontend_configuration';
       add_settings_field($options['input_name'],
         __('Allow registered users to change the language that user looks the website','user-language-switch'),
         'ULS_Options::create_checkbox_input',
         'uls-settings-page',
         'uls_general_settings_section',$options);
-        
+
       $options['input_name'] = 'user_backend_configuration';
       add_settings_field($options['input_name'],
         __('Allow registered users to change the language that user looks the back-end side','user-language-switch'),
@@ -200,7 +200,7 @@ class ULS_Options{
       __('Rate it!','user-language-switch'),
       'ULS_Options::create_calification_section',
       'uls-settings-page');
-      
+
     //create section for collaboration
     add_settings_section('uls_collaboration_section',
       __('Collaborate','user-language-switch'),
@@ -448,7 +448,7 @@ class ULS_Options{
       <div class="section-inside"><p><?php printf(__('You can collaborate with the development of this plugin, please submit your collaboration to %s or send us any suggestion or bug notification to %s.', 'user-language-switch'), '<a target="_blank" href="https://github.com/Webilop/user-language-switch">' . __('the respository of the plugin in Github', 'user-language-switch') . '</a>', '<a href="mailto:support@webilop.com">support@webilop.com</a>'); ?></p></div>
       <?php
    }
-   
+
    /**
     * Create the section to collaborate with the development.
     */
@@ -563,7 +563,7 @@ class ULS_Options{
     $activate_tab_language_switch = get_user_meta(get_current_user_id(), $options['activate_tab_language_switch'], true);
     if(empty($activate_tab_language_switch))
         $activate_tab_language_switch = $options['activate_tab_language_switch'];
-    
+
     ?>
     <h3><?php _e('User Language Preferences','user-language-switch'); ?></h3>
     <input type="hidden" name="action" value="uls_user_language_preferences" />
@@ -612,10 +612,11 @@ class ULS_Options{
       if(!empty($_POST[$options['frontend_language_field_name']]))
          update_user_meta(get_current_user_id(), $options['frontend_language_field_name'], $_POST[$options['frontend_language_field_name']]);
 
+
       wp_redirect($_SERVER['HTTP_REFERER'] . "&message=saved");
       exit;
    }
-   
+
   static function save_user_profile_language_preferences(){
     //save settings for the user
     $options = get_option('uls_settings');
@@ -623,6 +624,12 @@ class ULS_Options{
         update_user_meta(get_current_user_id(), $options['backend_language_field_name'], $_POST[$options['backend_language_field_name']]);
     if(!empty($_POST[$options['frontend_language_field_name']]))
         update_user_meta(get_current_user_id(), $options['frontend_language_field_name'], $_POST[$options['frontend_language_field_name']]);
+
+    // save
+    if ( !isset($_SESSION) )
+     session_start();
+    $_SESSION["ULS_USER_FRONTEND_LOCALE"] = $_POST[$options['frontend_language_field_name']];
+    $_SESSION["ULS_USER_BACKEND_LOCALE"] = $_POST[$options['backend_language_field_name']];
   }
 
    /**
