@@ -363,12 +363,57 @@ class ULS_Options{
             <input type="hidden" name="menulanguage" value="menulanguage" >
         <?php
            }
+           
+  function sort_translations_callback( $a, $b ){
+    return strnatcasecmp( $a['english_name'], $b['english_name']);
+  }
+  
+  static function download_language(){
+    $data=explode(";", $_POST['post_id']);
+    $ArchivoRemoto = $data[1];
+ 
+    chdir('..');
+    $rutaLocal = getcwd()."/wp-content/languages/";
+    $ArchivoLocal = $rutaLocal."package.zip";
+    
+    $flag = file_put_contents($ArchivoLocal, fopen($ArchivoRemoto, 'r'));
+    
+    if($flag===FALSE)
+      die(_("File writing permission denied. Please fix permissions to directory wp-content/languages"));
+    
+    $zip = new ZipArchive;
+    
+    if ($zip->open($ArchivoLocal) === TRUE) {
+      $zip->extractTo($rutaLocal, array($data[0].".mo", $data[0].".po"));
+      $zip->close();
+    }
+    
+    unlink($ArchivoLocal);
+  }
 
-  static function create_table_available_language($options) {
+  static function create_table_available_language($options){
     $languages = uls_get_available_languages(false); // get the all languages available in the wp
     $options = get_option('uls_settings'); // get information from DB
     $available_language = isset($options['available_language']) ? $options['available_language'] : uls_get_available_languages(false); // get the information that actually is in the DB
   ?>
+    <script type="text/javascript">
+      jQuery(function($){
+        jQuery('#button-download-language').click(function () {
+          jQuery("#div_message_download").html("<?php echo _("Downloading language...") ?>");
+        
+          var language = $("#tblang").val();
+          $.post(ajaxurl, {
+                  action: 'uls_download_language',
+                  post_id: language
+          }, function(data) {
+                  window.location.href = "<?php echo "http://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]."&success=1"; ?>";
+                  /*jQuery(function($){
+                    jQuery("#div_message_download").html(data);
+                  });*/
+          });
+        });
+      });
+    </script>
     <table id="menu-locations-table" class="">
       <thead>
         <tr>
@@ -391,6 +436,43 @@ class ULS_Options{
       </tbody>
     </table>
     <input type="hidden" name="available_languages" value="available_languages" >
+    
+    <br/>
+    
+    <table id="menu-locations-table" class="">
+      <thead>
+        <tr>
+          <th>Install Additional Languages</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+        <?php
+          require_once ABSPATH . '/wp-admin/includes/translation-install.php';
+          $translations = wp_get_available_translations();
+          uasort( $translations, array( __CLASS__, 'sort_translations_callback' ) );
+          
+          
+          echo "<td>".__('Select a language').": </td><td><select id='tblang'>";//<option value='en_EN'>Default - English</option>";
+          
+          foreach($translations as $language){
+            echo "<option value='".$language['language'].";".$language['package'].";".$language['english_name']."'>".$language['english_name']." - ".$language['native_name']."</option>";
+          }
+          
+          echo "</select>";
+        ?>
+        <input type="button" class="button-primary" id="button-download-language" value="<?php echo __('Download','user-language-switch')?>" />
+        </td>
+        </tr>
+      </tbody>
+    </table>
+    <div id="div_message_download" class="div_message_download">
+      <?php
+        if(isset($_GET['success'])){
+          echo "Language successfully downloaded!!!";
+        }
+      ?>
+    </div>
   <?php
   }
 
@@ -485,7 +567,7 @@ class ULS_Options{
          $description = __("Assign menus as translations to other menus, first you need to create your menus in Appearance - Menus. If you don't assign a translation for a menu, then pages in the menu are translated individually if they have translations assigned.", 'user-language-switch');
          break;
        case 'uls_tabs_available_language':
-         $description = __('You can install more languages in your site following the instructions in <a href="http://codex.wordpress.org/WordPress_in_Your_Language" target="_blank">WordPress in Your Language</a>.', 'user-language-switch');
+         $description = '';//__('You can install more languages in your site following the instructions in <a href="http://codex.wordpress.org/WordPress_in_Your_Language" target="_blank">WordPress in Your Language</a>.', 'user-language-switch');
          break;
        case 'uls_tabs_language_filter':
          $description = __("Select which post types should be filtered automatically by language. If a post, page or custom post doesn't match the language you are looking in the website, then it is not displayed. If a post, page or custom post doesn't have language, then it is matched with the default language of the website.", 'user-language-switch');
@@ -710,4 +792,10 @@ add_action('wp_ajax_uls_user_language_preferences', 'ULS_Options::save_user_lang
  * Add ajax action to save user language preferences.
  */
 add_filter('wp_nav_menu_items', 'ULS_Options::select_correct_menu_language', 10, 2);
+
+/**
+ * Add ajax action to download a specific language
+ */
+add_action('wp_ajax_uls_download_language', 'ULS_Options::download_language');
+
 ?>
