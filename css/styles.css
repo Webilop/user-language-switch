@@ -61,3 +61,10 @@ div.section-inside{
   height: 16px;
   background: url('../images/star.png') 0 0px;
 }
+
+.div_message_download{
+ color: red;
+ font-weight: bold;
+ margin-top: 10px;
+ margin-bottom:15px;
+}
