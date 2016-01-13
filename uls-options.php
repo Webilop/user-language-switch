@@ -364,31 +364,39 @@ class ULS_Options{
         <?php
            }
            
-  function sort_translations_callback( $a, $b ){
+  static function sort_translations_callback( $a, $b ){
     return strnatcasecmp( $a['english_name'], $b['english_name']);
   }
   
   static function download_language(){
     $data=explode(";", $_POST['post_id']);
-    $ArchivoRemoto = $data[1];
+    $remoteFile = $data[1];
  
     chdir('..');
-    $rutaLocal = getcwd()."/wp-content/languages/";
-    $ArchivoLocal = $rutaLocal."package.zip";
+    $localPath = getcwd()."/wp-content/languages/";
+    $localFile = $localPath."package.zip";
     
-    $flag = file_put_contents($ArchivoLocal, fopen($ArchivoRemoto, 'r'));
+    $flag = file_put_contents($localFile, fopen($remoteFile, 'r'));
     
-    if($flag===FALSE)
-      die(_("File writing permission denied. Please fix permissions to directory wp-content/languages"));
-    
-    $zip = new ZipArchive;
-    
-    if ($zip->open($ArchivoLocal) === TRUE) {
-      $zip->extractTo($rutaLocal, array($data[0].".mo", $data[0].".po"));
-      $zip->close();
+    if($flag===FALSE){
+      echo "0-";
+      //die(_("File writing permission denied. Please fix permissions to directory wp-content/languages"));
     }
-    
-    unlink($ArchivoLocal);
+    else{
+      if ( class_exists( 'ZipArchive' ) ){
+        $zip = new ZipArchive;
+        if ($zip->open($localFile) === TRUE) {
+          $zip->extractTo($localPath, array($data[0].".mo", $data[0].".po"));
+          $zip->close();
+        }
+        echo "1-";
+      }
+      else{
+        echo "2-";
+      }
+      
+      unlink($localFile);
+    }
   }
 
   static function create_table_available_language($options){
@@ -406,10 +414,8 @@ class ULS_Options{
                   action: 'uls_download_language',
                   post_id: language
           }, function(data) {
-                  window.location.href = "<?php echo "http://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]."&success=1"; ?>";
-                  /*jQuery(function($){
-                    jQuery("#div_message_download").html(data);
-                  });*/
+            data = data.split("-");
+            window.location.href = window.location + "&success="+data[0];
           });
         });
       });
@@ -452,8 +458,7 @@ class ULS_Options{
           $translations = wp_get_available_translations();
           uasort( $translations, array( __CLASS__, 'sort_translations_callback' ) );
           
-          
-          echo "<td>".__('Select a language').": </td><td><select id='tblang'>";//<option value='en_EN'>Default - English</option>";
+          echo "<td>".__('Select a language').": </td><td><select id='tblang'>";
           
           foreach($translations as $language){
             echo "<option value='".$language['language'].";".$language['package'].";".$language['english_name']."'>".$language['english_name']." - ".$language['native_name']."</option>";
@@ -469,7 +474,12 @@ class ULS_Options{
     <div id="div_message_download" class="div_message_download">
       <?php
         if(isset($_GET['success'])){
-          echo "Language successfully downloaded!!!";
+          if($_GET['success']==1)
+            echo _("Language successfully downloaded!!!");
+          else if($_GET['success']==0)
+            echo _("File writing permission denied. Please fix permissions to directory wp-content/languages.");
+          else
+            echo _("Missing class ZipArchive. Please install and retry later.");
         }
       ?>
     </div>
