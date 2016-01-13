@@ -364,12 +364,12 @@ class ULS_Options{
         <?php
            }
            
-  static function sort_translations_callback( $a, $b ){
-    return strnatcasecmp( $a['english_name'], $b['english_name']);
+  static function sort_translations_callback($a, $b) {
+    return strnatcasecmp($a['english_name'], $b['english_name']);
   }
   
-  static function download_language(){
-    $data=explode(";", $_POST['post_id']);
+  static function download_language() {
+    $data = explode(";", $_POST['info_language']);
     $remoteFile = $data[1];
  
     chdir('..');
@@ -378,28 +378,30 @@ class ULS_Options{
     
     $flag = file_put_contents($localFile, fopen($remoteFile, 'r'));
     
-    if($flag===FALSE){
-      echo "0-";
+    if($flag === FALSE){
+      echo "0";
       //die(_("File writing permission denied. Please fix permissions to directory wp-content/languages"));
     }
     else{
-      if ( class_exists( 'ZipArchive' ) ){
+      if (class_exists('ZipArchive')){
         $zip = new ZipArchive;
         if ($zip->open($localFile) === TRUE) {
           $zip->extractTo($localPath, array($data[0].".mo", $data[0].".po"));
           $zip->close();
         }
-        echo "1-";
+        echo "1";
       }
       else{
-        echo "2-";
+        echo "2";
       }
       
       unlink($localFile);
     }
+    
+    wp_die();
   }
 
-  static function create_table_available_language($options){
+  static function create_table_available_language($options) {
     $languages = uls_get_available_languages(false); // get the all languages available in the wp
     $options = get_option('uls_settings'); // get information from DB
     $available_language = isset($options['available_language']) ? $options['available_language'] : uls_get_available_languages(false); // get the information that actually is in the DB
@@ -411,11 +413,10 @@ class ULS_Options{
         
           var language = $("#tblang").val();
           $.post(ajaxurl, {
-                  action: 'uls_download_language',
-                  post_id: language
+            action: 'uls_download_language',
+            info_language: language
           }, function(data) {
-            data = data.split("-");
-            window.location.href = window.location + "&success="+data[0];
+            window.location.href = window.location + "&success=" + data;
           });
         });
       });
@@ -456,7 +457,7 @@ class ULS_Options{
         <?php
           require_once ABSPATH . '/wp-admin/includes/translation-install.php';
           $translations = wp_get_available_translations();
-          uasort( $translations, array( __CLASS__, 'sort_translations_callback' ) );
+          uasort($translations, array( __CLASS__, 'sort_translations_callback'));
           
           echo "<td>".__('Select a language').": </td><td><select id='tblang'>";
           
@@ -474,9 +475,9 @@ class ULS_Options{
     <div id="div_message_download" class="div_message_download">
       <?php
         if(isset($_GET['success'])){
-          if($_GET['success']==1)
+          if($_GET['success'] == 1)
             echo _("Language successfully downloaded!!!");
-          else if($_GET['success']==0)
+          else if($_GET['success'] == 0)
             echo _("File writing permission denied. Please fix permissions to directory wp-content/languages.");
           else
             echo _("Missing class ZipArchive. Please install and retry later.");
