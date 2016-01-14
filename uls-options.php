@@ -714,6 +714,7 @@ class ULS_Options{
       if(!empty($_POST[$options['frontend_language_field_name']]))
          update_user_meta(get_current_user_id(), $options['frontend_language_field_name'], $_POST[$options['frontend_language_field_name']]);
 
+
       wp_redirect($_SERVER['HTTP_REFERER'] . "&message=saved");
       exit;
    }
@@ -725,6 +726,12 @@ class ULS_Options{
         update_user_meta(get_current_user_id(), $options['backend_language_field_name'], $_POST[$options['backend_language_field_name']]);
     if(!empty($_POST[$options['frontend_language_field_name']]))
         update_user_meta(get_current_user_id(), $options['frontend_language_field_name'], $_POST[$options['frontend_language_field_name']]);
+
+    // save
+    if ( !isset($_SESSION) )
+     session_start();
+    $_SESSION["ULS_USER_FRONTEND_LOCALE"] = $_POST[$options['frontend_language_field_name']];
+    $_SESSION["ULS_USER_BACKEND_LOCALE"] = $_POST[$options['backend_language_field_name']];
   }
 
    /**

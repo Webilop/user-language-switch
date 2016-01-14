@@ -406,20 +406,54 @@ function uls_language_loading($lang){
    else
      $uls_locale = true;
 
-   $language = uls_get_user_language();
+   if ( !isset($_SESSION) )
+     session_start();
 
-   //if it is only the code language
-   if(!empty($language) && false === strpos($language, '_')){
-      //get default location for the language, if the language isn't valid, then it returns null
-      $language = uls_get_location_by_language($language);
-   }
-
-   $res = empty($language) ? $lang : $language;
+   if ( is_admin() )
+     $res = isset($_SESSION["ULS_USER_BACKEND_LOCALE"]) ? $_SESSION["ULS_USER_BACKEND_LOCALE"] : $lang;
+   else
+     $res = isset($_SESSION["ULS_USER_FRONTEND_LOCALE"]) ? $_SESSION["ULS_USER_FRONTEND_LOCALE"] : $lang;
 
    $uls_locale = false;
    return $res;
 }
 add_filter('locale', 'uls_language_loading');
+
+
+/*
+ * This function create the new value on sessions vars, it save code language, it is necesary because many function need this value and it is not a good way save this value in db.
+ */
+
+function uls_language_loading_in_session ( $username ) {
+
+  // check if the user exits
+  if ( ! username_exists( $username ) )
+    return;
+
+  // get current user
+  $user = get_user_by( 'login', $username );
+
+  // if user is empty return nothing
+  if (empty($user))
+    return;
+
+  //get the options of the plugin
+  $options = uls_get_options();
+  $language = '';
+
+  //if the user can modify the language
+  if($options["user_frontend_configuration"])
+    $language_ftd = get_user_meta($user->ID, "uls_frontend_language", true);
+
+  if($options["user_backend_configuration"])
+    $language_bkd = get_user_meta($user->ID, "uls_backend_language", true);
+
+  // Save language
+  $_SESSION["ULS_USER_FRONTEND_LOCALE"] = $language_ftd;
+  $_SESSION["ULS_USER_BACKEND_LOCALE"] = $language_bkd;
+}
+add_action( 'wp_authenticate' , 'uls_language_loading_in_session' );
+
 
 /**
  * It returns the configured or default code language for a language abbreviation. The code language is the pair of language and country (i.e: en_US, es_ES)-
@@ -1264,15 +1298,15 @@ register_activation_hook( __FILE__, 'update_db_after_update' );
 */
 add_action( 'show_user_profile', 'extended_user_profil_fields' );
 add_action( 'edit_user_profile', 'extended_user_profil_fields' );
- 
-function extended_user_profil_fields( $user ) { 
+
+function extended_user_profil_fields( $user ) {
   ULS_Options::create_user_profile_language_options();
 }
 
 add_action( 'personal_options_update', 'save_language_options' );
 add_action( 'edit_user_profile_update', 'save_language_options' );
 
-//Función que guarda los cambios 
+//Función que guarda los cambios
 function save_language_options( $user_id ) {
   ULS_Options::save_user_profile_language_preferences();
 }
