@@ -445,7 +445,8 @@ class ULS_Options{
               <input type="checkbox" name="uls_available_language[<?=$lang_name?>]" value="<?=$lang_code?>" <?=$checked?> />
             </td>
             <td>
-                <img src="<?= plugins_url("css/blank.gif", __FILE__) ?>" style="margin-right:5px;" class="flag_16x11 flag-<?= strtolower(substr($lang_code, -2))?>" alt="<?= $lang_name ?>" title="<?= $lang_name ?>" />
+                <!--img src="<?= plugins_url("css/blank.gif", __FILE__) ?>" style="margin-right:5px;" class="flag_16x11 flag-<?= strtolower(substr($lang_code, -2))?>" alt="<?= $lang_name ?>" title="<?= $lang_name ?>" /-->
+                <img src="<?= plugins_url("css/blank.gif", __FILE__) ?>" style="margin-right:5px;" class="flag_16x11 flag-<?= Codes::languageCode2CountryCode($lang_code); ?>" alt="<?= $lang_name ?>" title="<?= $lang_name ?>" />
             </td>
           </tr>
         <?php endforeach; ?>
@@ -468,7 +469,13 @@ class ULS_Options{
           $translations = wp_get_available_translations();
           uasort($translations, array( __CLASS__, 'sort_translations_callback'));
           
+//           foreach($translations as $language){
+//             print_r($language);
+//             echo "<br/>";
+//           }
+          
           echo "<td>".__('Select a language').": </td><td><select id='tblang'>";
+          
           
           foreach($translations as $language){
             echo "<option value='".$language['language'].";".$language['package'].";".$language['english_name']."'>".$language['english_name']." - ".$language['native_name']."</option>";

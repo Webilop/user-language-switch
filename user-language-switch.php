@@ -33,6 +33,7 @@ define( 'ULS_FILE_PATH', __FILE__ );
 
 require_once 'uls-options.php';
 require_once 'uls-rewrite-rules.php';
+require_once 'codes.php';
 include 'uls-functions.php';
 
 /**
@@ -1062,7 +1063,8 @@ function webilop_show_posts_columns($name) {
     switch ($name) {
       case 'language':
         $views = strtolower(get_post_meta($post->ID, 'uls_language', true));
-        echo '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.substr($views, -2).'" alt="'.$views.'" title="'.$views.'" />';
+        //echo '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.substr($views, -2).'" alt="'.$views.'" title="'.$views.'" />';
+        echo '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.Codes::languageCode2CountryCode($views).'" alt="'.$views.'" title="'.$views.'" />';
       break;
         case 'translation':
             $views = get_post_meta($post->ID);
@@ -1075,7 +1077,8 @@ function webilop_show_posts_columns($name) {
          unset($string[strtolower($views)]);
          foreach ($string as $key => $value)
       echo '<a href="'.get_edit_post_link($value).'">'.
-         '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.substr($key, -2).'" alt="'.$views.'" title="'.$value.'" />'.
+         //'<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.substr($key, -2).'" alt="'.$views.'" title="'.$value.'" />'.
+         '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.Codes::languageCode2CountryCode($key).'" alt="'.$views.'" title="'.$value.'" />'.
            '</a>';
       }else
          echo $string;
@@ -1098,7 +1101,8 @@ function webilop_show_pages_columns($name) {
     switch ($name) {
         case 'language':
             $views = strtolower(get_post_meta($post->ID, 'uls_language', true));
-      echo '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.substr($views, -2).'" alt="'.$views.'" />';
+      //echo '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.substr($views, -2).'" alt="'.$views.'" />';
+      echo '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.Codes::languageCode2CountryCode($views).'" alt="'.$views.'" />';
       break;
         case 'translation':
             $views = get_post_meta($post->ID);
@@ -1112,7 +1116,8 @@ function webilop_show_pages_columns($name) {
          unset($string[strtolower($views)]);
          foreach ($string as $key => $value)
       echo '<a href="'.get_edit_post_link($value).'">'.
-         '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.substr($key, -2).'" alt="'.$views.'" />'.
+         //'<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.substr($key, -2).'" alt="'.$views.'" />'.
+         '<img src="'.plugins_url("css/blank.gif", __FILE__).'" style="margin-right:5px;" class="flag_16x11 flag-'.Codes::languageCode2CountryCode($key).'" alt="'.$views.'" />'.
            '</a>';
       }else
          echo $string;
