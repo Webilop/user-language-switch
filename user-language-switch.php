@@ -2,7 +2,7 @@
 /*
 Plugin Name: User Language Switch
 Description: Build a multilingual and SEO friendly website. Linking translations of content and allow visitors to browse your website in different languages.
-Version: 1.5.1
+Version: 1.6
 Author: webilop
 Author URI: http://www.webilop.com
 License: GPL2
