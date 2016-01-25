@@ -7,6 +7,7 @@ $country_languages = array(
 	'cs_CZ' => 'Czech (Czech Republic)',
 	'da_DK' => 'Danish (Denmark)',
 	'de_DE' => 'German (Germany)',
+	'de_DE_formal' => 'German Formal (Germany)',
 	'el_GR' => 'Greek (Greece)',
 	'en_US' => 'English (United States)',
 	'fi_FI' => 'Finnish (Finland)',
@@ -165,7 +166,10 @@ $country_languages = array(
 	'quz_BO' => 'Quechua (Bolivia)',
 	'se_NO' => 'Sami, Northern (Norway)',
 	'mt_MT' => 'Maltese',
-	'bs_Latn_BA' => 'Bosnian (Latin, Bosnia and Herzegovina)'
+	'bs_Latn_BA' => 'Bosnian (Latin, Bosnia and Herzegovina)',
+	'my_MM' => 'Myanmar',
+	'tl' => 'Timor-Leste',
+	'th' => 'Tai (Tailandia)'
 );
 
 $language_codes = array(
