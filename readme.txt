@@ -7,7 +7,7 @@ Author URI: http://www.webilop.com/
 Plugin URI: http://www.webilop.com/products/user-language-switch-wordpress-multilingual-plugin/
 Requires at least: 4.0
 Tested up to: 4.4
-Stable tag: 1.6
+Stable tag: 1.6.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -154,6 +154,8 @@ You can submit your pull requests to the code of the plugin through the reposito
 * Compatibility with Buddypress and bbPress
 * Move user options to profile page
 * Fix of major bugs.
+= 1.6.1 =
+* Fix relation between language codes and country codes for solve problem with render correct flag
 
 == Upgrade Notice ==
 
