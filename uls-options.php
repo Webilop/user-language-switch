@@ -372,21 +372,21 @@ class ULS_Options{
             <input type="hidden" name="menulanguage" value="menulanguage" >
         <?php
            }
-           
+
   static function sort_translations_callback($a, $b) {
     return strnatcasecmp($a['english_name'], $b['english_name']);
   }
-  
+
   static function download_language() {
     $data = explode(";", $_POST['info_language']);
     $remoteFile = $data[1];
- 
+
     chdir('..');
     $localPath = getcwd()."/wp-content/languages/";
     $localFile = $localPath."package.zip";
-    
+
     $flag = file_put_contents($localFile, fopen($remoteFile, 'r'));
-    
+
     if($flag === FALSE){
       echo "0";
       //die(_("File writing permission denied. Please fix permissions to directory wp-content/languages"));
@@ -403,10 +403,10 @@ class ULS_Options{
       else{
         echo "2";
       }
-      
+
       unlink($localFile);
     }
-    
+
     wp_die();
   }
 
@@ -419,7 +419,7 @@ class ULS_Options{
       jQuery(function($){
         jQuery('#button-download-language').click(function () {
           jQuery("#div_message_download").html("<?php echo _("Downloading language...") ?>");
-        
+
           var language = $("#tblang").val();
           $.post(ajaxurl, {
             action: 'uls_download_language',
@@ -453,9 +453,9 @@ class ULS_Options{
       </tbody>
     </table>
     <input type="hidden" name="available_languages" value="available_languages" >
-    
+
     <br/>
-    
+
     <table id="menu-locations-table" class="">
       <thead>
         <tr>
@@ -468,19 +468,19 @@ class ULS_Options{
           require_once ABSPATH . '/wp-admin/includes/translation-install.php';
           $translations = wp_get_available_translations();
           uasort($translations, array( __CLASS__, 'sort_translations_callback'));
-          
+
 //           foreach($translations as $language){
 //             print_r($language);
 //             echo "<br/>";
 //           }
-          
+
           echo "<td>".__('Select a language').": </td><td><select id='tblang'>";
-          
-          
+
+
           foreach($translations as $language){
             echo "<option value='".$language['language'].";".$language['package'].";".$language['english_name']."'>".$language['english_name']." - ".$language['native_name']."</option>";
           }
-          
+
           echo "</select>";
         ?>
         <input type="button" class="button-primary" id="button-download-language" value="<?php echo __('Download','user-language-switch')?>" />
