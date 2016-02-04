@@ -82,6 +82,9 @@ function uls_init_plugin(){
  * @return mixed it returns a string containing a language code or false if there isn't any language detected.
  */
 function uls_get_user_language_from_url($only_lang = false){
+  if(!isset($_SERVER['HTTP_HOST']) || !isset($_SERVER['REQUEST_URI'])) {
+    return false;
+  }
   //get language from URL
   $language = null;
   //get the language form query vars
