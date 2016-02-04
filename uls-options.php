@@ -360,7 +360,13 @@ class ULS_Options{
                                             <option value="0">— Select a Menu —</option>
                                     <?php
                                           foreach ($menus as $menu ): // iterative menues, add cols ?>
-                                            <option value="<?= $menu->slug; ?>"  <?php selected($menu->slug, ($options) ? $options[$theme][$language_code] : '' );  ?> ><?= $menu ->name; ?></option>
+                                            <?php
+                                            $selectedHTML = '';
+                                            if(isset($options[$theme]) && isset($options[$theme][$language_code])) {
+                                              $selectedHTML = selected($menu->slug, ($options) ? $options[$theme][$language_code] : '' );
+                                            }
+                                            ?>
+                                            <option value="<?= $menu->slug; ?>"  <?= $selectedHTML;?> ><?= $menu ->name; ?></option>
                                     <?php endforeach; ?>
                                   </select>
                                 </td><!-- .menu-location-menus -->
