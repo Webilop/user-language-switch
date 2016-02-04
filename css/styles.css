@@ -56,14 +56,20 @@ div.section-inside{
 
 .rating-star{
   display: block;
-  float: right;        
+  float: right;
   width: 16px;
   height: 16px;
   background: url('../images/star.png') 0 0px;
 }
 
-.div_message_download{
+.div_message_download .bg-warning{
  color: red;
+ font-weight: bold;
+ margin-top: 10px;
+ margin-bottom:15px;
+}
+.div_message_download .bg-success{
+ color: green;
  font-weight: bold;
  margin-top: 10px;
  margin-bottom:15px;
