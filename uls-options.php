@@ -387,8 +387,8 @@ class ULS_Options{
     $data = explode(";", $_POST['info_language']);
     $remoteFile = $data[1];
 
-    chdir('..');
-    $localPath = getcwd()."/wp-content/languages/";
+
+    $localPath = WP_CONTENT_DIR . '/languages/';
     $localFile = $localPath."package.zip";
 
     $flag = file_put_contents($localFile, fopen($remoteFile, 'r'));
