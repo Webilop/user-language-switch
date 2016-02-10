@@ -383,6 +383,11 @@ class ULS_Options{
     return strnatcasecmp($a['english_name'], $b['english_name']);
   }
 
+   /*
+    * this function dowload automaticaly the langue from the https: official page
+    * this funcion check if the class ZipArchive is available and check the openss available too
+    * this class needs the last requirements to can download and unzip the language
+    */
   static function download_language() {
     $data = explode(";", $_POST['info_language']);
     $remoteFile = $data[1];

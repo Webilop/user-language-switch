@@ -1,3 +1,6 @@
+/*
+ * This style rules for flags were taken from this url https://www.flag-sprites.com/
+ */
 .flag_16x11 {
 	width: 16px;
 	height: 11px;
@@ -256,3 +259,4 @@
 .flag_16x11.flag-zanzibar {background-position: -160px -165px}
 .flag_16x11.flag-zm {background-position: -176px -165px}
 .flag_16x11.flag-zw {background-position: -192px -165px}
+.flag_16x11.flag-eo {background-position: -208px -165px}
