@@ -175,7 +175,7 @@ class Codes{
     'se_NO' => 'no',// revisar
     'mt_MT' => 'mt',
     'bs_Latn_BA' => 'ba',// revisar
-    'eo' => 'es', // revisar
+    'eo' => 'eo', // esperanto this language does not have country
     'haz' => 'af',
     'ary' => 'ma',
     'oci' => 'es',
@@ -191,9 +191,9 @@ class Codes{
     if(array_key_exists($languageCode, self::$array_codes)){
       return self::$array_codes[$languageCode];
     }
-    
+
     return false;
   }
-  
+
 }
 ?>
