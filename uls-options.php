@@ -360,7 +360,13 @@ class ULS_Options{
                                             <option value="0">— Select a Menu —</option>
                                     <?php
                                           foreach ($menus as $menu ): // iterative menues, add cols ?>
-                                            <option value="<?= $menu->slug; ?>"  <?php selected($menu->slug, ($options) ? $options[$theme][$language_code] : '' );  ?> ><?= $menu ->name; ?></option>
+                                            <?php
+                                            $selectedHTML = '';
+                                            if(isset($options[$theme]) && isset($options[$theme][$language_code])) {
+                                              $selectedHTML = selected($menu->slug, ($options) ? $options[$theme][$language_code] : '' );
+                                            }
+                                            ?>
+                                            <option value="<?= $menu->slug; ?>"  <?= $selectedHTML;?> ><?= $menu ->name; ?></option>
                                     <?php endforeach; ?>
                                   </select>
                                 </td><!-- .menu-location-menus -->
@@ -372,24 +378,28 @@ class ULS_Options{
             <input type="hidden" name="menulanguage" value="menulanguage" >
         <?php
            }
-           
+
   static function sort_translations_callback($a, $b) {
     return strnatcasecmp($a['english_name'], $b['english_name']);
   }
-  
+
+   /*
+    * this function dowload automaticaly the langue from the https: official page
+    * this funcion check if the class ZipArchive is available and check the openss available too
+    * this class needs the last requirements to can download and unzip the language
+    */
   static function download_language() {
     $data = explode(";", $_POST['info_language']);
     $remoteFile = $data[1];
- 
-    chdir('..');
-    $localPath = getcwd()."/wp-content/languages/";
+
+
+    $localPath = WP_CONTENT_DIR . '/languages/';
     $localFile = $localPath."package.zip";
-    
+
     $flag = file_put_contents($localFile, fopen($remoteFile, 'r'));
-    
+
     if($flag === FALSE){
       echo "0";
-      //die(_("File writing permission denied. Please fix permissions to directory wp-content/languages"));
     }
     else{
       if (class_exists('ZipArchive')){
@@ -403,10 +413,10 @@ class ULS_Options{
       else{
         echo "2";
       }
-      
+
       unlink($localFile);
     }
-    
+
     wp_die();
   }
 
@@ -419,7 +429,7 @@ class ULS_Options{
       jQuery(function($){
         jQuery('#button-download-language').click(function () {
           jQuery("#div_message_download").html("<?php echo _("Downloading language...") ?>");
-        
+
           var language = $("#tblang").val();
           $.post(ajaxurl, {
             action: 'uls_download_language',
@@ -453,9 +463,9 @@ class ULS_Options{
       </tbody>
     </table>
     <input type="hidden" name="available_languages" value="available_languages" >
-    
+
     <br/>
-    
+
     <table id="menu-locations-table" class="">
       <thead>
         <tr>
@@ -468,22 +478,39 @@ class ULS_Options{
           require_once ABSPATH . '/wp-admin/includes/translation-install.php';
           $translations = wp_get_available_translations();
           uasort($translations, array( __CLASS__, 'sort_translations_callback'));
-          
-//           foreach($translations as $language){
-//             print_r($language);
-//             echo "<br/>";
-//           }
-          
-          echo "<td>".__('Select a language').": </td><td><select id='tblang'>";
-          
-          
-          foreach($translations as $language){
-            echo "<option value='".$language['language'].";".$language['package'].";".$language['english_name']."'>".$language['english_name']." - ".$language['native_name']."</option>";
+
+
+          // check the requirement to can download language
+          $execute_languages = true;
+          $zip_message = ''; // meessage information
+          $ssl_message = ''; // meessage information
+          if ( !class_exists('ZipArchive')  ){
+            $zip_message = '<p class="bg-warning">';
+            $zip_message .= __("Missing class ZipArchive. Please install and retry later.");
+            $zip_message .= '</p>';
+            $execute_languages = false;
           }
-          
+          if ( !extension_loaded('openssl') ) {
+            $ssl_message = '<p class="bg-warning">';
+            $ssl_message .= __("Missing extension openssl. Please enable openss extension in your php.ini and retry later.");
+            $ssl_message .= '</p>';
+            $execute_languages = false;
+          }
+
+          echo "<td>".__('Select a language').": </td><td><select id='tblang'>";
+          if ( $execute_languages ) {
+            foreach($translations as $language){
+              echo "<option value='".$language['language'].";".$language['package'].";".$language['english_name']."'>";
+              echo $language['english_name']." - ".$language['native_name']."</option>";
+            }
+          }
           echo "</select>";
-        ?>
-        <input type="button" class="button-primary" id="button-download-language" value="<?php echo __('Download','user-language-switch')?>" />
+          if ( $execute_languages ) : ?>
+            <input type="button"
+                   class="button-primary"
+                   id="button-download-language"
+                   value="<?php echo __('Download','user-language-switch')?>" />
+          <?php endif; ?>
         </td>
         </tr>
       </tbody>
@@ -491,13 +518,21 @@ class ULS_Options{
     <div id="div_message_download" class="div_message_download">
       <?php
         if(isset($_GET['success'])){
-          if($_GET['success'] == 1)
-            echo _("Language successfully downloaded!!!");
-          else if($_GET['success'] == 0)
-            echo _("File writing permission denied. Please fix permissions to directory wp-content/languages.");
-          else
-            echo _("Missing class ZipArchive. Please install and retry later.");
+          if($_GET['success'] == 1) {
+            $ok_message = '<p class="bg-success">';
+            $ok_message .= __("Language successfully downloaded!!!");
+            $ok_message .= '</p>';
+            echo $ok_message;
+          }
+          else if($_GET['success'] == 0) {
+            $error_message = '<p class="bg-warning">';
+            $error_message .= __("File writing permission denied. Please fix permissions to directory wp-content/languages.");
+            $error_message .= '</p>';
+            echo $error_message;
+          }
         }
+        echo $zip_message;
+        echo $ssl_message;
       ?>
     </div>
   <?php

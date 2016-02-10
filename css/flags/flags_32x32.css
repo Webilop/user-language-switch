@@ -1,3 +1,6 @@
+/*
+ * This style rules for flags were taken from this url https://www.flag-sprites.com/
+ */
 .flag_32x32 {
 	width: 32px;
 	height: 32px;
@@ -226,3 +229,4 @@
 .flag_32x32.flag-za {background-position: -320px -448px}
 .flag_32x32.flag-zm {background-position: -352px -448px}
 .flag_32x32.flag-zw {background-position: -384px -448px}
+.flag_32x32.flag-eo {background-position: -416px -448px}
