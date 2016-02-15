@@ -443,7 +443,7 @@ class ULS_Options{
     <table id="menu-locations-table" class="">
       <thead>
         <tr>
-          <th>Enable / Disable </th>
+          <th>Enable</th>
           <th>Language</th>
         </tr>
       </thead>
@@ -457,6 +457,7 @@ class ULS_Options{
             <td>
                 <!--img src="<?= plugins_url("css/blank.gif", __FILE__) ?>" style="margin-right:5px;" class="flag_16x11 flag-<?= strtolower(substr($lang_code, -2))?>" alt="<?= $lang_name ?>" title="<?= $lang_name ?>" /-->
                 <img src="<?= plugins_url("css/blank.gif", __FILE__) ?>" style="margin-right:5px;" class="flag_16x11 flag-<?= Codes::languageCode2CountryCode($lang_code); ?>" alt="<?= $lang_name ?>" title="<?= $lang_name ?>" />
+                <span><?= $lang_name; ?></span>
             </td>
           </tr>
         <?php endforeach; ?>
