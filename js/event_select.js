@@ -1,5 +1,5 @@
-jQuery(document).ready(function($) { 
-  var actual_value = jQuery("select#uls_language").val(); 
+jQuery(document).ready(function($) {
+  var actual_value = jQuery("select#uls_language").val();
   jQuery("select#uls_language").change(
     function() {
       val = jQuery(this).val();

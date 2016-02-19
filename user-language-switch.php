@@ -1042,6 +1042,7 @@ function uls_add_styles() {
   wp_register_style( 'html-style', plugins_url('css/styles.css', __FILE__) );
   wp_enqueue_style( 'html-style' );
   wp_enqueue_style( 'webilop-flags_16x11-style', plugins_url('css/flags/flags_16x11.css', __FILE__) );
+  wp_enqueue_script( 'add_admin_questions_js',   WP_CONTENT_URL . '/plugins/user-language-switch/js/admin_questions.js', array('jquery') );
 }
 add_action( 'admin_enqueue_scripts', 'uls_add_styles' );
 
