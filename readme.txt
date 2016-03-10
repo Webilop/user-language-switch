@@ -7,7 +7,7 @@ Author URI: http://www.webilop.com/
 Plugin URI: http://www.webilop.com/products/user-language-switch-wordpress-multilingual-plugin/
 Requires at least: 4.0
 Tested up to: 4.4
-Stable tag: 1.6.3
+Stable tag: 1.6.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -162,6 +162,8 @@ You can submit your pull requests to the code of the plugin through the reposito
 * Fix correct show flags in posts/pages index page
 = 1.6.3 =
 * Update country and languages list
+= 1.6.4 =
+* Fix Vietnam flag
 
 == Upgrade Notice ==
 
