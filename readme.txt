@@ -164,6 +164,8 @@ You can submit your pull requests to the code of the plugin through the reposito
 * Update country and languages list
 = 1.6.4 =
 * Fix Vietnam flag
+= 1.6.5 =
+* Fix post-type issue
 
 == Upgrade Notice ==
 
