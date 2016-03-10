@@ -177,7 +177,7 @@ class Codes{
     'ur_PK'        => 'pk',
     'uz_Cyrl_UZ'   => 'uz', //revisar
     'uz_Latn_UZ'   => 'uz',
-    'vi'           => 'vi',
+    'vi'           => 'vn',
     'xh_ZA'        => 'za',// revisar
     'zh_CN'        => 'cn',
     'zh_HK'        => 'hk',
