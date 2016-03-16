@@ -2,7 +2,7 @@
 /*
 Plugin Name: User Language Switch
 Description: Build a multilingual and SEO friendly website. Linking translations of content and allow visitors to browse your website in different languages.
-Version: 1.6.2
+Version: 1.6.5
 Author: webilop
 Author URI: http://www.webilop.com
 License: GPL2
@@ -1241,9 +1241,16 @@ function uls_filter_archive_by_language($query){
     $postType = $query->query['post_type'];
   }
 
-  if(array_key_exists('languages_filter_enable', $settings) &&
-     !isset($settings['languages_filter_enable'][$postType])) {
-    return;
+  if (is_array($settings)) {
+    if (array_key_exists('languages_filter_enable', $settings)) {
+      if (is_string($postType) || is_numeric($postType)) {
+        if (is_array($settings['languages_filter_enable'])) {
+          if (!array_key_exists($postType, $settings['languages_filter_enable'])) {
+            return;
+          }
+        }
+      }
+    }
   }
 
   //this flag indicates if we should filter posts by language
