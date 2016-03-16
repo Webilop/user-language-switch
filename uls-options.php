@@ -311,13 +311,13 @@ class ULS_Options{
       if ($answere_question == 'answere_yes' )
         $answere = "yes";
       else
-        $answere = "not";
+        $answere = "no";
 
       $user = wp_get_current_user();
       $user_email = $user->user_email;
       $site_url = get_site_url();
       $site_url = preg_replace('#^https?://#', '', $site_url);
-      $url = "http://dev.webilop.com/webilop-3.0/wp-admin/admin-ajax.php?action=store_answer&answer=$answere&domain=$site_url&email=$user_email";
+      $url = "http://webilop.com/wp-admin/admin-ajax.php?action=store_answer&answer=$answere&domain=$site_url&email=$user_email";
 
       $ch = curl_init();
       curl_setopt($ch, CURLOPT_URL, $url);
