@@ -46,9 +46,10 @@ class ULS_Options{
 
     //get options
     $options = get_option('uls_settings');
- //   echo "<pre>"; print_r($options ); echo "</pre>";
-    if ( empty(get_option('uls_settings_question'))  )
-      add_action( 'admin_notices', 'ULS_Options::uls_admin_notice_question' );
+    $option_question = get_option('uls_settings_question');
+    if (empty($option_question)) {
+      add_action('admin_notices', 'ULS_Options::uls_admin_notice_question');
+    }
 
     //create about section
     add_settings_section('uls_create_section_tabs',
