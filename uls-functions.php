@@ -368,6 +368,62 @@ function uls_get_url_map_translation($url, $language = null){
   return false;
 }
 
+/*
+ * This shortcode print the languages flags where the user want add the code
+ * This shortcode have a value cols, this value is to print the shortcode with a number of cols
+ * @param $atts is the number of cols with you want to show flags
+ */
+add_shortcode('uls-languages-flags', 'uls_tap_shortcode_show_languages');
+function uls_tap_shortcode_show_languages($atts) {
+  $atts = shortcode_atts( array( 'cols' => 3), $atts );
+  $options = get_option('uls_settings');
+
+  // call the function that print the style for the flags
+  ob_start();
+    uls_tab_background_color_picker_shortcode($atts['cols']);
+    $shortcode_class = 'tab_background_color_picker_shortcode';
+    include('uls-tab-template.php');
+  $shortcode = ob_get_contents();
+  ob_end_clean();
+  return do_shortcode( $shortcode );
+}
+
+/*
+ * This function is for create the styles conditions for the shortcode
+ * @param: $no_flags is the number of cols to show the flags
+ */
+function uls_tab_background_color_picker_shortcode($no_flags) {
+
+  $options = get_option('uls_settings');
+
+  // value for tabStyle
+  $TabStyle = "";
+  // default or not tab background color
+  $TabBackground = isset($options['tab_color_picker_language_switch']) ? $options['tab_color_picker_language_switch'] : 'rgba(255, 255, 255, 0);';
+  $TabBackground = "background-color: ".$TabBackground.";";
+
+  // select the style for the position flags
+  $TabStyle = '#tab_background_color_picker_shortcode{ '.
+    $TabBackground.
+      'position: relative;
+      padding: 5px;
+      border-radius: 0 0 15px 15px;
+      z-index: 0;
+      width: '.( ($no_flags * 33) + 10).'px;
+    }
+    #tab_background_color_picker_shortcode .tab_flag {
+      width: 33px;
+      float: left;
+    }';
+?>
+  <style type="text/css">
+    <?= $TabStyle; ?>
+  </style>
+<?php
+}
+
+
+
 add_action('wp_footer', 'tap_user_language_switch');
 // uls-tab-user-language-switch include the template to show flags
 function tap_user_language_switch() {
@@ -383,7 +439,7 @@ function tap_user_language_switch() {
     else
       $postId = get_post()->ID;
 
-    include_once('uls-tab-template.php');
+    include('uls-tab-template.php');
   }
 }
 
@@ -416,6 +472,7 @@ function uls_tab_background_color_picker() {
           border-radius: 0 0 15px 15px;
           z-index: 10000000000;
         }
+       #tab_background_color_picker
       .tab_flag {
         display: inline;
       }";
@@ -431,6 +488,7 @@ function uls_tab_background_color_picker() {
           border-radius: 0 0 15px 15px;
           z-index: 10000000000;
         }
+       #tab_background_color_picker
         .tab_flag {
           display: inline;
         }";
@@ -446,6 +504,7 @@ function uls_tab_background_color_picker() {
           border-radius: 0 0 15px 15px;
           z-index: 10000000000;
         }
+       #tab_background_color_picker
         .tab_flag {
           display: inline;
         }";
@@ -461,6 +520,7 @@ function uls_tab_background_color_picker() {
         border-radius: 15px 15px 0 0;
         z-index: 10000000000;
       }
+       #tab_background_color_picker
       .tab_flag {
         display: inline;
       }
@@ -479,6 +539,7 @@ function uls_tab_background_color_picker() {
         border-radius: 15px 15px 0 0;
         z-index: 10000000000;
       }
+       #tab_background_color_picker
       .tab_flag {
         display: inline;
       }
@@ -497,6 +558,7 @@ function uls_tab_background_color_picker() {
         border-radius: 15px 15px 0 0;
         z-index: 10000000000;
       }
+       #tab_background_color_picker
       .tab_flag {
         display: inline;
       }
