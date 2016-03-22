@@ -176,6 +176,7 @@ class ULS_Options{
         'uls-settings-page',
         'uls_tabs_menu_language',
         $options);
+
     }
     else if( isset($_GET['tab']) && $_GET['tab'] == 'available_languages' ) {
       //create section for registration
@@ -241,6 +242,30 @@ class ULS_Options{
     }
     else if ( isset($_POST['available_languages']) ) {
       $options['available_language'] = $_POST['uls_available_language'];
+
+      $files_options = $_FILES['uls_available_language_new_flags'];
+      $upload_overrides = array( 'test_form' => false );
+      // check if the value is null to create each file to upload to the upload files
+      if( isset($files_options) && !empty($files_options) ) {
+        foreach ($files_options['name'] as $key => $value) {
+          // if the value is not empty, create the file array to upload file
+          if ( !empty($files_options['name'][$key]) ) {
+            $uploadedfile = array(
+              'name'     => $files_options['name'][$key],
+              'type'     => $files_options['type'][$key],
+              'tmp_name' => $files_options['tmp_name'][$key],
+              'error'    => $files_options['error'][$key],
+              'size'     => $files_options['size'][$key]
+              );
+            }
+          // upload file with wp function
+          $movefile = wp_handle_upload( $uploadedfile, $upload_overrides );
+          // if it uploaded success save the public url
+          if ( $movefile && !isset( $movefile['error'] ) ) {
+            $options['uls_available_language_new_flags'][$key] = $movefile['url'];
+          }
+        }
+      }
     }
     else if ( isset($_POST['languages_filter_enable']) ) {
       $options['languages_filter_enable'] = $_POST['uls_language_filter'];
@@ -251,6 +276,7 @@ class ULS_Options{
       // if the user does not want to show the languages he has tow options
       // 1 - desactive the flags tab  or 2 - desactive the plugin
       $ulsAvailableLanguage = isset($options['available_language']) ? $options['available_language'] : uls_get_available_languages(false);
+      $ulsAvailableLanguageFlags = isset($options['uls_available_language_new_flags']) ? $options['uls_available_language_new_flags'] : '';
       // disable all post type filter
       $ulsLanguageFilter = isset($options['languages_filter_enable']) ? $options['languages_filter_enable'] : self::$default_options['languages_filter_enable'];
 
@@ -261,15 +287,16 @@ class ULS_Options{
           $options[$k] = trim($_POST[$k]);
 
       //get values of checkboxes
-      $options['user_backend_configuration'] = isset($_POST['user_backend_configuration']);
-      $options['user_frontend_configuration'] = isset($_POST['user_frontend_configuration']);
-      $options['activate_tab_language_switch'] = isset($_POST['activate_tab_language_switch']);
-      $options['fixed_position_language_switch'] = isset($_POST['fixed_position_language_switch']);
+      $options['user_backend_configuration']     =   isset($_POST['user_backend_configuration']);
+      $options['user_frontend_configuration']    =   isset($_POST['user_frontend_configuration']);
+      $options['activate_tab_language_switch']   =   isset($_POST['activate_tab_language_switch']);
+      $options['fixed_position_language_switch'] =   isset($_POST['fixed_position_language_switch']);
       $options['enable_translation_sidebars_language_switch'] = isset($_POST['enable_translation_sidebars_language_switch']);
-      $options['use_browser_language_to_redirect_visitors'] = isset($_POST['use_browser_language_to_redirect_visitors']);
-      $options['position_menu_language'] = $ulsPostionMenuLanguage;
-      $options['available_language'] = $ulsAvailableLanguage;
-      $options['languages_filter_enable'] = $ulsLanguageFilter;
+      $options['use_browser_language_to_redirect_visitors']   = isset($_POST['use_browser_language_to_redirect_visitors']);
+      $options['position_menu_language']           =   $ulsPostionMenuLanguage;
+      $options['available_language']               =   $ulsAvailableLanguage;
+      $options['uls_available_language_new_flags'] =   $ulsAvailableLanguageFlags;
+      $options['languages_filter_enable']          =   $ulsLanguageFilter;
     }
     return $options;
   }
@@ -371,6 +398,10 @@ class ULS_Options{
       <?php
    }
 
+   /**
+    * Create the HTML of an input select option.
+    * @param $options array plugin options saved.
+    */
    static function create_select_input($options){
       $default_value = (isset($options[$options['input_name']])) ? $options[$options['input_name']] : self::$default_options[$options['input_name']]; ?>
 
@@ -382,6 +413,10 @@ class ULS_Options{
       <?php
    }
 
+   /**
+    * Create the HTML of a table with languages lits.
+    * @param $options array plugin options saved.
+    */
     static function create_table_menu_language($option) {
       $languages = uls_get_available_languages(); // get the all languages available in the wp
       $themeLocation  = get_registered_nav_menus(); // get the all theme location
@@ -470,30 +505,20 @@ class ULS_Options{
   }
 
   static function create_table_available_language($options) {
+
     $languages = uls_get_available_languages(false); // get the all languages available in the wp
     $options = get_option('uls_settings'); // get information from DB
     $available_language = isset($options['available_language']) ? $options['available_language'] : uls_get_available_languages(false); // get the information that actually is in the DB
+  wp_enqueue_script( 'uls_languages_js', plugins_url('js/uls-languages-tap.js', __FILE__), array('jquery') );
   ?>
-    <script type="text/javascript">
-      jQuery(function($){
-        jQuery('#button-download-language').click(function () {
-          jQuery("#div_message_download").html("<?php echo _("Downloading language...") ?>");
-
-          var language = $("#tblang").val();
-          $.post(ajaxurl, {
-            action: 'uls_download_language',
-            info_language: language
-          }, function(data) {
-            window.location.href = window.location + "&success=" + data;
-          });
-        });
-      });
-    </script>
     <table id="menu-locations-table" class="">
       <thead>
         <tr>
           <th>Enable</th>
           <th>Language</th>
+          <th>Frontend flag optional</th>
+          <th>Optional flag</th>
+          <th>Remove</th>
         </tr>
       </thead>
       <tbody>
@@ -508,6 +533,22 @@ class ULS_Options{
                 <img src="<?= plugins_url("css/blank.gif", __FILE__) ?>" style="margin-right:5px;" class="flag_16x11 flag-<?= Codes::languageCode2CountryCode($lang_code); ?>" alt="<?= $lang_name ?>" title="<?= $lang_name ?>" />
                 <span><?= $lang_name; ?></span>
             </td>
+            <td>
+              <input type="file" name="uls_available_language_new_flags[<?=$lang_name?>]" value="" />
+            </td>
+            <td>
+              <?php if ( isset($options['uls_available_language_new_flags']) && isset($options['uls_available_language_new_flags'][$lang_name]) ): ?>
+                  <img src="<?= $options['uls_available_language_new_flags'][$lang_name] ?>" class="optional_flag" alt="<?=$lang_name;?>" title="<?= $lang_name ?>" ></img>
+              <?php endif; ?>
+           </td>
+            <td>
+              <?php if ( isset($options['uls_available_language_new_flags']) && isset($options['uls_available_language_new_flags'][$lang_name]) ): ?>
+                <button
+                        value="<?=$lang_name;?>"
+                        class="uls_remove_laguage_flag button-secondary"
+                        type="button"><span class="dashicons dashicons-trash"></span></button>
+              <?php endif; ?>
+           </td>
           </tr>
         <?php endforeach; ?>
       </tbody>
@@ -712,7 +753,7 @@ class ULS_Options{
    ?>
    <div class="wrap">
       <h2><?php _e('User Language Switch','user-language-switch'); ?></h2>
-      <form method="post" action="options.php">
+      <form method="post" action="options.php" enctype="multipart/form-data">
          <?php settings_fields( 'uls_settings' ); ?>
          <?php do_settings_sections( 'uls-settings-page' ); ?>
          <?php submit_button( __( 'Save', 'user-language-switch') ); ?>
@@ -870,6 +911,24 @@ class ULS_Options{
     return $items;
    }
 
+   static function remove_img_flags_uploaded(){
+     if( isset($_POST['remove_flag']) && !empty($_POST['remove_flag']) ) {
+
+      $options = get_option('uls_settings'); // get information from DB
+      $images_files = $options['uls_available_language_new_flags'];
+      unset($images_files[$_POST['remove_flag']]);
+      $options['uls_available_language_new_flags'] = $images_files;
+      //echo "<pre>"; print_r(update_option('uls_settings', $options)); echo "</pre>";
+      //exit;
+      wp_cache_delete ( 'alloptions', 'options' );
+      update_option('uls_settings', $options);
+      echo 1;
+      exit;
+     }
+     echo 0;
+     exit;
+   }
+
 }
 
 /**
@@ -902,6 +961,11 @@ add_filter('wp_nav_menu_items', 'ULS_Options::select_correct_menu_language', 10,
  * Add ajax action to download a specific language
  */
 add_action('wp_ajax_uls_download_language', 'ULS_Options::download_language');
+/**
+ * Add ajax action to remove a specific flag
+ */
+add_action('wp_ajax_uls_remove_img_flags_uploaded', 'ULS_Options::remove_img_flags_uploaded');
+
 /**
  * Add ajax action to answere the question
  */
