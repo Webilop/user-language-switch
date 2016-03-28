@@ -1056,6 +1056,7 @@ function uls_add_scripts() {
     // make the ajaxurl var available to the above script
     wp_localize_script( 'add-bx-js', 'the_ajax_script', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
     wp_enqueue_style( 'webilop-flags_32x32-style', plugins_url('css/flags/flags_32x32.css', __FILE__) );
+    wp_enqueue_style( 'uls-public-css', plugins_url('css/public.css', __FILE__) );
 }
 add_action( 'wp_enqueue_scripts', 'uls_add_scripts' );
 
