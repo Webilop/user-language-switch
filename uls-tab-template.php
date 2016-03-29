@@ -23,7 +23,7 @@ if (!is_home() && !is_archive() && !is_search() && !is_404()) {
       // if the user load a specific img for a language load it and add its configuration
       if ( isset($new_img_file[$key]) && !empty($new_img_file[$key]) ) {
         // get width and height from image loaded
-        list($width, $height) = getimagesize($new_img_file[$key]);
+        list($width, $height) = getimagesize($new_img_file[$key]['file']);
         // this rule is for div content "tab_flag"
         $content_style = 'width:'. $width .'px; height:'. $height.'px;';
         // create css rules
@@ -32,7 +32,7 @@ if (!is_home() && !is_archive() && !is_search() && !is_404()) {
         $new_style .= 'background-image: none;';
         $new_style .= $content_style;
         // create html tag for show this image
-        $tagHtml = ' <img src="'. $new_img_file[$key] .
+        $tagHtml = ' <img src="'. $new_img_file[$key]['url'] .
           '" style="'.$new_style.'" class="flag_32x32 flag-' .
             Codes::languageCode2CountryCode($value). '" alt="' . $value . '" title="' .
             $key . '" /> ';

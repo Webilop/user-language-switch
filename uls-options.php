@@ -242,7 +242,7 @@ class ULS_Options{
     }
     else if ( isset($_POST['available_languages']) ) {
       $options['available_language'] = $_POST['uls_available_language'];
-      $delete_flags = $_POST['uls_available_language_del_flags'];
+      $delete_flags = isset($_POST['uls_available_language_del_flags']) ? $_POST['uls_available_language_del_flags'] : '';
 
       if ( !empty($delete_flags) ) {
         foreach ($delete_flags as $key => $value) {
@@ -272,7 +272,7 @@ class ULS_Options{
           $movefile = wp_handle_upload( $uploadedfile, $upload_overrides );
           // if it uploaded success save the public url
           if ( $movefile && !isset( $movefile['error'] ) ) {
-            $options['uls_available_language_new_flags'][$key] = $movefile['url'];
+            $options['uls_available_language_new_flags'][$key] = $movefile;
           }
         }
       }// end conditions to the file input
@@ -548,7 +548,7 @@ class ULS_Options{
             </td>
             <td>
               <?php if ( isset($options['uls_available_language_new_flags']) && isset($options['uls_available_language_new_flags'][$lang_name]) ): ?>
-                  <img src="<?= $options['uls_available_language_new_flags'][$lang_name] ?>" class="optional_flag" alt="<?=$lang_name;?>" title="<?= $lang_name ?>" ></img>
+                  <img src="<?= $options['uls_available_language_new_flags'][$lang_name]['url'] ?>" class="optional_flag" alt="<?=$lang_name;?>" title="<?= $lang_name ?>" ></img>
               <?php endif; ?>
            </td>
             <td>
@@ -917,26 +917,6 @@ class ULS_Options{
     }
     return $items;
    }
-
-   static function remove_img_flags_uploaded(){
-     if( isset($_POST['remove_flag']) && !empty($_POST['remove_flag']) ) {
-
-      $options = get_option('uls_settings'); // get information from DB
-      $images_files = $options['uls_available_language_new_flags'];
-      unset($images_files[$_POST['remove_flag']]);
-      $options['uls_available_language_new_flags'] = $images_files;
-      echo "<pre>"; print_r($options); echo "</pre>";
-
-      echo "<pre>"; print_r(update_option('uls_settings', '')); echo "</pre>";
-      wp_cache_delete ( 'alloptions', 'options' );
-      update_option('uls_settings',$options);
-      echo 1;
-      exit;
-     }
-     echo 0;
-     exit;
-   }
-
 }
 
 /**
@@ -969,10 +949,6 @@ add_filter('wp_nav_menu_items', 'ULS_Options::select_correct_menu_language', 10,
  * Add ajax action to download a specific language
  */
 add_action('wp_ajax_uls_download_language', 'ULS_Options::download_language');
-/**
- * Add ajax action to remove a specific flag
- */
-add_action('wp_ajax_uls_remove_img_flags_uploaded', 'ULS_Options::remove_img_flags_uploaded');
 
 /**
  * Add ajax action to answere the question
