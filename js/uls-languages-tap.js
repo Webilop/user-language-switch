@@ -12,13 +12,4 @@ jQuery(document).ready(function($) {
     });
   });
 
-  $('.uls_remove_laguage_flag').on("click",function() {
-    var language = $(this).val();
-    $.post(ajaxurl, {
-      action: 'uls_remove_img_flags_uploaded',
-      remove_flag: language
-    }, function(data) {
-        //location.reload();
-    });
-  });
 });

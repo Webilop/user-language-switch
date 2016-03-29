@@ -242,7 +242,17 @@ class ULS_Options{
     }
     else if ( isset($_POST['available_languages']) ) {
       $options['available_language'] = $_POST['uls_available_language'];
+      $delete_flags = $_POST['uls_available_language_del_flags'];
 
+      if ( !empty($delete_flags) ) {
+        foreach ($delete_flags as $key => $value) {
+          if ( isset($options['uls_available_language_new_flags'][$key]) ) {
+            unset( $options['uls_available_language_new_flags'][$key] );
+          }
+        }
+      }
+
+      // conditions for input file
       $files_options = $_FILES['uls_available_language_new_flags'];
       $upload_overrides = array( 'test_form' => false );
       // check if the value is null to create each file to upload to the upload files
@@ -265,7 +275,7 @@ class ULS_Options{
             $options['uls_available_language_new_flags'][$key] = $movefile['url'];
           }
         }
-      }
+      }// end conditions to the file input
     }
     else if ( isset($_POST['languages_filter_enable']) ) {
       $options['languages_filter_enable'] = $_POST['uls_language_filter'];
@@ -534,7 +544,7 @@ class ULS_Options{
                 <span><?= $lang_name; ?></span>
             </td>
             <td>
-              <input type="file" name="uls_available_language_new_flags[<?=$lang_name?>]" value="" />
+              <input type="file" name="uls_available_language_new_flags[<?=$lang_name?>]" value=""  title="<?= __("the default dimension is 32x32 px, it is neccessary to keep the aesthetics"); ?>" />
             </td>
             <td>
               <?php if ( isset($options['uls_available_language_new_flags']) && isset($options['uls_available_language_new_flags'][$lang_name]) ): ?>
@@ -543,10 +553,7 @@ class ULS_Options{
            </td>
             <td>
               <?php if ( isset($options['uls_available_language_new_flags']) && isset($options['uls_available_language_new_flags'][$lang_name]) ): ?>
-                <button
-                        value="<?=$lang_name;?>"
-                        class="uls_remove_laguage_flag button-secondary"
-                        type="button"><span class="dashicons dashicons-trash"></span></button>
+                <input type="checkbox" name="uls_available_language_del_flags[<?=$lang_name?>]" value="" />
               <?php endif; ?>
            </td>
           </tr>
@@ -918,10 +925,11 @@ class ULS_Options{
       $images_files = $options['uls_available_language_new_flags'];
       unset($images_files[$_POST['remove_flag']]);
       $options['uls_available_language_new_flags'] = $images_files;
-      //echo "<pre>"; print_r(update_option('uls_settings', $options)); echo "</pre>";
-      //exit;
+      echo "<pre>"; print_r($options); echo "</pre>";
+
+      echo "<pre>"; print_r(update_option('uls_settings', '')); echo "</pre>";
       wp_cache_delete ( 'alloptions', 'options' );
-      update_option('uls_settings', $options);
+      update_option('uls_settings',$options);
       echo 1;
       exit;
      }
