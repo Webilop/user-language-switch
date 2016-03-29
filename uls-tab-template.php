@@ -15,7 +15,12 @@ if (!is_home() && !is_archive() && !is_search() && !is_404()) {
       '" style="margin-right:5px;" class="flag_32x32 flag-' .
       Codes::languageCode2CountryCode($value). '" alt="' . $value . '" title="' .
       $key . '" /> ';
+      $grayClass = '';
+      if (!is_null($postId)) {
+        $hasTranslation = uls_get_post_translation_id($postId, $value) !== false;
+        $grayClass = $hasTranslation ? '' : 'uls-grayscale';
+      }
     ?>
-    <div class="tab_flag"><?= uls_get_link($postId, $value, $tagHtml); ?></div>
+    <div class="tab_flag <?=$grayClass?>"><?= uls_get_link($postId, $value, $tagHtml); ?></div>
   <?php endforeach; ?>
 </div>
