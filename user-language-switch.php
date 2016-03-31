@@ -1337,6 +1337,23 @@ function update_db_after_update() {
 register_activation_hook( __FILE__, 'update_db_after_update' );
 
 
+// this function search the front page and show its traduction if it has
+// the filter is the option_ this Used to temporarily alter a WordPress option before you display a specific view
+// alter the page_on_front action
+
+add_filter('option_page_on_front', 'uls_search_front_page_translation');
+function uls_search_front_page_translation($page_on_front) {
+
+  if (!empty($page_on_front) ) {
+    $lang_code = uls_get_site_language(); // get site language
+    $get_page_translation = get_post_meta($page_on_front,'uls_translation_'.strtolower($lang_code), true); // get language translations
+
+    if ( !empty($get_page_translation) ) {
+      return $get_page_translation;
+    }
+  }
+  return $page_on_front;
+}
 /*
   Moving configuration options to user profile page
 */
