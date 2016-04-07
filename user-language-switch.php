@@ -1345,11 +1345,17 @@ add_filter('option_page_on_front', 'uls_search_front_page_translation');
 function uls_search_front_page_translation($page_on_front) {
 
   if (!empty($page_on_front) ) {
-    $lang_code = uls_get_site_language(); // get site language
-    $get_page_translation = get_post_meta($page_on_front,'uls_translation_'.strtolower($lang_code), true); // get language translations
+    $lang_code = uls_get_user_language(); // get site language
+    $page_translation = get_post_meta($page_on_front, 'uls_translation_' . strtolower($lang_code), true); // get language translations
+    if ( !empty($page_translation) ) {
 
-    if ( !empty($get_page_translation) ) {
-      return $get_page_translation;
+      add_filter('redirect_canonical', function($link, $id) use ($page_on_front, $page_translation) {
+        //var_dump($id, $page_on_front);
+          $link = get_page_link($page_translation);
+
+        return $link;
+      }, 10, 2);
+      return $page_translation;
     }
   }
   return $page_on_front;
