@@ -646,20 +646,6 @@ function uls_tab_background_color_picker() {
 <?php
 }
 
-// this function is for automatic traduction menues
-/*function uls_traduction_automatic_menu($object)
-{
-  foreach ($object as $key ) {
-    $post_id = get_post_meta($key->object_id, 'uls_translation_'.strtolower(uls_get_user_language()), true);
-    if ( !empty($post_id) ) {
-      $key->title = get_post($post_id)->post_title;
-      $key->url = uls_get_url_translated($key->url);
-      var_dump('yeah!');
-    }
-  }
-  return $object;
-}
-//add_filter( 'wp_nav_menu_objects', 'uls_traduction_automatic_menu');*/
 
 // this functin action is for register sidebar if the checkbox in backend is enable
 function uls_register_sidebar_laguages() {
