@@ -5,7 +5,6 @@
 class ULS_Options{
    static private $default_options = array(
       'uls_plugin_version' => '1.5',
-      'uls_plugin_question' => false,
       'user_backend_configuration' => true,
       'user_frontend_configuration' => true,
       'default_backend_language' => 'en_US',
@@ -46,10 +45,6 @@ class ULS_Options{
 
     //get options
     $options = get_option('uls_settings');
-    $option_question = get_option('uls_settings_question');
-    if (empty($option_question)) {
-      add_action('admin_notices', 'ULS_Options::uls_admin_notice_question');
-    }
 
     //create about section
     add_settings_section('uls_create_section_tabs',
@@ -336,49 +331,12 @@ class ULS_Options{
     </div>
   <?php
   }
+
   /**
-   * function: uls_answere_question_contact
-   * this is an ajax function to change value of the uls_plugin_question to not show
-   * the question again and send the information to this url:
-   * http://dev.webilop.com/webilop-3.0/wp-admin/admin-ajax.php?action=store_answer&answer=yes&domain=awesome-site.com&email=aritoma@gmail.com
-  */
-  static function uls_answere_question_contact() {
-    $answere_question = isset($_POST['button_answere_value']) ? $_POST['button_answere_value'] : '';
-    if (!empty($answere_question)) {
-
-      if ($answere_question == 'answere_yes' )
-        $answere = "yes";
-      else
-        $answere = "no";
-
-      $user = wp_get_current_user();
-      $user_email = $user->user_email;
-      $site_url = get_site_url();
-      $site_url = preg_replace('#^https?://#', '', $site_url);
-      $url = "http://webilop.com/wp-admin/admin-ajax.php?action=store_answer&answer=$answere&domain=$site_url&email=$user_email";
-
-      $ch = curl_init();
-      curl_setopt($ch, CURLOPT_URL, $url);
-      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-      curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true );
-      $response = curl_exec($ch);
-      curl_close($ch);
-
-      $uls_options = add_option('uls_settings_question',  $answere);
-
-      $message = " <br/> The information was save <br/>";
-      echo $message ; exit;
-    }
-    echo "0"; exit;
-  }
-
-
-   /**
     * Create the HTML of an input select field to choose a language.
     * @param $options array plugin options saved.
     */
-   static function create_language_selector_input($options) {
+  static function create_language_selector_input($options) {
       $default_value = (isset($options[$options['input_name']])) ? $options[$options['input_name']] : self::$default_options[$options['input_name']];
       $available_language = (isset($options['available_language'])) ? $options['available_language'] : true;
       $class = '';
@@ -949,10 +907,3 @@ add_filter('wp_nav_menu_items', 'ULS_Options::select_correct_menu_language', 10,
  * Add ajax action to download a specific language
  */
 add_action('wp_ajax_uls_download_language', 'ULS_Options::download_language');
-
-/**
- * Add ajax action to answere the question
- */
-add_action('wp_ajax_uls_answere_question_contact', 'ULS_Options::uls_answere_question_contact');
-
-?>
