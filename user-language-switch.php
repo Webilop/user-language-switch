@@ -2,7 +2,7 @@
 /*
 Plugin Name: User Language Switch
 Description: Build a multilingual and SEO friendly website. Linking translations of content and allow visitors to browse your website in different languages.
-Version: 1.6.7
+Version: 1.6.8
 Author: webilop
 Author URI: http://www.webilop.com
 License: GPL2
@@ -299,10 +299,14 @@ function uls_redirect_by_browser_language(){
           //redirect to the browser language
           $redirectUrl = uls_get_url_translated($homeUrl, $language);
         }
+        //add the language to the URL
+        else{
+          $redirectUrl = uls_get_url_translated($url, $language);
+        }
 
         //check if it is the first redirection
         if(!session_id()) session_start();
-        if(empty($_SESSION['uls_home_redirection']) && empty($_COOKIE['uls_home_redirection'])){
+        if($url != $redirectUrl && empty($_SESSION['uls_home_redirection']) && empty($_COOKIE['uls_home_redirection'])){
           //save temporal vars to avoid redirection in the home page again
           $time = date_format(new DateTime(), 'Y-m-d H:i');
           setcookie('uls_home_redirection', $time, time()+2*60*60); //set a cookie for 2 hour
