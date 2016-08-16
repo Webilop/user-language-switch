@@ -7,7 +7,7 @@ Author URI: http://www.webilop.com/
 Plugin URI: http://www.webilop.com/products/user-language-switch-wordpress-multilingual-plugin/
 Requires at least: 4.0
 Tested up to: 4.4
-Stable tag: 1.6.8
+Stable tag: 1.6.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -174,6 +174,9 @@ You can submit your pull requests to the code of the plugin through the reposito
 * Add gray filter to flags when no have a translation
 = 1.6.8 =
 * Fix automatic redirection based on browser language.
+= 1.6.9 =
+* Avoid pass-by-reference in PHP.
+* Remove rewrite rules on deactivation of plugin.
 
 == Upgrade Notice ==
 
