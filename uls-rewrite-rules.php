@@ -109,11 +109,11 @@ function uls_login_redirect( $redirect_to, $request, $user ) {
     //get languages available
     $languages = uls_get_available_languages();
     //add slash to languages to remove it in the URL
-    array_walk($languages, function(&$item, $key){
-      $item = "/$item";
-    });
+    $aux = array();
+    foreach($languages as $key => $item)
+      $aux[$key] = "/$item"; 
     //remove languages in the URL
-    $redirect_to = str_replace($languages, '', $redirect_to);
+    $redirect_to = str_replace($aux, '', $redirect_to);
   }
   
   return $redirect_to;
