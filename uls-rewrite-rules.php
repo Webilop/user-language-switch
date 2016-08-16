@@ -68,8 +68,16 @@ function uls_add_custom_page_variables( $public_query_vars ) {
  * Flush the rewrite rules, which forces the regeneration with new rules.
  */
 function uls_flush_rewrite_rules() {
-  global $wp_rewrite;
-  $wp_rewrite->flush_rules();
+  //update htaccess file
+  flush_rewrite_rules();
+}
+
+function uls_deactivate_rewrite_rules() {
+  //remove rewrite rules
+  if(remove_action('generate_rewrite_rules', 'uls_create_custom_rewrite_rules', PHP_INT_MAX));
+  
+  //update htaccess file
+  flush_rewrite_rules();
 }
 
 /**
@@ -78,6 +86,11 @@ function uls_flush_rewrite_rules() {
 register_activation_hook(ULS_FILE_PATH, 'uls_flush_rewrite_rules');
 add_action( 'generate_rewrite_rules', 'uls_create_custom_rewrite_rules', PHP_INT_MAX ); //highest priority to be excuted at last position
 add_filter( 'query_vars', 'uls_add_custom_page_variables' );
+
+/**
+ * Remove ULS rules from htaccess file.
+ */
+register_deactivation_hook(ULS_FILE_PATH, 'uls_deactivate_rewrite_rules');
 
 /**
  * Add rewrite rules for BuddyPress
