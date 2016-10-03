@@ -7,17 +7,18 @@ Author URI: http://www.webilop.com/
 Plugin URI: http://www.webilop.com/products/user-language-switch-wordpress-multilingual-plugin/
 Requires at least: 4.0
 Tested up to: 4.4
-Stable tag: 1.6.9
+Stable tag: 1.6.10
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 == Description ==
 
-> #### Read before updating to 1.5
-> Version 1.5 brings some major changes. Please create a backup of your database before updating!
-
-> #### Collaboration
-> [The plugin is available in Github](https://github.com/Webilop/user-language-switch). We receive patches to fix bugs, improvements and translation files.
+> #### Closing announcement
+> It has been a while since we are helping to translate websites in multiple languages and we appreciate your confidence in the plugin for that. Unfortunatelly, we don't have capacity for maintining the plugin and providing support. We have planned to close User Language Switch project at Octuber 31 and we are not able to provide support any more after closing.
+>
+> Due to the plugin could not work in future WordPress versions and new bugs found could not be solved, we encourage users to test and make changes to use [another translation plugin](https://wordpress.org/plugins/search.php?q=language+translation).
+>
+> Finally, our apologizes by any problem we could cause with this decision.
 
 User Language Switch is a WordPress multilingual plugin that you can use to build multilingual websites. It displays flags to visitors that your users can use to browse your website in different languages. If you prefer, you can deactivate flags and user shortcodes and functions to create your own language switch.
 

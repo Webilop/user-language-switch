@@ -2,7 +2,7 @@
 /*
 Plugin Name: User Language Switch
 Description: Build a multilingual and SEO friendly website. Linking translations of content and allow visitors to browse your website in different languages.
-Version: 1.6.9
+Version: 1.6.10
 Author: webilop
 Author URI: http://www.webilop.com
 License: GPL2
@@ -1357,3 +1357,17 @@ add_action( 'edit_user_profile_update', 'save_language_options' );
 function save_language_options( $user_id ) {
   ULS_Options::save_user_profile_language_preferences();
 }
+
+/**
+ * Announcement about closing the project.
+ */
+add_action( 'admin_notices', function(){
+  ?>
+  <div class="notice notice-warning">
+    <p><strong>User Language Switch: </strong> <?php _e( 'It has been a while since we are helping to translate websites in multiple languages and we appreciate your confidence in the plugin for that. Unfortunatelly, we don\'t have capacity for maintining the plugin and providing support. <strong>We have planned to close User Language Switch project at Octuber 31</strong> and we are not able to provide support any more after closing.', 'user-language-switch' ); ?></p>
+    <p><?php printf(__('Due to the plugin could not work in future WordPress versions and new bugs found could not be solved, we encourage users to test and make changes to use %s.', 'user-language-switch'), '<a href="https://wordpress.org/plugins/search.php?q=language+translation" target="_blank">another translation plugin</a>'); ?></p>
+    <p><?php _e('Finally, our apologizes by any problem we could cause with this decision.'); ?></p>
+  </div>
+  <?php
+});
+
